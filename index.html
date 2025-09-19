@@ -169,6 +169,93 @@
     </footer>
 
     <script>
+
+            // Mobile Menu JavaScript
+            function initializeMobileMenu() {
+                // Create hamburger menu button if it doesn't exist
+                const navContainer = document.querySelector('.nav-container');
+                const navLinks = document.querySelector('.nav-links');
+                
+                if (!document.querySelector('.mobile-menu-toggle')) {
+                    const hamburger = document.createElement('button');
+                    hamburger.className = 'mobile-menu-toggle';
+                    hamburger.setAttribute('aria-label', 'Toggle mobile menu');
+                    hamburger.innerHTML = `
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                    `;
+                    navContainer.appendChild(hamburger);
+                }
+
+                const hamburger = document.querySelector('.mobile-menu-toggle');
+
+                // Toggle mobile menu
+                hamburger.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    navLinks.classList.toggle('active');
+                    document.body.classList.toggle('menu-open');
+                    
+                    // Prevent scrolling when menu is open
+                    if (navLinks.classList.contains('active')) {
+                        document.body.style.overflow = 'hidden';
+                    } else {
+                        document.body.style.overflow = 'auto';
+                    }
+                });
+
+                // Close menu when clicking on nav links
+                const navLinkItems = document.querySelectorAll('.nav-links a');
+                navLinkItems.forEach(link => {
+                    link.addEventListener('click', function() {
+                        hamburger.classList.remove('active');
+                        navLinks.classList.remove('active');
+                        document.body.classList.remove('menu-open');
+                        document.body.style.overflow = 'auto';
+                    });
+                });
+
+                // Close menu when clicking outside
+                document.addEventListener('click', function(event) {
+                    if (!navContainer.contains(event.target) && navLinks.classList.contains('active')) {
+                        hamburger.classList.remove('active');
+                        navLinks.classList.remove('active');
+                        document.body.classList.remove('menu-open');
+                        document.body.style.overflow = 'auto';
+                    }
+                });
+
+                // Close menu on window resize if screen becomes larger
+                window.addEventListener('resize', function() {
+                    if (window.innerWidth > 768) {
+                        hamburger.classList.remove('active');
+                        navLinks.classList.remove('active');
+                        document.body.classList.remove('menu-open');
+                        document.body.style.overflow = 'auto';
+                    }
+                });
+
+                // Handle escape key to close menu
+                document.addEventListener('keydown', function(event) {
+                    if (event.key === 'Escape' && navLinks.classList.contains('active')) {
+                        hamburger.classList.remove('active');
+                        navLinks.classList.remove('active');
+                        document.body.classList.remove('menu-open');
+                        document.body.style.overflow = 'auto';
+                    }
+                });
+            }
+
+            // Initialize mobile menu when DOM is loaded
+            document.addEventListener('DOMContentLoaded', initializeMobileMenu);
+
+            // Also initialize if the script is loaded after DOM is ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initializeMobileMenu);
+            } else {
+                initializeMobileMenu();
+            }
+                    
         let currentProject = 0;
         const totalProjects = 2;
         let autoScrollInterval;
