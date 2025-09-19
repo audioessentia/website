@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Essentia</title>
+    <link rel="stylesheet" href="indexcss.css">
+</head>
+<body>
+    <!-- Animated background -->
+    <div class="bg-particles" id="particles"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">Audio Essentia</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="#aboutus">About Us</a></li>
+                <li><a href="calendar.html">Upcoming Events</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Audio Essentia</h1>
+            <p class="hero-subtitle">Immersive Sound Experiences</p>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="projects" id="projects">
+        <h2 class="section-title">Our Projects</h2>
+
+        <div class="carousel-container">
+            <!-- Carousel Navigation -->
+            <button class="carousel-nav prev" onclick="prevProject()">
+                <svg viewBox="0 0 24 24">
+                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                </svg>
+            </button>
+            
+            <button class="carousel-nav next" onclick="nextProject()">
+                <svg viewBox="0 0 24 24">
+                    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                </svg>
+            </button>
+
+            <div class="carousel-wrapper" id="carouselWrapper">
+                <!-- Project 1: Depth -->
+                <div class="project-card">
+                    <div class="project-header">
+                        <h3 class="project-title">DEPTHS</h3>
+                        <p class="project-subtitle">4D Sound Installation</p>
+                    </div>
+                    
+                    <div class="project-content">
+                        <div class="project-description">
+                            <div class="projectimage_1">
+                                <div class="wave"></div>
+                            </div>
+                            
+                            <p>Drawing from both personal experience and universal patterns of transformation, the piece creates a space for profound inner exploration through sound.</p>
+                            <p></p>
+                            <div class="meta-value">
+                                <div class="sublinks"><a href="calendar.html">Upcoming Dates</a></div>
+                            </div>
+                                
+                        </div>
+                        
+                        <div class="project-meta">
+                            <div class="meta-item">
+                                <div class="meta-label">Format</div>
+                                <div class="meta-value">4D Spatial Audio</div>
+                            </div>
+                            
+                            <div class="meta-item">
+                                <div class="meta-label">Technology</div>
+                                <div class="meta-value">Lobe Studio</div>
+                            </div>
+                            
+                            <div class="meta-item">
+                                <div class="meta-label">Location</div>
+                                <div class="meta-value">Vancouver, BC</div>
+                            </div>
+                            
+                            <div class="meta-item">
+                                <div class="meta-label">Experience</div>
+                                <div class="meta-value">Immersive Journey</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="explore-button">
+                        <a href="projects.html#project-depth" class="btn-explore">LEARN MORE</a>
+                    </div>
+                </div>
+
+                <!-- Project 2:  -->
+                <div class="project-card">
+                    <div class="project-header">
+                        <h3 class="project-title">A Shaman's Tale</h3>
+                        <p class="project-subtitle">Sound Design</p>
+                    </div>
+                    
+                    <div class="project-content">
+                        <div class="project-description">
+                            <div class="projectimage_2">
+                                <div class="wave"></div>
+                            </div>
+                            
+                            <p>An interactive installation that responds to human presence and movement, creating unique soundscapes that evolve with each visitor's journey through the space.</p>
+                        </div>
+                        
+                    <div class="project-meta">
+                        <div class="meta-item">
+                            <div class="meta-label">Format</div>
+                            <div class="meta-value">5.1 & Stereo</div>
+                        </div>
+                        
+                        <div class="meta-item">
+                            <div class="meta-label">Tools</div>
+                            <div class="meta-value">Pro Tools, Ableton Live, etc</div>
+                        </div>
+                        
+                        <div class="meta-item">
+                            <div class="meta-label">Experience</div>
+                            <div class="meta-value">Storytelling</div>
+                        </div>
+                    </div>
+                    
+                    <div class="explore-button">
+                        <a href="projects.html#project-shaman" class="btn-explore">LEARN MORE</a>
+                    </div>
+                </div>
+
+
+        <!-- Carousel Indicators -->
+        <div class="carousel-indicators">
+            <div class="indicator active" onclick="goToProject(0)"></div>
+            <div class="indicator" onclick="goToProject(1)"></div>
+        </div>
+    </section>
+
+    <!-- aboutus Section -->
+    <section class="aboutus" id="aboutus">
+        <h2 class="aboutus-title">About Us</h2>
+        
+        <div class="aboutus-grid">
+            <div class="aboutus-card">
+                <div class="aboutus-bio">
+                    <p>Audio essentia is an international collective of sound and music professionals using tech to as a tool for developing consicouness exploring etc…</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <h3 class="footer-title">Audio Essentia</h3>
+            <p class="footer-text">Transforming consciousness through sound</p>
+        </div>
+    </footer>
+
+    <script>
+        let currentProject = 0;
+        const totalProjects = 2;
+        let autoScrollInterval;
+        let isAutoScrollPaused = false;
+
+        // Create floating particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // Carousel functionality
+        function updateCarousel() {
+            const wrapper = document.getElementById('carouselWrapper');
+            const indicators = document.querySelectorAll('.indicator');
+            const projectsSection = document.querySelector('.projects');
+            const sectionWidth = projectsSection.offsetWidth;
+            
+            // Ensure each project card takes full width of the section
+            const projectCards = document.querySelectorAll('.project-card');
+            projectCards.forEach(card => {
+                card.style.width = `${sectionWidth}px`;
+            });
+            
+            wrapper.style.transform = `translateX(-${currentProject * 100}%)`;
+            
+            indicators.forEach((indicator, index) => {
+                indicator.classList.toggle('active', index === currentProject);
+            });
+        }
+
+        function nextProject() {
+            currentProject = (currentProject + 1) % totalProjects;
+            updateCarousel();
+        }
+
+        function prevProject() {
+            currentProject = (currentProject - 1 + totalProjects) % totalProjects;
+            updateCarousel();
+        }
+
+        function goToProject(index) {
+            currentProject = index;
+            updateCarousel();
+        }
+
+        // Auto-scroll functionality
+        function startAutoScroll() {
+            if (autoScrollInterval) {
+                clearInterval(autoScrollInterval);
+            }
+            autoScrollInterval = setInterval(() => {
+                if (!isAutoScrollPaused) {
+                    nextProject();
+                }
+            }, 10000); // this number tells the ammount of miliseconds the carrousel waits to autoscroll to next project.
+        }
+
+        function pauseAutoScroll() {
+            isAutoScrollPaused = true;
+        }
+
+        function resumeAutoScroll() {
+            isAutoScrollPaused = false;
+        }
+
+        // Initialize auto-scroll
+        startAutoScroll();
+
+        // Pause auto-scroll when hovering over projects section
+        const projectsSection = document.querySelector('.projects');
+        projectsSection.addEventListener('mouseenter', pauseAutoScroll);
+        projectsSection.addEventListener('mouseleave', resumeAutoScroll);
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Parallax effect for hero section
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const hero = document.querySelector('.hero');
+            if (hero) {
+                hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+            }
+        });
+
+        // Initialize particles when page loads
+        createParticles();
+
+        // Initialize carousel dimensions
+        function initializeCarousel() {
+            updateCarousel();
+        }
+
+        // Update carousel on window resize
+        window.addEventListener('resize', updateCarousel);
+
+        // Initialize carousel after page load
+        window.addEventListener('load', initializeCarousel);
+
+        // Add intersection observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe project cards
+        document.querySelectorAll('.project-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(50px)';
+            card.style.transition = 'opacity 1s ease, transform 1s ease';
+            observer.observe(card);
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                prevProject();
+            } else if (e.key === 'ArrowRight') {
+                nextProject();
+            }
+        });
+    </script>
+</body>
+</html>
+</html>

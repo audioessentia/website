@@ -1,0 +1,467 @@
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gray: #1a1a1a;
+            --secondary-gray: #2a2a2a;
+            --accent-gray: #404040;
+            --light-gray: #808080;
+            --off-white: #f5f5f5;
+            --pure-white: #ffffff;
+            --success-green: #4ade80;
+            --error-red: #ef4444;
+        }
+
+        @font-face {
+            font-family: 'AlteHaasBold';
+            src: url('Fonts/AlteHaasGroteskBold.woff') format('woff'),
+        }
+
+        @font-face {
+            font-family: 'AlteHaasRegular';
+            src: url('Fonts/AlteHaasGroteskRegular.woff') format('woff'),
+        }
+
+        body {
+            font-family: "AlteHaasRegular";
+            background: var(--primary-gray);
+            color: var(--off-white);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated background particles */
+        .bg-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--light-gray);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.3;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Navigation */
+        nav { 
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 50px;
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--accent-gray);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-family: "AlteHaasBold";
+            font-size: 24px;
+            font-weight: 300;
+            letter-spacing: 3px;
+            color: var(--pure-white);
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-family: "AlteHaasRegular";
+            color: var(--light-gray);
+            text-decoration: none;
+            font-weight: 300;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--pure-white);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            background: linear-gradient(45deg, var(--primary-gray) 0%, var(--secondary-gray) 100%);
+        }
+
+        .hero-content {
+            max-width: 800px;
+            padding: 0 20px;
+            z-index: 10;
+        }
+
+        .hero h1 {
+            font-family: "AlteHaasBold";
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 100;
+            letter-spacing: 6px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeInUp 1.5s ease forwards;
+        }
+
+        .hero-subtitle {
+            font-size: 16px;
+            color: var(--light-gray);
+            letter-spacing: 2px;
+            font-weight: 300;
+            opacity: 0;
+            animation: fadeInUp 1.5s ease 0.5s forwards;
+            text-transform: uppercase;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+        }
+
+        /* Contact Section */
+        .contact-section {
+            padding: 80px 50px 120px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 80px;
+            align-items: start;
+        }
+
+        .contact-info {
+            position: relative;
+            padding-right: 40px;
+        }
+
+        .contact-info h2 {
+            font-family: "AlteHaasBold";
+            font-size: 40px;
+            font-weight: 100;
+            letter-spacing: 3px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            color: var(--pure-white);
+        }
+
+        .contact-info p {
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--off-white);
+            margin-bottom: 20px;
+        }
+
+        .contact-details {
+            margin-top: 40px;
+        }
+
+        .contact-item {
+            margin-bottom: 25px;
+            padding-left: 20px;
+            border-left: 2px solid var(--accent-gray);
+        }
+
+        .contact-label {
+            font-size: 14px;
+            color: var(--light-gray);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        .contact-value {
+            font-size: 16px;
+            color: var(--pure-white);
+            font-weight: 300;
+        }
+
+        /* Contact Form */
+        .contact-form {
+            background: var(--secondary-gray);
+            border: 1px solid var(--accent-gray);
+            padding: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-form::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .contact-form:hover::before {
+            left: 100%;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            color: var(--light-gray);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px 0;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid var(--accent-gray);
+            color: var(--pure-white);
+            font-size: 16px;
+            font-weight: 300;
+            transition: border-color 0.3s ease;
+            font-family: "AlteHaasRegular";
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-bottom-color: var(--pure-white);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: var(--light-gray);
+            opacity: 0.7;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+            padding: 15px 0;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px 0;
+            background: transparent;
+            border: 2px solid var(--accent-gray);
+            color: var(--pure-white);
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 300;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            color: var(--primary-gray);
+            border-color: var(--pure-white);
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--pure-white);
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+
+        .submit-btn:hover::before {
+            left: 0;
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Success/Error Messages */
+        .message {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 300;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .message.success {
+            background: rgba(74, 222, 128, 0.1);
+            border: 1px solid var(--success-green);
+            color: var(--success-green);
+        }
+
+        .message.error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--error-red);
+            color: var(--error-red);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--secondary-gray);
+            padding: 80px 50px 40px;
+            border-top: 1px solid var(--accent-gray);
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-title {
+            font-family: "AlteHaasBold";
+            font-size: 24px;
+            font-weight: 100;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .footer-text {
+            font-family: "AlteHaasRegular";
+            color: var(--light-gray);
+            font-size: 14px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 15px 20px;
+            }
+
+            .nav-links {
+                gap: 20px;
+            }
+
+            .contact-section {
+                padding: 60px 20px 80px;
+            }
+
+            .contact-container {
+                grid-template-columns: 1fr;
+                gap: 50px;
+            }
+
+            .contact-form {
+                padding: 30px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+                letter-spacing: 4px;
+            }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--primary-gray);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-gray);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--light-gray);
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+    }

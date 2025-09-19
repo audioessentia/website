@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Essentia - Dates</title>
+    <link rel="stylesheet" href="calendarcss.css">
+</head>
+<body>
+    <!-- Animated background -->
+    <div class="bg-particles" id="particles"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <!-- Primary Navigation -->
+        <div class="primary-nav">
+            <div class="nav-container">
+                <div class="logo">Audio Essentia</div>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="projects.html">Projects</a></li>
+                    <li><a href="index.html#aboutus">About Us</a></li>
+                    <li><a href="calendar.html">Upcoming Events</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+        
+
+
+    <!-- Dates Section -->
+    <section class="dates-section" id="upcoming">
+        <h1 class="dates-title">Dates</h1>
+     
+        <div class="dates-container">
+            <div class="date-entry">
+                <div class="date-day">26</div>
+                <div class="date-month">Sept</div>
+                <div class="venue-info">
+                    <div class="venue-name">LOBE STUDIOS</div>
+                    <div class="venue-location">713 E Hastings St, Vancouver, BC</div>
+                </div>
+                <div class="project-info">
+                    <div class="project-name"><a href="projects.html#project-depth">DEPTHS</a></div>
+                </div>
+                <div class="date-status status-confirmed">Confirmed</div>
+            </div>
+    <!-- UPDATE WHEN YOU HAVE MORE DATES FOR THE SHOWS    
+            <div class="date-entry">
+                <div class="date-day">22</div>
+                <div class="date-month">March</div>
+                <div class="venue-info">
+                    <div class="venue-name">The Phoenix Concert Theatre</div>
+                    <div class="venue-location">Toronto, ON</div>
+                </div>
+                <div class="project-info">
+                    <div class="project-name"><a href="projects.html#project-shaman">A Shaman's Tale</a></div>
+                </div>
+                <div class="date-status status-sold-out">Sold Out</div>
+            </div>
+
+            <div class="date-entry">
+                <div class="date-day">08</div>
+                <div class="date-month">April</div>
+                <div class="venue-info">
+                    <div class="venue-name">Sound & Vision Festival</div>
+                    <div class="venue-location">Montreal, QC</div>
+                </div>
+                <div class="project-info">
+                    <div class="project-name"><a href="projects.html#project-depth">DEPTHS</a></div>
+                </div>
+                <div class="date-status status-confirmed">Confirmed</div>
+            </div>
+        </div>
+    -->
+
+
+        <!--
+        <div class="past-dates-link">
+            <a href="#past">View Past Dates</a>
+        </div>
+        -->
+    </section>
+
+    <!-- Booking Info -->
+     <!--
+    <section class="booking-info" id="booking">
+        <h2 class="booking-title">To Book Audio Essentia</h2>
+        <div class="booking-contacts">
+            <div class="booking-contact">
+                <div class="contact-region">North & South America</div>
+                <div class="contact-name">Booking Agency Name</div>
+            </div>
+            <div class="booking-contact">
+                <div class="contact-region">Europe & Rest of World</div>
+                <div class="contact-name">International Booking</div>
+            </div>
+        </div>
+    </section>
+    -->
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <h3 class="footer-title">Audio Essentia</h3>
+            <p class="footer-text">Transforming consciousness through sound</p>
+        </div>
+    </footer>
+
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.duration = (15 + Math.random() * 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Initialize particles when page loads
+        createParticles();
+    </script>
+</body>
+</html>
