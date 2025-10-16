@@ -7,99 +7,40 @@
     <link rel="stylesheet" href="calendarcss.css">
 </head>
 <body>
-    <!-- Animated background -->
-    <div class="bg-particles" id="particles"></div>
 
-    <!-- Navigation -->
-    <nav>
-        <!-- Primary Navigation -->
-        <div class="primary-nav">
-            <div class="nav-container">
-                <div class="logo">Audio Essentia</div>
-                <ul class="nav-links">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="projects.html">Projects</a></li>
-                    <li><a href="index.html#aboutus">About Us</a></li>
-                    <li><a href="calendar.html">Upcoming Events</a></li>
-                    <li><a href="contact.html">Contact</a></li>
-                </ul>
-            </div>
+    <nav id="nav">
+        <div class="nav-container">
+            <a href="index.html" class="logo">AUDIO ESSENTIA</a>
+            <button class="mobile-menu-toggle" id="menuToggle">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">PROJECTS</a></li>
+                <li><a href="aboutus.html">ABOUT US</a></li>
+                <li><a class="active" href="calendar.html">EVENT CALENDAR</a></li>
+                <li><a href="contact.html">CONTACT</a></li>
+            </ul>
         </div>
-        
+    </nav>
 
-
-    <!-- Dates Section -->
     <section class="dates-section" id="upcoming">
         <h1 class="dates-title">Dates</h1>
      
         <div class="dates-container">
-            <div class="date-entry">
-                <div class="date-day">26</div>
-                <div class="date-month">Sept</div>
-                <div class="venue-info">
-                    <div class="venue-name">LOBE STUDIOS</div>
-                    <div class="venue-location">713 E Hastings St, Vancouver, BC</div>
-                </div>
-                <div class="project-info">
-                    <div class="project-name"><a href="projects.html#project-depth">DEPTHS</a></div>
-                </div>
-                <div class="date-status status-confirmed">Confirmed</div>
-            </div>
-    <!-- UPDATE WHEN YOU HAVE MORE DATES FOR THE SHOWS    
-            <div class="date-entry">
-                <div class="date-day">22</div>
-                <div class="date-month">March</div>
-                <div class="venue-info">
-                    <div class="venue-name">The Phoenix Concert Theatre</div>
-                    <div class="venue-location">Toronto, ON</div>
-                </div>
-                <div class="project-info">
-                    <div class="project-name"><a href="projects.html#project-shaman">A Shaman's Tale</a></div>
-                </div>
-                <div class="date-status status-sold-out">Sold Out</div>
+            <h2 class="section-subtitle">Upcoming</h2>
+            <div id="upcoming-dates">
+                <!-- Java Script places the upcoming dates automatically after this -->
             </div>
 
-            <div class="date-entry">
-                <div class="date-day">08</div>
-                <div class="date-month">April</div>
-                <div class="venue-info">
-                    <div class="venue-name">Sound & Vision Festival</div>
-                    <div class="venue-location">Montreal, QC</div>
-                </div>
-                <div class="project-info">
-                    <div class="project-name"><a href="projects.html#project-depth">DEPTHS</a></div>
-                </div>
-                <div class="date-status status-confirmed">Confirmed</div>
-            </div>
-        </div>
-    -->
-
-
-        <!--
-        <div class="past-dates-link">
-            <a href="#past">View Past Dates</a>
-        </div>
-        -->
-    </section>
-
-    <!-- Booking Info -->
-     <!--
-    <section class="booking-info" id="booking">
-        <h2 class="booking-title">To Book Audio Essentia</h2>
-        <div class="booking-contacts">
-            <div class="booking-contact">
-                <div class="contact-region">North & South America</div>
-                <div class="contact-name">Booking Agency Name</div>
-            </div>
-            <div class="booking-contact">
-                <div class="contact-region">Europe & Rest of World</div>
-                <div class="contact-name">International Booking</div>
+            <h2 class="section-subtitle" id="past-title" style="display: none;">Past Dates</h2>
+            <div id="past-dates">
+                <!-- Java Script places the past dates automatically after this -->
             </div>
         </div>
     </section>
-    -->
 
-    <!-- Footer -->
     <footer>
         <div class="footer-content">
             <h3 class="footer-title">Audio Essentia</h3>
@@ -108,9 +49,114 @@
     </footer>
 
     <script>
-                // Mobile Menu JavaScript
+        // All dates go here following the format
+        // { day: 'DD', month: 'MonthName', year: 2025, venue: '', venueLink: '', location: '', project: '', projectLink: '', status: 'confirmed/sold-out/tba', info: '', infoLink: '' }
+        const allDates = [
+            {
+                day: '-',
+                month: 'Nov',
+                year: 2025,
+                venue: 'IndieFest',
+                venueLink: '',
+                location: 'Vancouver, Canada',
+                project: 'DEPTHS',
+                projectLink: 'depths.html',
+                status: 'tba',
+                info: '',
+                infoLink: '#'
+            },
+            {
+                day: '26',
+                month: 'Sept',
+                year: 2025,
+                venue: 'LOBE STUDIO',
+                venueLink: 'https://lobestudio.ca/',
+                location: 'Vancouver, Canada',
+                project: 'DEPTHS',
+                projectLink: 'depths.html',
+                status: 'confirmed',
+                info: '',
+                infoLink: ''
+            },
+        ];
+
+        // Function to parse date and check if it's in the past
+        function isPastDate(day, month, year) {
+            const months = {
+                'Jan': 0, 'Feb': 1, 'Mar': 2, 'Apr': 3, 'May': 4, 'Jun': 5,
+                'Jul': 6, 'Aug': 7, 'Sept': 8, 'Oct': 9, 'Nov': 10, 'Dec': 11
+            };
+            
+            const eventDate = new Date(year, months[month], parseInt(day));
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            return eventDate < today;
+        }
+
+        // Function to create date entry HTML
+        function createDateEntry(dateObj, isPast) {
+            const statusClass = isPast ? 'status-past' : `status-${dateObj.status}`;
+            const statusText = isPast ? 'Past' : (dateObj.status === 'confirmed' ? 'Confirmed' : 
+                              dateObj.status === 'sold-out' ? 'Sold Out' : 'TBA');
+            const pastClass = isPast ? 'past-date' : '';
+            
+            return `
+                <div class="date-entry ${pastClass}">
+                    <div style="display: flex; flex-direction: column; gap: 3px;">
+                        <div class="date-day">${dateObj.day}</div>
+                        <div class="date-month">${dateObj.month}</div>
+                        <div class="date-year">${dateObj.year}</div>
+                    </div>
+                    <div class="location-column">${dateObj.location}</div>
+                    <div class="venue-name"><a href="${dateObj.venueLink}" target="_blank">${dateObj.venue}</a></div>
+                    <div class="project-info">
+                        <div class="project-name"><a href="${dateObj.projectLink}">${dateObj.project}</a></div>
+                    </div>
+                    <div class="date-status ${statusClass}">${statusText}</div>
+                    <div class="info-column"><a href="${dateObj.infoLink}" target="_blank">${dateObj.info}</a></div>
+                </div>
+            `;
+        }
+
+        // Organize and display dates
+        function organizeDates() {
+            const upcomingContainer = document.getElementById('upcoming-dates');
+            const pastContainer = document.getElementById('past-dates');
+            const pastTitle = document.getElementById('past-title');
+            
+            const upcomingDates = [];
+            const pastDates = [];
+            
+            // Separate upcoming and past dates
+            allDates.forEach(date => {
+                if (isPastDate(date.day, date.month, date.year)) {
+                    pastDates.push(date);
+                } else {
+                    upcomingDates.push(date);
+                }
+            });
+            
+            // Display upcoming dates
+            if (upcomingDates.length > 0) {
+                upcomingContainer.innerHTML = upcomingDates.map(date => 
+                    createDateEntry(date, false)
+                ).join('');
+            } else {
+                upcomingContainer.innerHTML = '<div class="no-dates-message">No upcoming dates at the moment. Check back soon!</div>';
+            }
+            
+            // Display past dates
+            if (pastDates.length > 0) {
+                pastTitle.style.display = 'block';
+                pastContainer.innerHTML = pastDates.map(date => 
+                    createDateEntry(date, true)
+                ).join('');
+            }
+        }
+
+        // Mobile Menu
         function initializeMobileMenu() {
-            // Create hamburger menu button if it doesn't exist
             const navContainer = document.querySelector('.nav-container');
             const navLinks = document.querySelector('.nav-links');
             
@@ -128,103 +174,62 @@
 
             const hamburger = document.querySelector('.mobile-menu-toggle');
 
-            // Toggle mobile menu
             hamburger.addEventListener('click', function() {
                 this.classList.toggle('active');
                 navLinks.classList.toggle('active');
-                document.body.classList.toggle('menu-open');
-                
-                // Prevent scrolling when menu is open
-                if (navLinks.classList.contains('active')) {
-                    document.body.style.overflow = 'hidden';
-                } else {
-                    document.body.style.overflow = 'auto';
-                }
+                document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : 'auto';
             });
 
-            // Close menu when clicking on nav links
             const navLinkItems = document.querySelectorAll('.nav-links a');
             navLinkItems.forEach(link => {
                 link.addEventListener('click', function() {
                     hamburger.classList.remove('active');
                     navLinks.classList.remove('active');
-                    document.body.classList.remove('menu-open');
                     document.body.style.overflow = 'auto';
                 });
             });
 
-            // Close menu when clicking outside
             document.addEventListener('click', function(event) {
                 if (!navContainer.contains(event.target) && navLinks.classList.contains('active')) {
                     hamburger.classList.remove('active');
                     navLinks.classList.remove('active');
-                    document.body.classList.remove('menu-open');
                     document.body.style.overflow = 'auto';
                 }
             });
 
-            // Close menu on window resize if screen becomes larger
             window.addEventListener('resize', function() {
                 if (window.innerWidth > 768) {
                     hamburger.classList.remove('active');
                     navLinks.classList.remove('active');
-                    document.body.classList.remove('menu-open');
                     document.body.style.overflow = 'auto';
                 }
             });
 
-            // Handle escape key to close menu
             document.addEventListener('keydown', function(event) {
                 if (event.key === 'Escape' && navLinks.classList.contains('active')) {
                     hamburger.classList.remove('active');
                     navLinks.classList.remove('active');
-                    document.body.classList.remove('menu-open');
                     document.body.style.overflow = 'auto';
                 }
             });
         }
 
-        // Initialize mobile menu when DOM is loaded
-        document.addEventListener('DOMContentLoaded', initializeMobileMenu);
-
-        // Also initialize if the script is loaded after DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initializeMobileMenu);
-        } else {
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', () => {
+            organizeDates();
             initializeMobileMenu();
-        }
+        });
 
-        // Create floating particles
-        function createParticles() {
-            const container = document.getElementById('particles');
-            const particleCount = 50;
-            
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 20 + 's';
-                particle.style.duration = (15 + Math.random() * 10) + 's';
-                container.appendChild(particle);
-            }
-        }
-
-        // Smooth scrolling for navigation links
+        // Smooth scrolling
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             });
         });
-
-        // Initialize particles when page loads
-        createParticles();
     </script>
 </body>
 </html>

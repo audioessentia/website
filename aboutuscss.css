@@ -1,3 +1,9 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 @font-face {
     font-family: 'AlteHaasBold';
     src: url('Fonts/AlteHaasGroteskBold.woff') format('woff');
@@ -8,12 +14,6 @@
     src: url('Fonts/AlteHaasGroteskRegular.woff') format('woff');
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 body {
     font-family: "AlteHaasRegular";
     background: #1a1a1a;
@@ -22,7 +22,6 @@ body {
     line-height: 1.6;
 }
 
-/* Navigation */
 nav {
     position: fixed;
     top: 0;
@@ -106,36 +105,22 @@ nav.scrolled {
     transform: rotate(-45deg) translate(6px, -6px);
 }
 
-.dates-section {
+.about-section {
     padding: 200px 50px 100px;
     max-width: 1400px;
     margin: 0 auto;
-    min-height: 100vh;
 }
 
-.dates-title {
-    font-family: 'AlteHaasBold';
+.about-title {
+    font-family: "AlteHaasBold";
     font-size: 72px;
     font-weight: 100;
     letter-spacing: 8px;
     margin-bottom: 80px;
     text-transform: uppercase;
     color: #ffffff;
-    text-align: center;
     opacity: 0;
     animation: fadeInUp 1.5s ease forwards;
-}
-
-.section-subtitle {
-    font-size: 24px;
-    font-weight: 100;
-    letter-spacing: 4px;
-    margin: 80px 0 40px;
-    text-transform: uppercase;
-    color: #808080;
-    text-align: left;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #404040;
 }
 
 @keyframes fadeInUp {
@@ -149,219 +134,117 @@ nav.scrolled {
     }
 }
 
-.dates-container {
-    max-width: 1000px;
-    margin: 0 auto;
+.about-content {
+    max-width: 900px;
+    margin-bottom: 120px;
 }
 
-.no-dates-message {
-    text-align: center;
-    padding: 40px;
-    color: #808080;
-    font-family: "AlteHaasRegular";
-    font-size: 14px;
-    font-style: italic;
+.about-text {
+    font-size: 18px;
+    line-height: 2;
+    color: #f5f5f5;
+    margin-bottom: 30px;
+    opacity: 0;
+    animation: fadeInUp 1.5s ease 0.3s forwards;
 }
 
-.date-entry {
+.collective-section {
+    margin-top: 120px;
+    padding-top: 80px;
+    border-top: 1px solid #404040;
+}
+
+.collective-title {
+    font-family: "AlteHaasBold";
+    font-size: 48px;
+    font-weight: 100;
+    letter-spacing: 6px;
+    margin-bottom: 80px;
+    text-transform: uppercase;
+    color: #ffffff;
+}
+
+.collective-grid {
     display: grid;
-    grid-template-columns: 100px 150px 150px 150px 200px auto;
-    gap: 30px;
-    padding: 25px 0;
-    border-bottom: 1px solid rgba(64, 64, 64, 0.3);
-    align-items: center;
-    transition: all 0.3s ease;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 60px;
+    margin-bottom: 80px;
+}
+
+.member-card {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
     opacity: 0;
     animation: fadeInUp 1.5s ease forwards;
 }
 
-.date-entry.past-date {
-    opacity: 0.6;
+.member-card:nth-child(1) { animation-delay: 0.4s; }
+.member-card:nth-child(2) { animation-delay: 0.5s; }
+.member-card:nth-child(3) { animation-delay: 0.6s; }
+.member-card:nth-child(4) { animation-delay: 0.7s; }
+.member-card:nth-child(5) { animation-delay: 0.8s; }
+.member-card:nth-child(6) { animation-delay: 0.9s; }
+
+.member-image {
+    width: 100%;
+    height: 400px;
+    background: #2a2a2a;
+    overflow: hidden;
+    position: relative;
 }
 
-.date-entry:hover {
-    background: rgba(42, 42, 42, 0.3);
-    padding-left: 20px;
-    padding-right: 20px;
-    margin-left: -20px;
-    margin-right: -20px;
+.member-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
 }
 
-.date-entry:last-child {
-    border-bottom: none;
+.member-card:hover .member-image img {
+    transform: scale(1.05);
 }
 
-.date-day {
-    font-family: "AlteHaasRegular";
-    font-size: 18px;
-    font-weight: 300;
-    color: #ffffff;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.date-month {
-    font-family: "AlteHaasRegular";
-    font-size: 14px;
-    font-weight: 300;
-    color: #808080;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-}
-
-.date-year {
-    font-family: "AlteHaasRegular";
-    font-size: 14px;
-    font-weight: 300;
-    color: #808080;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-}
-
-.venue-info {
+.member-placeholder {
+    width: 100%;
+    height: 100%;
     display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-.venue-name {
-    font-size: 16px;
-    font-weight: 700 !important;
-    color: #ffffff;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    text-align: center;
-}
-
-.venue-name a {
-    color: #f5f5f5 !important;
-    text-decoration: none !important;
-    font-weight: 700 !important;
-    letter-spacing: 1px;
-    transition: color 0.3s ease;
-}
-
-.venue-name a:hover {
-    color: #686868;
-}
-
-.venue-name a:visited {
-    color: #f5f5f5;
-}
-
-.venue-location {
-    font-family: "AlteHaasRegular";
-    font-size: 12px;
-    font-weight: 300;
-    color: #808080;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.location-column {
-    font-family: "AlteHaasRegular";
-    font-size: 12px;
-    font-weight: 300;
-    color: #808080;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.project-info {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    justify-self: center;
     align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    color: #808080;
+    font-family: "AlteHaasBold";
 }
 
-.project-name {
-    font-family: "AlteHaasRegular";
-    font-size: 12px;
+.member-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.member-name {
+    font-family: "AlteHaasBold";
+    font-size: 24px;
     font-weight: 300;
-    color: #f5f5f5;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #ffffff;
+}
+
+.member-role {
+    font-size: 12px;
+    color: #808080;
     text-transform: uppercase;
     letter-spacing: 1px;
-    padding: 8px 16px;
+    padding-bottom: 15px;
     border-bottom: 1px solid #404040;
-    text-align: center;
-    transition: all 0.3s ease;
-    width: 200px;
-    min-width: 120px;
 }
 
-.project-name a {
-    color: #f5f5f5;
-    padding: 3px 8px;
-    font-weight: 300;
-    letter-spacing: 1px;
-    transition: color 0.3s ease;
-    text-transform: uppercase;
+.member-bio {
     font-size: 15px;
-    text-decoration: none;
-}
-
-.project-name a:hover {
-    color: #808080;
-}
-
-.date-status {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    padding: 6px 12px;
-    border-radius: 12px;
-    white-space: nowrap;
-    justify-self: center;
-    align-items: center;
-    text-align: center;
-    width: 150px;
-}
-
-.status-confirmed {
-    background: rgba(0, 255, 0, 0.1);
-    color: #00ff00;
-    border: 1px solid rgba(0, 255, 0, 0.3);
-}
-
-.status-sold-out {
-    background: rgba(255, 0, 0, 0.1);
-    color: #ff6b6b;
-    border: 1px solid rgba(255, 0, 0, 0.3);
-}
-
-.status-tba {
-    background: rgba(255, 255, 0, 0.1);
-    color: #ffff00;
-    border: 1px solid rgba(255, 255, 0, 0.3);
-}
-
-.status-past {
-    background: rgba(128, 128, 128, 0.1);
-    color: #808080;
-    border: 1px solid rgba(128, 128, 128, 0.3);
-}
-
-.info-column {
-    font-family: "AlteHaasRegular";
-    font-size: 12px;
-    font-weight: 300;
-    color: #808080;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    text-align: center;
-    font-style: italic;
-}
-
-.info-column a {
-    color: #808080;
-    text-decoration: none;
-    font-style: italic;
-    transition: color 0.3s ease;
-}
-
-.info-column a:hover {
-    color: #ffffff;
+    line-height: 1.8;
+    color: #f5f5f5;
+    margin-top: 5px;
 }
 
 footer {
@@ -459,47 +342,42 @@ html {
         color: #ffffff;
     }
 
-    .dates-section {
+    .about-section {
         padding: 150px 20px 50px;
     }
 
-    .dates-title {
+    .about-title {
         font-size: 48px;
         letter-spacing: 4px;
         margin-bottom: 50px;
     }
 
-    .section-subtitle {
-        font-size: 20px;
-        letter-spacing: 2px;
-        margin: 60px 0 30px;
+    .collective-title {
+        font-size: 36px;
+        letter-spacing: 4px;
+        margin-bottom: 50px;
     }
 
-    .date-entry {
+    .about-text {
+        font-size: 16px;
+        line-height: 1.8;
+    }
+
+    .collective-grid {
         grid-template-columns: 1fr;
-        gap: 15px;
-        text-align: center;
-        padding: 25px 15px;
-        margin: 0 -15px;
+        gap: 50px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
-    .date-entry:hover {
-        margin: 0 -15px;
-        padding-left: 15px;
-        padding-right: 15px;
+    .member-card {
+        max-width: 350px;
     }
 
-    .project-name {
-        font-size: 12px;
-        padding: 6px 12px;
-        width: 100%;
-        min-width: auto;
-    }
-
-    .date-status {
-        width: 100%;
-        max-width: 200px;
-        margin: 0 auto;
+    .member-image {
+        height: 350px;
+        width: 350px;
     }
 }
 

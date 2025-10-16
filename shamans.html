@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Audio Essentia</title>
-    <link rel="stylesheet" href="projectscss.css">
+    <link rel="stylesheet" href="shamanscss.css">
 </head>
 <body>
     <nav id="nav">
@@ -16,10 +16,9 @@
                 <span class="hamburger-line"></span>
             </button>
             <ul class="nav-links" id="navLinks">
-                <li><a href="index.html">HOME</a></li>
-                <li><a href="projects.html">PROJECTS</a></li>
-                <li><a href="index.html#aboutus">ABOUT US</a></li>
-                <li><a href="calendar.html">UPCOMING EVENTS</a></li>
+                <li><a href="index.html">PROJECTS</a></li>
+                <li><a href="aboutus.html">ABOUT US</a></li>
+                <li><a href="calendar.html">EVENT CALENDAR</a></li>
                 <li><a href="contact.html">CONTACT</a></li>
             </ul>
         </div>
@@ -27,146 +26,12 @@
 
     <div class="project-nav">
         <ul class="project-nav-links">
-            <li><a href="#depths" class="active">DEPTHS</a></li>
-            <li><a href="#shamans-tale">A SHAMAN'S TALE</a></li>
+            <li><a href="depths.html">DEPTHS</a></li>
+            <li><a href="shamans.html" class="active">A SHAMAN'S TALE</a></li>
         </ul>
     </div>
 
     <main class="main-content">
-        <!-- DEPTHS Project -->
-        <section class="project-section" id="depths">
-            <div class="project-header">
-                <h1 class="project-title">DEPTHS</h1>
-                <p class="project-subtitle">4D SOUND INSTALLATION</p>
-            </div>
-
-            <div class="photo-gallery">
-                <div class="gallery-wrapper">
-                    <button class="gallery-arrow prev" onclick="moveGallery(-1, 0)">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
-                        </svg>
-                    </button>
-                    
-                    <div class="gallery-container" id="gallery-0">
-                        <div class="gallery-item" onclick="openLightbox(0, 0)">
-                            <img src="Media/Depths_1.JPG" alt="Depths Project 1">
-                        </div>
-                        <div class="gallery-item" onclick="openLightbox(0, 1)">
-                            <img src="Media/Depths_2.JPG" alt="Depths Project 2">
-                        </div>
-                        <div class="gallery-item" onclick="openLightbox(0, 3)">
-                            <img src="Media/Depths_4.JPG" alt="Depths Project 4">
-                        </div>
-                        <div class="gallery-item" onclick="openLightbox(0, 4)">
-                            <img src="Media/Depths_5.JPG" alt="Depths Project 5">
-                        </div>
-                        <div class="gallery-item" onclick="openLightbox(0, 5)">
-                            <img src="Media/Depths_6.JPG" alt="Depths Project 6">
-                        </div>
-                    </div>
-                    
-                    <button class="gallery-arrow next" onclick="moveGallery(1, 0)">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-
-            <div class="project-content">
-                <div class="project-description">
-                    <p>A 4D spatial audio installation exploring consciousness through immersive sonic art. This innovative experience combines advanced spatial audio technology with Indigenous wisdom traditions, guiding participants through a transformative journey from descent into shadow to integration and transcendence.</p>
-                    
-                    <p>The installation incorporates authentic Shipibo Icaros, binaural frequencies, and environmental soundscapes to facilitate deep states of consciousness exploration.</p>
-                    
-                    <p>Set for premiere in September 2025 at Lobe Studio Vancouver, DEPTHS represents a unique fusion of technology and spirituality—a sonic ceremony that challenges participants to confront their shadows and emerge transformed.</p>
-                </div>
-
-                <div class="project-meta">
-                    <div class="meta-item">
-                        <div class="meta-label">FORMAT</div>
-                        <div class="meta-value">4D Spatial Audio</div>
-                    </div>
-                    <div class="meta-item">
-                        <div class="meta-label">TECHNOLOGY</div>
-                        <div class="meta-value">Lobe Studio</div>
-                    </div>
-                    <div class="meta-item">
-                        <div class="meta-label">LOCATION</div>
-                        <div class="meta-value">Vancouver, BC</div>
-                    </div>
-                    <div class="meta-item">
-                        <div class="meta-label">EXPERIENCE</div>
-                        <div class="meta-value">Immersive Journey</div>
-                    </div>
-                    <div class="meta-item">
-                        <div class="meta-label">SHOW DATES</div>
-                        <div class="meta-value"><a href="calendar.html">View Calendar</a></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="collective-section">
-                <h2 class="collective-title">COLLECTIVE</h2>
-                <div class="collective-grid">
-                    <div class="collective-member">
-                        <div class="member-info">
-                            <h3 class="member-name">Dan Hawryluk</h3>
-                            <p class="member-role">Creative Director</p>
-                        </div>
-                    </div>
-                    <div class="collective-member">
-                        <div class="member-info">
-                            <h3 class="member-name">John Gregory</h3>
-                            <p class="member-role">Co-Creative Director</p>
-                        </div>
-                    </div>
-                    <div class="collective-member">
-                        <div class="member-info">
-                            <h3 class="member-name">Raine Edgar</h3>
-                            <p class="member-role">Technical Sound Designer</p>
-                        </div>
-                    </div>
-                    <div class="collective-member">
-                        <div class="member-info">
-                            <h3 class="member-name">Eloisa Sandoval</h3>
-                            <p class="member-role">Sound Designer</p>
-                        </div>
-                    </div>
-                    <div class="collective-member">
-                        <div class="member-info">
-                            <h3 class="member-name">Steven Tsia</h3>
-                            <p class="member-role">Video & Sound Designer</p>
-                        </div>
-                    </div>
-                    <div class="collective-member">
-                        <div class="member-info">
-                            <h3 class="member-name">Sidharth Satheesh</h3>
-                            <p class="member-role">Media Composer</p>
-                        </div>
-                    </div>
-                    <div class="collective-member">
-                        <div class="member-info">
-                            <h3 class="member-name">Aditya Arjun</h3>
-                            <p class="member-role">Musician</p>
-                        </div>
-                    </div>
-                    <div class="collective-member">
-                        <div class="member-info">
-                            <h3 class="member-name">Aditya Aman</h3>
-                            <p class="member-role">Motion Designer</p>
-                        </div>
-                    </div>
-                    <div class="collective-member">
-                        <div class="member-info">
-                            <h3 class="member-name">Luz Salcedo</h3>
-                            <p class="member-role">Lead Video Editor</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
 
         <!-- A SHAMAN'S TALE Project -->
         <section class="project-section" id="shamans-tale">
@@ -188,9 +53,8 @@
                 <div class="project-description">
                     <p>A Shaman's Tale is an animated short film that weaves together consciousness exploration, Indigenous wisdom, and transformative sound design. Created by filmmaker Jules Guérin and sonically redesigned by Dan Hawrluk, the film guides viewers through a profound shamanic journey.</p>
                     
-                    <p>The film incorporates Robert Monroe's pioneering "Gateway Tapes" consciousness research, Four Tet's ethereal musical compositions, and authentic Shipibo Icaros performed by Maestro Ricardo Amaringo from Peru's Nihue Rao Centro Espiritual.</p>
+                    <p>The redesign incorporates Robert Monroe's pioneering "Gateway Tapes" consciousness research, Four Tet's ethereal musical compositions, and authentic Shipibo Icaros performed by Maestro Ricardo Amaringo from Peru's Nihue Rao Centro Espiritual.</p>
                     
-                    <p>This unique blend of Western consciousness technology and traditional Indigenous healing practices creates a powerful audio-visual ceremony.</p>
                 </div>
 
                 <div class="project-meta">
@@ -203,8 +67,8 @@
                         <div class="meta-value">Pro Tools, Ableton Live</div>
                     </div>
                     <div class="meta-item">
-                        <div class="meta-label">EXPERIENCE</div>
-                        <div class="meta-value">Storytelling</div>
+                        <div class="meta-label">MEDIUM</div>
+                        <div class="meta-value">Animated Short</div>
                     </div>
                 </div>
             </div>
@@ -215,7 +79,7 @@
                     <div class="collective-member">
                         <div class="member-info">
                             <h3 class="member-name">Dan Hawryluk</h3>
-                            <p class="member-role">Sound Designer</p>
+                            <p class="member-role">Sound Designer & Re-Recording Mixer</p>
                         </div>
                     </div>
                 </div>
