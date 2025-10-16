@@ -604,6 +604,9 @@ footer {
         display: none;
     }
 
+    .gallery-wrapper {
+    overflow: hidden;
+    }
     .project-title {
         font-size: 48px;
         letter-spacing: 4px;
@@ -634,7 +637,7 @@ footer {
     line-height: 2;
     text-transform: uppercase;
     text-align: left;
-    width: 55%;
+    width: 52%;
     }
 
     @media (max-width: 480px) {
@@ -662,6 +665,10 @@ footer {
         padding: 40px 20px;
     }
 
+    .gallery-wrapper {
+    overflow: hidden;
+}
+
 }
 
 @media (max-width: 320px) {
@@ -672,5 +679,8 @@ footer {
     .logo {
         font-size: 16px;
     }
+    .gallery-wrapper {
+    overflow: hidden;
+}
 }
 }
