@@ -152,6 +152,9 @@ nav.scrolled {
     margin-top: 120px;
     padding-top: 80px;
     border-top: 1px solid #404040;
+    /* Lands correctly below the fixed nav when jumped to via
+       aboutus.html#collective from another page. */
+    scroll-margin-top: 100px;
 }
 
 .collective-title {
@@ -177,6 +180,9 @@ nav.scrolled {
     gap: 20px;
     opacity: 0;
     animation: fadeInUp 1.5s ease forwards;
+    /* Lands correctly below the fixed nav when jumped to via
+       aboutus.html#slug from a credit name on another page. */
+    scroll-margin-top: 100px;
 }
 
 .member-card:nth-child(1) { animation-delay: 0.4s; }
@@ -270,6 +276,8 @@ footer {
 
 html {
     scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
 }
 
 ::-webkit-scrollbar {

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Audio Essentia - Dates</title>
+    <link rel="icon" type="image/svg+xml" href="Media/Favicon/favicon.svg">
     <link rel="stylesheet" href="aboutuscss.css">
 </head>
 <body>
@@ -17,7 +18,8 @@
                     <span class="hamburger-line"></span>
                 </button>
                 <ul class="nav-links" id="navLinks">
-                    <li><a href="index.html">PROJECTS</a></li>
+                    <li><a href="index.html">HOME</a></li>
+                    <li><a href="projects.html">PROJECTS</a></li>
                     <li><a href="aboutus.html" class="active">ABOUT US</a></li>
                     <li><a href="calendar.html">EVENT CALENDAR</a></li>
                     <li><a href="contact.html">CONTACT</a></li>
@@ -40,11 +42,22 @@
             </p>
         </div>
 
-        <div class="collective-section">
+        <!--
+            id="collective" is the fallback anchor used by any credit name
+            elsewhere on the site that doesn't have its own bio yet
+            (e.g. Axel Braaten) — links to aboutus.html#collective land here.
+        -->
+        <div class="collective-section" id="collective">
             <h2 class="collective-title">Our Collective</h2>
             
             <div class="collective-grid">
-                <div class="member-card">
+                <!--
+                    Each member-card has an id matching the slugs used in
+                    work.html's teamLinks object (e.g. id="dan-hawryluk").
+                    Keep these in sync: if a name changes here, update the
+                    matching key in teamLinks too.
+                -->
+                <div class="member-card" id="dan-hawryluk">
                     <div class="member-image">
                         <!-- <div class="member-placeholder">DH</div> !-->
                         <img src="Media/Collective/Dan.jpeg" alt="Dan Hawryluk">
@@ -58,7 +71,7 @@
                     </div>
                 </div>
 
-                <div class="member-card">
+                <div class="member-card" id="john-gregory">
                     <div class="member-image">
                         <img src="Media/Collective/John.jpeg" alt="John Gregory">
                     </div>
@@ -70,7 +83,7 @@
                     </div>
                 </div>
 
-                <div class="member-card">
+                <div class="member-card" id="raine-edgar">
                     <div class="member-image">
                         <img src="Media/Collective/Raine.jpeg" alt="Raine Edgar">
                     </div>
@@ -81,7 +94,7 @@
                             Vancouver-based sound designer and audio programmer focused on providing clean, adaptive soundscapes that enhance interactive narratives.
                     </div>
                 </div>
-                <div class="member-card">
+                <div class="member-card" id="steven-tsia">
                     <div class="member-image">
                         <img src="Media/Collective/Steven.jpeg" alt="Steven Tsia">
                     </div>
@@ -93,7 +106,7 @@
                         </p>
                     </div>
                 </div>
-                <div class="member-card">
+                <div class="member-card" id="eloisa-sandoval">
                     <div class="member-image">
                         <img src="Media/Collective/Eloise.jpeg" alt="Eloísa Sandoval">
                     </div>
@@ -106,7 +119,7 @@
                     </div>
                 </div>
 
-                <div class="member-card">
+                <div class="member-card" id="sidharth-satheesh">
                     <div class="member-image">
                         <img src="Media/Collective/Sidharth.jpeg" alt="Sidharth Satheesh">
                     </div>
@@ -118,8 +131,19 @@
                         </p>
                     </div>
                 </div>
-
-                <div class="member-card">
+                <div class="member-card" id="axel-braaten">
+                    <div class="member-image">
+                        <img src="Media/Collective/Axel.webp" alt="Axel Braaten">
+                    </div>
+                    <div class="member-info">
+                        <h3 class="member-name">Axel Braaten</h3>
+                        <p class="member-role">Sound Designer</p>
+                        <p class="member-bio">
+                           Vancouver-based sound designer specializing in cinematic audio for film and games. He creates immersive soundscapes through field recording, sound design, and audio mixing, with a passion for crafting impactful sonic experiences that bring stories and worlds to life.
+                        </p>
+                    </div>
+                </div>
+                <div class="member-card" id="luz-salcedo">
                     <div class="member-image">
                         <img src="Media/Collective/Luz.jpeg" alt="Luz Salcedo">
                     </div>
@@ -132,7 +156,7 @@
                     </div>
                 </div>
 
-                <div class="member-card">
+                <div class="member-card" id="joel-tong">
                     <div class="member-image">
                         <img src="Media/Collective/Joel.jpeg" alt="Joel Tong">
                     </div>
@@ -146,7 +170,7 @@
                     </div>
                 </div>
                 
-                <div class="member-card">
+                <div class="member-card" id="vanessa-yuen">
                     <div class="member-image">
                         <img src="Media/Collective/Vanessa.jpeg" alt="Vanessa Yuen">
                     </div>

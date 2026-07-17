@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Audio Essentia</title>
+    <title>Audio Essentia — Projects</title>
+    <link rel="icon" type="image/svg+xml" href="Media/Favicon/favicon.svg">
     <link rel="stylesheet" href="projectscss.css">
 </head>
 <body>
@@ -17,318 +18,652 @@
             </button>
             <ul class="nav-links" id="navLinks">
                 <li><a href="index.html">HOME</a></li>
-                <li><a href="projects.html">PROJECTS</a></li>
-                <li><a href="index.html#aboutus">ABOUT US</a></li>
-                <li><a href="calendar.html">UPCOMING EVENTS</a></li>
+                <li><a href="projects.html" class="active">PROJECTS</a></li>
+                <li><a href="aboutus.html">ABOUT US</a></li>
+                <li><a href="calendar.html">EVENT CALENDAR</a></li>
                 <li><a href="contact.html">CONTACT</a></li>
             </ul>
         </div>
     </nav>
 
-    <div class="project-nav">
-        <ul class="project-nav-links">
-            <li><a href="#depths" class="active">DEPTHS</a></li>
-            <li><a href="#shamans-tale">A SHAMAN'S TALE</a></li>
-        </ul>
-    </div>
-
     <main class="main-content">
-        <!-- DEPTHS Project -->
-        <section class="project-section" id="depths">
+        <section class="project-section" id="work">
             <div class="project-header">
-                <h1 class="project-title">DEPTHS</h1>
-                <p class="project-subtitle">4D SOUND INSTALLATION</p>
+                <h1 class="project-title">FEATURED PROJECTS</h1>
             </div>
 
-            <div class="photo-gallery">
-                <div class="gallery-wrapper">
-                    <button class="gallery-arrow prev" onclick="moveGallery(-1, 0)">
+            <!-- Sub-nav: lists the projects in the carousel, jumps to that slide -->
+            <div class="sub-project-nav" id="subProjectNav">
+                <ul class="sub-project-nav-links" id="subProjectNavLinks"></ul>
+            </div>
+
+            <div class="work-carousel" id="workCarousel">
+                <div class="carousel-frame">
+                    <button class="carousel-arrow prev" id="prevSlide" aria-label="Previous project">
                         <svg viewBox="0 0 24 24">
                             <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
                         </svg>
                     </button>
-                    
-                    <div class="gallery-container" id="gallery-0">
-                        <div class="gallery-item" onclick="openLightbox(0, 0)">
-                            <img src="Media/Depths_1.JPG" alt="Depths Project 1">
-                        </div>
-                        <div class="gallery-item" onclick="openLightbox(0, 1)">
-                            <img src="Media/Depths_2.JPG" alt="Depths Project 2">
-                        </div>
-                        <div class="gallery-item" onclick="openLightbox(0, 3)">
-                            <img src="Media/Depths_4.JPG" alt="Depths Project 4">
-                        </div>
-                        <div class="gallery-item" onclick="openLightbox(0, 4)">
-                            <img src="Media/Depths_5.JPG" alt="Depths Project 5">
-                        </div>
-                        <div class="gallery-item" onclick="openLightbox(0, 5)">
-                            <img src="Media/Depths_6.JPG" alt="Depths Project 6">
+
+                    <div class="carousel-viewport">
+                        <div class="carousel-track" id="carouselTrack">
+                            <!-- Slides are injected by JS from carouselData below -->
                         </div>
                     </div>
-                    
-                    <button class="gallery-arrow next" onclick="moveGallery(1, 0)">
+
+                    <button class="carousel-arrow next" id="nextSlide" aria-label="Next project">
                         <svg viewBox="0 0 24 24">
                             <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
                         </svg>
                     </button>
                 </div>
-            </div>
 
-            <div class="project-content">
-                <div class="project-description">
-                    <p>A 4D spatial audio installation exploring consciousness through immersive sonic art. This innovative experience combines advanced spatial audio technology with Indigenous wisdom traditions, guiding participants through a transformative journey from descent into shadow to integration and transcendence.</p>
-                    
-                    <p>The installation incorporates authentic Shipibo Icaros, binaural frequencies, and environmental soundscapes to facilitate deep states of consciousness exploration.</p>
-                    
-                    <p>Set for premiere in September 2025 at Lobe Studio Vancouver, DEPTHS represents a unique fusion of technology and spirituality—a sonic ceremony that challenges participants to confront their shadows and emerge transformed.</p>
-                </div>
-
-                <div class="project-meta">
-                    <div class="meta-item">
-                        <div class="meta-label">FORMAT</div>
-                        <div class="meta-value">4D Spatial Audio</div>
+                <div class="carousel-footer">
+                    <div class="carousel-counter">
+                        <span id="counterCurrent">01</span>
+                        <span class="counter-divider">/</span>
+                        <span id="counterTotal">04</span>
                     </div>
-                    <div class="meta-item">
-                        <div class="meta-label">TECHNOLOGY</div>
-                        <div class="meta-value">Lobe Studio</div>
-                    </div>
-                    <div class="meta-item">
-                        <div class="meta-label">LOCATION</div>
-                        <div class="meta-value">Vancouver, BC</div>
-                    </div>
-                    <div class="meta-item">
-                        <div class="meta-label">EXPERIENCE</div>
-                        <div class="meta-value">Immersive Journey</div>
-                    </div>
-                    <div class="meta-item">
-                        <div class="meta-label">SHOW DATES</div>
-                        <div class="meta-value"><a href="calendar.html">View Calendar</a></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="collective-section">
-                <h2 class="collective-title">COLLECTIVE</h2>
-                <div class="collective-grid">
-                    <div class="collective-member">
-                        <div class="member-info">
-                            <h3 class="member-name">Dan Hawryluk</h3>
-                            <p class="member-role">Creative Director</p>
-                        </div>
-                    </div>
-                    <div class="collective-member">
-                        <div class="member-info">
-                            <h3 class="member-name">John Gregory</h3>
-                            <p class="member-role">Co-Creative Director</p>
-                        </div>
-                    </div>
-                    <div class="collective-member">
-                        <div class="member-info">
-                            <h3 class="member-name">Raine Edgar</h3>
-                            <p class="member-role">Technical Sound Designer</p>
-                        </div>
-                    </div>
-                    <div class="collective-member">
-                        <div class="member-info">
-                            <h3 class="member-name">Eloisa Sandoval</h3>
-                            <p class="member-role">Sound Designer</p>
-                        </div>
-                    </div>
-                    <div class="collective-member">
-                        <div class="member-info">
-                            <h3 class="member-name">Steven Tsia</h3>
-                            <p class="member-role">Video & Sound Designer</p>
-                        </div>
-                    </div>
-                    <div class="collective-member">
-                        <div class="member-info">
-                            <h3 class="member-name">Sidharth Satheesh</h3>
-                            <p class="member-role">Media Composer</p>
-                        </div>
-                    </div>
-                    <div class="collective-member">
-                        <div class="member-info">
-                            <h3 class="member-name">Aditya Arjun</h3>
-                            <p class="member-role">Musician</p>
-                        </div>
-                    </div>
-                    <div class="collective-member">
-                        <div class="member-info">
-                            <h3 class="member-name">Aditya Aman</h3>
-                            <p class="member-role">Motion Designer</p>
-                        </div>
-                    </div>
-                    <div class="collective-member">
-                        <div class="member-info">
-                            <h3 class="member-name">Luz Salcedo</h3>
-                            <p class="member-role">Lead Video Editor</p>
-                        </div>
-                    </div>
+                    <div class="carousel-dots" id="carouselDots"></div>
                 </div>
             </div>
         </section>
 
-        <!-- A SHAMAN'S TALE Project -->
-        <section class="project-section" id="shamans-tale">
-            <div class="project-header">
-                <h1 class="project-title">A SHAMAN'S<br>TALE</h1>
-                <p class="project-subtitle">SOUND DESIGN</p>
+        <!-- ---------------------------------------------------------------
+             MORE PROJECTS — hover-reveal grid, everything not in the
+             carousel above. Hover any tile to see a short description;
+             click opens the full project (with credits) in a lightbox.
+        --------------------------------------------------------------- -->
+        <section class="more-projects-section" id="moreProjects">
+            <div class="more-projects-header">
+                <h2 class="more-projects-title">MORE PROJECTS</h2>
             </div>
-
-            <div class="video-section">
-                <div class="video-container">
-                    <iframe src="https://player.vimeo.com/video/1114698558?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
-                        allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
-                        title="A Shaman's Tale">
-                    </iframe>
-                </div>
-            </div>
-
-            <div class="project-content">
-                <div class="project-description">
-                    <p>A Shaman's Tale is an animated short film that weaves together consciousness exploration, Indigenous wisdom, and transformative sound design. Created by filmmaker Jules Guérin and sonically redesigned by Dan Hawrluk, the film guides viewers through a profound shamanic journey.</p>
-                    
-                    <p>The film incorporates Robert Monroe's pioneering "Gateway Tapes" consciousness research, Four Tet's ethereal musical compositions, and authentic Shipibo Icaros performed by Maestro Ricardo Amaringo from Peru's Nihue Rao Centro Espiritual.</p>
-                    
-                    <p>This unique blend of Western consciousness technology and traditional Indigenous healing practices creates a powerful audio-visual ceremony.</p>
-                </div>
-
-                <div class="project-meta">
-                    <div class="meta-item">
-                        <div class="meta-label">FORMAT</div>
-                        <div class="meta-value">5.1 & Stereo</div>
-                    </div>
-                    <div class="meta-item">
-                        <div class="meta-label">TOOLS</div>
-                        <div class="meta-value">Pro Tools, Ableton Live</div>
-                    </div>
-                    <div class="meta-item">
-                        <div class="meta-label">EXPERIENCE</div>
-                        <div class="meta-value">Storytelling</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="collective-section">
-                <h2 class="collective-title">COLLECTIVE</h2>
-                <div class="collective-grid">
-                    <div class="collective-member">
-                        <div class="member-info">
-                            <h3 class="member-name">Dan Hawryluk</h3>
-                            <p class="member-role">Sound Designer</p>
-                        </div>
-                    </div>
-                </div>
+            <div class="more-projects-grid" id="moreProjectsGrid">
+                <!-- Tiles are injected by JS from gridData below -->
             </div>
         </section>
     </main>
 
-    <!-- Lightbox -->
-    <div class="lightbox" id="lightbox">
-        <button class="lightbox-close" onclick="closeLightbox()">×</button>
-        <button class="lightbox-arrow prev" onclick="lightboxNav(-1)">
-            <svg viewBox="0 0 24 24">
-                <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
-            </svg>
-        </button>
+    <!-- ---------------------------------------------------------------
+         PROJECT LIGHTBOX — opened when a "More Projects" tile is clicked.
+         Media stays fixed size; the info panel below it scrolls.
+    --------------------------------------------------------------- -->
+    <div class="project-lightbox" id="projectLightbox">
+        <div class="lightbox-backdrop" id="lightboxBackdrop"></div>
         <div class="lightbox-content">
-            <img id="lightbox-img" src="" alt="Gallery image">
+            <button class="lightbox-close" id="lightboxClose" aria-label="Close">×</button>
+            <div class="lightbox-scroll">
+                <div class="lightbox-media" id="lightboxMedia"></div>
+                <div class="lightbox-info" id="lightboxInfo"></div>
+            </div>
         </div>
-        <button class="lightbox-arrow next" onclick="lightboxNav(1)">
-            <svg viewBox="0 0 24 24">
-                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
-            </svg>
-        </button>
     </div>
 
     <footer>
         <div>
             <h3 class="footer-title">AUDIO ESSENTIA</h3>
             <p class="footer-text">EXPLORING CONSCIOUSNESS THROUGH SOUND</p>
+            <a href="https://instagram.com/audioessentia/" target="_blank" style="display: inline-flex; align-items: center; gap: 10px; margin-top: 20px; text-decoration: none; transition: opacity 0.3s ease;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" fill="#808080"/>
+                </svg>
+                <span style="color: #808080; font-size: 11px; letter-spacing: 1px; text-transform: uppercase;">@audioessentia</span>
+            </a>
         </div>
     </footer>
 
     <script>
-        // Gallery positions
-        const galleryPositions = [0];
-        const galleries = [
-            ['Media/Depths_1.JPG', 'Media/Depths_2.JPG', 'Media/Depths_4.JPG', 'Media/Depths_5.JPG', 'Media/Depths_6.JPG']
-        ];
+        // ---------------------------------------------------------------
+        // TEAM LINKS — maps a credit name (as it appears in the arrays
+        // below) to its anchor on aboutus.html. Add new people/aliases
+        // here as they join — the key must match the name string used in
+        // `credits` EXACTLY (case-sensitive). Any name not found here
+        // falls back to aboutus.html#collective (the team section in
+        // general), per creditLink() below.
+        // ---------------------------------------------------------------
+        const teamLinks = {
+            "Dan Hawryluk": "dan-hawryluk",
+            "John Gregory": "john-gregory",
+            "Raine Edgar": "raine-edgar",
+            "Steven Tsia": "steven-tsia",
+            "Eloísa Sandoval": "eloisa-sandoval",
+            "Eloísa Sandoval García": "eloisa-sandoval",
+            "Sidharth Satheesh": "sidharth-satheesh",
+            "Luz Salcedo": "luz-salcedo",
+            "Joel Tong": "joel-tong",
+            "Vanessa Yuen": "vanessa-yuen",
+            "Vanessa Yuen (樂凡)": "vanessa-yuen",
+            "Axel Braaten": "axel-braaten"
+        };
 
-        // Move gallery
-        function moveGallery(direction, galleryIndex) {
-            const gallery = document.getElementById(`gallery-${galleryIndex}`);
-            const items = gallery.children;
-            const itemsToShow = window.innerWidth <= 768 ? 1 : 3;
-            const maxPosition = items.length - itemsToShow;
-            
-            galleryPositions[galleryIndex] += direction;
-            
-            if (galleryPositions[galleryIndex] < 0) {
-                galleryPositions[galleryIndex] = 0;
-            }
-            if (galleryPositions[galleryIndex] > maxPosition) {
-                galleryPositions[galleryIndex] = maxPosition;
-            }
-            
-            const itemWidth = items[0].offsetWidth + 20;
-            gallery.style.transform = `translateX(-${galleryPositions[galleryIndex] * itemWidth}px)`;
+        function creditLink(name) {
+            const slug = teamLinks[name];
+            return slug ? `aboutus.html#${slug}` : `aboutus.html#collective`;
         }
 
-        // Lightbox
-        let currentLightboxGallery = 0;
-        let currentLightboxIndex = 0;
+        // ---------------------------------------------------------------
+        // PROJECT DATA
+        // Replace `src` with real media per project (image path, video path,
+        // or an embed URL). `type` controls how it's rendered:
+        //   'image'  -> <img src="...">
+        //   'video'  -> <video> for a self-hosted file (autoplays, muted, looped)
+        //   'vimeo'  -> <iframe> using the player.vimeo.com URL from Vimeo's
+        //               "Embed" share option
+        //   'youtube'-> <iframe> using the youtube.com/embed/VIDEO_ID URL
+        //               from YouTube's Share → Embed code (copy the src="..."
+        //               value out of the <iframe> YouTube gives you — the
+        //               normal youtube.com/watch?v=... link will NOT work here)
+        //   'embed'  -> generic fallback, same iframe rendering, for any other
+        //               host that gives you an embeddable iframe src
+        // `explore` (true/false) controls whether the EXPLORE button shows —
+        // only set true for projects that have a real dedicated page to link to.
+        // `link` is only used when explore is true.
+        // `imdb` (optional) — full IMDb title URL. When present, a "VIEW ON
+        // IMDB" button is shown in the lightbox / carousel slide alongside
+        // the EXPLORE button.
+        // `credits` is an array of [name, role] pairs shown under the description.
+        // Each name is automatically linked via creditLink() above.
+        //
+        // `lightboxType`/`lightboxSrc` (optional, gridData only) — set these
+        // if you want the lightbox popup to show different media than the
+        // grid tile itself, e.g. a static image thumbnail in the grid but
+        // the actual video when someone clicks in for the full view. Same
+        // type values as above ('image'/'video'/'vimeo'/'youtube'/'embed').
+        // If omitted, the lightbox just reuses the tile's own type/src.
+        //
+        // Split into two lists:
+        //   carouselData -> the featured projects shown in the big carousel
+        //   gridData     -> everything else, shown in the "More Projects" grid
+        //                   below, opened larger in a lightbox on click.
+        // ---------------------------------------------------------------
 
-        function openLightbox(galleryIndex, imageIndex) {
-            currentLightboxGallery = galleryIndex;
-            currentLightboxIndex = imageIndex;
-            const lightbox = document.getElementById('lightbox');
-            const img = document.getElementById('lightbox-img');
-            img.src = galleries[galleryIndex][imageIndex];
-            lightbox.classList.add('active');
+        const carouselData = [
+            {
+                title: "DEPTHS",
+                subtitle: "4D SOUND INSTALLATION",
+                type: "image",
+                src: "Media/Depths/Depths_1.webp",
+                description: "A 4D spatial audio installation that explores consciousness by combining advanced spatial audio technology with Indigenous wisdom traditions.",
+                explore: true,
+                link: "depths.html",
+                credits: [
+                    ["John Gregory", "Co-Creative Director, Supervising Sound Editor, Re-Recording Mixer And International Talent Coordinator"],
+                    ["Dan Hawryluk", "Creative Director, Sound Editor and Re-Recording Mixer"],
+                    ["Eloísa Sandoval", "ADR Editor, Voice Processing, Sound designer & Web Developer"],
+                    ["Steven Tsia", "Video Editor, Sound Designer, ADR Recordist"],
+                    ["Raine Edgar", "VFX Artist & Technical Sound Designer"],
+                    ["Sidharth Satheesh", "Media Composer & Music Producer"],
+                    ["Joel Tong", "Media Composer & Music Producer"],
+                    ["Luz Salcedo", "Lead Video Editor"],
+                ]
+            },
+            {
+                title: "STRAIN",
+                subtitle: "SOUND DESIGN",
+                type: "image",
+                src: "Media/Strain/Strain.webp",
+                description: "A late shift at a cannabis grow-op takes a strange turn when a worker samples the product, only for the night to spiral out of control.",
+                explore: false,
+                link: "",
+                credits: [
+                    ["John Gregory", "Re-Recording Mixer & Sound Designer"],
+                    ["Dan Hawryluk", "Re-Recording Mixer & Sound Designer"],
+                    ["Steven Tsia", "Sound Designer"],
+                    ["Eloísa Sandoval", "Sound Designer"]
+                ]
+            },
+            {
+                title: "A SHAMAN'S TALE",
+                subtitle: "ANIMATED SHORT FILM",
+                type: "image",
+                src: "Media/Shamans/AST_2.webp",
+                description: "Animated short film that weaves together consciousness exploration, Indigenous wisdom, and transformative sound design.",
+                explore: true,
+                link: "shamans.html",
+                credits: [
+                    ["Dan Hawryluk", "Re-Recording Mixer & Sound Designer"],
+                ]
+            },
+        ];
+
+        const gridData = [
+            {
+                title: "KNIGHT TERROR",
+                subtitle: "FEATURE FILM AUDIO POST",
+                type: "image",
+                src: "Media/KT/KT.webp",
+                description: "At a remote campsite retreat, a startup's knight mascot begins killing employees. The Knightly staff must solve the murders while navigating office drama as bodies pile up.",
+                explore: false,
+                link: "",
+                imdb: "https://www.imdb.com/title/tt38079921/fullcredits/?ref_=tt_cst_sm#amzn1.imdb.concept.name_credit_category.ce258419-131b-41f0-b2c5-227f5d9b719f",
+                credits: [
+                    ["John Gregory", "Re-Recording Mixer & Sound Designer"],
+                    ["Dan Hawryluk", "Re-Recording Mixer & Sound Designer"],
+                    ["Steven Tsia", "Sound Designer"],
+                    ["Axel Braaten", "Sound Designer"],
+                    ["Eloísa Sandoval", "Dialogue Editor"]
+                ]
+            },
+            {
+                title: "DANCE MOM",
+                subtitle: "SHORT FILM AUDIO POST",
+                type: "image",
+                src: "Media/DanceMom/DanceMom.webp",
+                description: "A character drama about an estranged father and his daughter reconnecting through a dance recital.",
+                explore: false,
+                link: "",
+                imdb: "https://www.imdb.com/title/tt32642300/fullcredits/?ref_=tt_cst_sm#amzn1.imdb.concept.name_credit_category.ce258419-131b-41f0-b2c5-227f5d9b719f",
+                credits: [
+                    ["John Gregory", "Foley Recordist & Foley Editor"],
+                    ["Steven Tsia", "Foley Artist & Foley Editor"],
+                    ["Eloísa Sandoval", "ADR Recordist & Dialogue Editor"],
+                    ["Raine Edgar", "Dialogue Editor"]
+                ]
+            },
+            {
+                title: "KILLER VACANCY",
+                subtitle: "SHORT FILM AUDIO POST",
+                type: "image",
+                src: "Media/KV/KV.webp",
+                description: "A fragile young woman moves into a shared house, where she discovers that her strange roommates have a twisted idea of a practical joke.",
+                explore: false,
+                link: "",
+                imdb: "https://www.imdb.com/title/tt37830452/fullcredits/?ref_=tt_cst_sm#amzn1.imdb.concept.name_credit_category.ce258419-131b-41f0-b2c5-227f5d9b719f",
+                lightboxType: "vimeo",
+                lightboxSrc: "https://www.youtube.com/embed/RmIxKVxTm0s?si=hvSfEhy4eErWxabT",
+                credits: [
+                    ["Dan Hawryluk", "Re-Recording Mixer"],
+                    ["Axel Braaten", "Re-Recording Mixer"],
+                    ["John Gregory", "Foley Recordist, Sound Designer & Music Editor"],
+                    ["Steven Tsia", "Foley Artist & Sound Designer"],
+                    ["Eloísa Sandoval", "ADR Recordist & Dialogue Editor"]
+                ]
+            },
+            {
+                title: "YONA",
+                subtitle: "ANIMATED SHORT FILM SOUND RE-DESIGN",
+                type: "image",
+                src: "Media/Yona/YonaPhoto.webp",
+                description: "After an expedition that went wrong, Chester Cornell, American Captain of the Union finds himself deeply wounded. As he is about to die, an unexpected encounter will make him face his fears and doubts",
+                explore: false,
+                link: "",
+                lightboxType: "vimeo",
+                lightboxSrc: "https://www.youtube.com/embed/KuOoTvratBA?si=kiW4ExZoUAy9m2A4",
+                credits: [
+                    ["John Gregory", "Sound Designer & Re-Recording Mixer"],
+                    ["Sidharth Satheesh", "Media Composer"]
+                ]
+            },
+            {
+                title: "AU REVOIR MON MONDE",
+                subtitle: "ANIMATED SHORT FILM SOUND RE-DESIGN",
+                type: "image",
+                src: "Media/ARMM/ARMM_4.webp",
+                description: "As the world comes to an end, a man trapped in a fish costume races against the clock toward a mysterious tower.",
+                explore: false,
+                link: "",
+                lightboxType: "vimeo",
+                lightboxSrc: "https://www.youtube.com/embed/N45cEg8qGx0?si=G9EJLAgnrkpKSw1Y",
+                credits: [
+                    ["Eloísa Sandoval", "Sound Designer & Re-Recording Mixer"]
+                ]
+            },
+            {
+                title: "WARFRAME: A NEW WAR",
+                subtitle: "VIDEO GAME TRAILER SOUND RE-DESIGN",
+                type: "image",
+                src: "Media/Warframe/Warframe.webp",
+                description: "Embark on an epic Quest across an expansive new adventure, as you race to unite the factions and discover the most dramatic conflict burning in the Origin System - the one within yourself.",
+                explore: false,
+                link: "",
+                credits: [
+                    ["Steven Tsia", "Sound Designer & Re-Recording Mixer"]
+                ]
+            },
+            {
+                title: "MARATHON REVEAL CINEMATIC",
+                subtitle: "VIDEO GAME TRAILER SOUND RE-DESIGN",
+                type: "image",
+                src: "Media/Marathon/Marathon.webp",
+                description: "A team-based extraction shooter. Choose your Runner and scavenge the lost colony of Tau Ceti IV for fortune, power, and answers to Tau Ceti's secrets.",
+                explore: false,
+                link: "",
+                lightboxType: "vimeo",
+                lightboxSrc: "https://www.youtube.com/embed/8GHGXk0p8wk?si=BwFTJl52gndJoUhH",
+                credits: [
+                    ["Ailean Yuzwa", "Sound Designer & Re-Recording Mixer"]
+                ]
+            },
+            {
+                title: "The BioShock 2 Trailer",
+                subtitle: "VIDEO GAME TRAILER SOUND RE-DESIGN",
+                type: "image",
+                src: "Media/BioShock/BioShock.webp",
+                description: "BioShock 2 follows Subject Delta, a prototype Big Daddy fighting through the ruined underwater city of Rapture. He must rescue his former Little Sister, Eleanor, from her mother, Sofia Lamb, who now controls the city's cult-like survivors.",
+                explore: false,
+                link: "",
+                lightboxType: "vimeo",
+                lightboxSrc: "https://www.youtube.com/embed/2NncmpOnIxA?si=6HMaiU8gcUlwd5-u",
+                credits: [
+                    ["Raine Edgar", "Sound Designer & Re-Recording Mixer"]
+                ]
+            },
+            {
+                title: "The First Berserker Khazan",
+                subtitle: "VIDEO GAME TRAILER SOUND RE-DESIGN",
+                type: "image",
+                src: "Media/Khazan/Khazan.webp",
+                description: "The First Berserker: Khazan is a hardcore action RPG based on DNF (Dungeon & Fighter) Universe that will be available on PlayStation 5. As Khazan, the great general of the Pell Los Empire who overcame death, players will unveil the incidents that led to his downfall and seek vengeance on his enemies.",
+                explore: false,
+                link: "",
+                lightboxType: "vimeo",
+                lightboxSrc: "https://www.youtube.com/embed/-6hEc8oXvuU?si=Zt8G0n6EtzWKfTSm",
+                credits: [
+                    ["Axel Braaten", "Sound Designer & Re-Recording Mixer"]
+                ]
+            }
+        ];
+
+        // ---------------------------------------------------------------
+        // SHARED HELPER — renders the media element (img/video/iframe) for
+        // any project object, used by the carousel, the grid, and the
+        // lightbox.
+        // ---------------------------------------------------------------
+        function renderMedia(slide, className) {
+            if (slide.type === 'video') {
+                return `<video class="${className}" src="${slide.src}" autoplay muted loop playsinline></video>`;
+            }
+            if (slide.type === 'vimeo' || slide.type === 'youtube' || slide.type === 'embed') {
+                return `<iframe class="${className}" src="${slide.src}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" allowfullscreen title="${slide.title}"></iframe>`;
+            }
+            return `<img class="${className}" src="${slide.src}" alt="${slide.title}">`;
+        }
+
+        function renderCreditsRows(credits) {
+            return credits.map(([name, role]) => `
+                <div class="credit-row">
+                    <a class="credit-name" href="${creditLink(name)}">${name}</a>
+                    <span class="credit-role">${role}</span>
+                </div>
+            `).join('');
+        }
+
+        // Shared helper — builds the EXPLORE + VIEW ON IMDB buttons for a
+        // project object, used by both the carousel slides and the lightbox.
+        function renderActionButtons(project) {
+            const exploreBtn = project.explore && project.link
+                ? `<a href="${project.link}" class="btn-explore">EXPLORE</a>`
+                : '';
+
+            const imdbBtn = project.imdb
+                ? `<a href="${project.imdb}" target="_blank" rel="noopener" class="btn-explore">VIEW ON IMDB</a>`
+                : '';
+
+            return exploreBtn + imdbBtn;
+        }
+
+        // ---------------------------------------------------------------
+        // STATE — carousel
+        // ---------------------------------------------------------------
+        let currentIndex = 0;
+        let autoplayTimer = null;
+
+        const track = document.getElementById('carouselTrack');
+        const dotsContainer = document.getElementById('carouselDots');
+        const counterCurrent = document.getElementById('counterCurrent');
+        const counterTotal = document.getElementById('counterTotal');
+        const subProjectNavLinks = document.getElementById('subProjectNavLinks');
+        const carouselEl = document.getElementById('workCarousel');
+
+        function pad(n) {
+            return n < 10 ? `0${n}` : `${n}`;
+        }
+
+        // ---------------------------------------------------------------
+        // SUB-NAV: project names for the carousel
+        // ---------------------------------------------------------------
+        function buildSubNav() {
+            subProjectNavLinks.innerHTML = '';
+
+            carouselData.forEach((slide, i) => {
+                const li = document.createElement('li');
+                const link = document.createElement('a');
+                link.href = '#';
+                link.textContent = slide.title;
+                if (i === currentIndex) link.classList.add('active');
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    goToSlide(i);
+                });
+                li.appendChild(link);
+                subProjectNavLinks.appendChild(li);
+            });
+        }
+
+        function updateSubNavActiveState() {
+            [...subProjectNavLinks.querySelectorAll('a')].forEach((link, i) => {
+                link.classList.toggle('active', i === currentIndex);
+            });
+        }
+
+        // ---------------------------------------------------------------
+        // CAROUSEL BUILD
+        // ---------------------------------------------------------------
+        function buildSlides() {
+            track.innerHTML = '';
+            dotsContainer.innerHTML = '';
+
+            carouselData.forEach((slide, i) => {
+                const slideEl = document.createElement('div');
+                slideEl.className = 'carousel-slide';
+
+                const mediaEl = renderMedia(slide, 'slide-media');
+
+                slideEl.innerHTML = `
+                    <div class="slide-media-wrapper">
+                        ${mediaEl}
+                    </div>
+                    <div class="slide-info">
+                        <p class="slide-subtitle">${slide.subtitle}</p>
+                        <h2 class="slide-title">${slide.title}</h2>
+                        <p class="slide-description">${slide.description}</p>
+                        ${renderActionButtons(slide)}
+                        <div class="slide-credits">
+                            <p class="credits-label">CREDITS</p>
+                            ${renderCreditsRows(slide.credits)}
+                        </div>
+                    </div>
+                `;
+                track.appendChild(slideEl);
+
+                const dot = document.createElement('button');
+                dot.className = 'carousel-dot';
+                dot.setAttribute('aria-label', `Go to ${slide.title}`);
+                dot.addEventListener('click', () => goToSlide(i));
+                dotsContainer.appendChild(dot);
+            });
+
+            counterTotal.textContent = pad(carouselData.length || 0);
+            currentIndex = Math.min(currentIndex, Math.max(carouselData.length - 1, 0));
+            buildSubNav();
+            updateCarousel();
+        }
+
+        function updateCarousel() {
+            track.style.transform = `translateX(-${currentIndex * 100}%)`;
+            counterCurrent.textContent = pad(currentIndex + 1);
+
+            document.querySelectorAll('.carousel-dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentIndex);
+            });
+
+            updateSubNavActiveState();
+        }
+
+        function goToSlide(index) {
+            const total = carouselData.length;
+            if (total === 0) return;
+            currentIndex = (index + total) % total;
+            updateCarousel();
+        }
+
+        function nextSlide() {
+            goToSlide(currentIndex + 1);
+        }
+
+        function prevSlide() {
+            goToSlide(currentIndex - 1);
+        }
+
+        document.getElementById('nextSlide').addEventListener('click', nextSlide);
+        document.getElementById('prevSlide').addEventListener('click', prevSlide);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') prevSlide();
+            if (e.key === 'ArrowRight') nextSlide();
+        });
+
+        // Optional autoplay — pauses while the pointer is over the carousel.
+        // `isHovering` is checked inside the tick itself (not just via
+        // clearInterval) so a tick that was already queued right as the
+        // pointer enters can't sneak a slide change past a click.
+        let isHovering = false;
+
+        function autoplayTick() {
+            if (!isHovering) nextSlide();
+        }
+
+        function startAutoplay() {
+            clearInterval(autoplayTimer);
+            autoplayTimer = setInterval(autoplayTick, 7000);
+        }
+
+        startAutoplay();
+
+        carouselEl.addEventListener('mouseenter', () => {
+            isHovering = true;
+            clearInterval(autoplayTimer);
+        });
+
+        carouselEl.addEventListener('mouseleave', () => {
+            isHovering = false;
+            startAutoplay();
+        });
+
+        buildSlides();
+
+        // ---------------------------------------------------------------
+        // MORE PROJECTS GRID — hover reveals a short description (and a
+        // "click to see credits" hint) on the tile itself; clicking opens
+        // the full project (with credits) in a lightbox. On touch devices
+        // (no hover), the tile currently centered in the viewport as the
+        // user scrolls gets the same reveal automatically.
+        // ---------------------------------------------------------------
+        const moreProjectsGrid = document.getElementById('moreProjectsGrid');
+
+        function buildGrid() {
+            moreProjectsGrid.innerHTML = '';
+
+            gridData.forEach((project, i) => {
+                const tile = document.createElement('div');
+                tile.className = 'grid-tile';
+
+                const mediaEl = renderMedia(project, 'grid-media');
+
+                tile.innerHTML = `
+                    <div class="grid-media-wrapper">
+                        ${mediaEl}
+                    </div>
+                    <div class="grid-overlay">
+                        <p class="grid-subtitle">${project.subtitle}</p>
+                        <h3 class="grid-title">${project.title}</h3>
+                        <p class="grid-description">${project.description}</p>
+                        <p class="grid-hint">Click to see credits</p>
+                    </div>
+                `;
+
+                tile.addEventListener('click', () => openLightbox(i));
+                moreProjectsGrid.appendChild(tile);
+            });
+
+            setupInViewObserver();
+        }
+
+        // ---------------------------------------------------------------
+        // LIGHTBOX — opened when a grid tile is clicked. Media stays a
+        // fixed size; the info panel below it (description + credits)
+        // scrolls independently if it's taller than the available space.
+        // ---------------------------------------------------------------
+        const projectLightbox = document.getElementById('projectLightbox');
+        const lightboxMedia = document.getElementById('lightboxMedia');
+        const lightboxInfo = document.getElementById('lightboxInfo');
+        const lightboxClose = document.getElementById('lightboxClose');
+        const lightboxBackdrop = document.getElementById('lightboxBackdrop');
+
+        function openLightbox(index) {
+            const project = gridData[index];
+            if (!project) return;
+
+            const lightboxMediaSource = {
+                type: project.lightboxType || project.type,
+                src: project.lightboxSrc || project.src,
+                title: project.title
+            };
+
+            lightboxMedia.innerHTML = renderMedia(lightboxMediaSource, 'lightbox-media-el');
+
+            lightboxInfo.innerHTML = `
+                <p class="slide-subtitle">${project.subtitle}</p>
+                <h2 class="slide-title">${project.title}</h2>
+                <p class="slide-description">${project.description}</p>
+                ${renderActionButtons(project)}
+                <div class="slide-credits">
+                    <p class="credits-label">CREDITS</p>
+                    ${renderCreditsRows(project.credits)}
+                </div>
+            `;
+
+            projectLightbox.classList.add('active');
             document.body.style.overflow = 'hidden';
         }
 
         function closeLightbox() {
-            const lightbox = document.getElementById('lightbox');
-            lightbox.classList.remove('active');
+            projectLightbox.classList.remove('active');
             document.body.style.overflow = 'auto';
+            lightboxMedia.innerHTML = '';
         }
 
-        function lightboxNav(direction) {
-            const gallery = galleries[currentLightboxGallery];
-            currentLightboxIndex += direction;
-            
-            if (currentLightboxIndex < 0) {
-                currentLightboxIndex = gallery.length - 1;
-            }
-            if (currentLightboxIndex >= gallery.length) {
-                currentLightboxIndex = 0;
-            }
-            
-            const img = document.getElementById('lightbox-img');
-            img.src = gallery[currentLightboxIndex];
-        }
+        lightboxClose.addEventListener('click', closeLightbox);
+        lightboxBackdrop.addEventListener('click', closeLightbox);
 
-        // Close lightbox on escape
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
+            if (e.key === 'Escape' && projectLightbox.classList.contains('active')) {
                 closeLightbox();
-            }
-            if (e.key === 'ArrowLeft') {
-                lightboxNav(-1);
-            }
-            if (e.key === 'ArrowRight') {
-                lightboxNav(1);
             }
         });
 
-        // Close lightbox on background click
-        document.getElementById('lightbox').addEventListener('click', (e) => {
-            if (e.target.id === 'lightbox') {
-                closeLightbox();
-            }
-        });
+        // ---------------------------------------------------------------
+        // TOUCH "IN VIEW" REVEAL — on devices without hover, whichever
+        // tile is centered in the viewport as the person scrolls gets its
+        // info revealed automatically, standing in for hover.
+        // ---------------------------------------------------------------
+        function setupInViewObserver() {
+            if (!window.matchMedia('(hover: none)').matches) return;
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    entry.target.classList.toggle('in-view', entry.isIntersecting);
+                });
+            }, {
+                root: null,
+                rootMargin: '-40% 0px -40% 0px',
+                threshold: 0
+            });
+
+            document.querySelectorAll('.grid-tile').forEach(tile => observer.observe(tile));
+        }
+
+        buildGrid();
 
         // Nav scroll effect
         window.addEventListener('scroll', () => {
@@ -343,30 +678,18 @@
         // Mobile menu
         const menuToggle = document.getElementById('menuToggle');
         const navLinks = document.getElementById('navLinks');
-        
+
         menuToggle.addEventListener('click', () => {
             menuToggle.classList.toggle('active');
             navLinks.classList.toggle('active');
             document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : 'auto';
         });
 
-        // Close menu when clicking on a link
         navLinks.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 menuToggle.classList.remove('active');
                 navLinks.classList.remove('active');
                 document.body.style.overflow = 'auto';
-            });
-        });
-
-        // Smooth scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
-                }
             });
         });
     </script>

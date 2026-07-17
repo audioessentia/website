@@ -14,29 +14,6 @@
     box-sizing: border-box;
 }
 
-html {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
-}
-
-::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-}
-
-::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.3);
-}
-
 body {
     font-family: 'AlteHaasRegular';
     background: #1a1a1a;
@@ -138,37 +115,6 @@ nav.scrolled {
     overflow: hidden;
 }
 
-/* ---------------------------------------------------------------
-   HERO BACKGROUND SLIDESHOW — 7 photos stacked and cross-faded via
-   JS toggling the .active class. Sits behind .hero::before (the dark
-   gradient) and .hero-content, so it never competes with the text.
---------------------------------------------------------------- */
-.hero-bg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-}
-
-.hero-bg-slide {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center;
-    background-color: #2a2a2a;
-    opacity: 0;
-    transition: opacity 1.5s ease;
-}
-
-.hero-bg-slide.active {
-    opacity: 1;
-}
-
 .hero::before {
     content: '';
     position: absolute;
@@ -186,14 +132,12 @@ nav.scrolled {
 }
 
 .hero h1 {
-    font-family: 'AlteHaasRegular';
-    font-size: 20px;
+    font-size: 72px;
     font-weight: 700;
-    letter-spacing: 2px;
+    letter-spacing: 12px;
     text-transform: uppercase;
-    color: #d8d8d8;
-    margin-bottom: 0;
-    opacity: 0.5;
+    margin-bottom: 20px;
+    opacity: 0;
     animation: fadeInUp 1.2s ease forwards;
 }
 
@@ -206,14 +150,40 @@ nav.scrolled {
     animation: fadeInUp 1.2s ease 0.3s forwards;
 }
 
-.hero-btn {
+.scroll-indicator {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
     opacity: 0;
-    animation: fadeInUp 1.2s ease 0.3s forwards;
+    animation: fadeInUp 1.2s ease 0.6s forwards;
+}
+
+.scroll-indicator span {
+    display: block;
+    width: 1px;
+    height: 40px;
+    background: #808080;
+    margin: 0 auto 10px;
+    animation: scrollLine 2s ease-in-out infinite;
+}
+
+.scroll-text {
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #808080;
 }
 
 @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scrollLine {
+    0%, 100% { transform: scaleY(0.3); transform-origin: top; }
+    50% { transform: scaleY(1); }
 }
 
 .projects {
@@ -445,16 +415,6 @@ footer {
         color: #ffffff;
     }
 
-    .hero h1 {
-        font-size: 30px;
-        letter-spacing: 5px;
-    }
-
-    .hero-subtitle {
-        font-size: 10px;
-        letter-spacing: 3px;
-    }
-
     .projects {
         padding: 50px 0 80px;
         margin-top: 0;
@@ -518,11 +478,6 @@ footer {
         font-size: 16px;
         width: 180px;
         padding: 12px 15px;
-    }
-
-    .hero h1 {
-        font-size: 24px;
-        letter-spacing: 3px;
     }
 }
 

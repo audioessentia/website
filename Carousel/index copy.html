@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Audio Essentia</title>
-    <link rel="icon" type="image/svg+xml" href="Media/Favicon/favicon.svg">
     <link rel="stylesheet" href="indexcss.css">
 </head>
 <body>
@@ -27,29 +26,34 @@
         </div>
     </nav>
 
-    <!-- ---------------------------------------------------------------
-         HERO — DEPTHS takeover. 7 background photos cross-fade behind a
-         dark gradient (see .hero::before in the CSS) so "SOUND
-         COLLECTIVE" and the explore button stay readable.
-         Swap the 7 image paths below for the real files.
-    --------------------------------------------------------------- -->
-    <section class="hero" id="hero">
-        <div class="hero-bg" id="heroBg">
-            <div class="hero-bg-slide active" style="background-image: url('Media/Depths/Depths_1.webp');"></div>
-            <div class="hero-bg-slide" style="background-image: url('Media/Depths/Depths_2.webp');"></div>
-            <div class="hero-bg-slide" style="background-image: url('Media/Depths/Depths_3.webp');"></div>
-            <div class="hero-bg-slide" style="background-image: url('Media/Depths/Depths_4.webp');"></div>
-            <div class="hero-bg-slide" style="background-image: url('Media/Depths/Depths_5.webp');"></div>
-            <div class="hero-bg-slide" style="background-image: url('Media/Depths/Depths_6.webp');"></div>
-            <div class="hero-bg-slide" style="background-image: url('Media/Depths/Depths_7.webp');"></div>
-        </div>
+    <section class="projects" id="home">
+        <div class="projects-grid">
+            <div class="project-card">
+                <div class="project-image" style="background-image: url('/Media/Depths/Depths_2.JPG'); background-color: #2a2a2a;"></div>
+                <div class="project-overlay">
+                    <h3 class="project-title">DEPTHS</h3>
+                    <p class="project-subtitle">4D SOUND INSTALLATION</p>
+                    <p class="project-description">
+                        Immersive audiovisual journey.
+                    </p>
+                    <a href="depths.html" class="btn-explore">EXPLORE</a>
+                </div>
+            </div>
 
-        <div class="hero-content">
-            <h1>SOUND COLLECTIVE</h1>
-            <a href="projects.html" class="btn-explore hero-btn">EXPLORE OUR WORK</a>
+            <div class="project-card">
+                <div class="project-image" style="background-image: url('/Media/Shamans/Shamans.jpeg'); background-color: #2a2a2a;"></div>
+                <div class="project-overlay">
+                    <h3 class="project-title">A SHAMAN'S TALE</h3>
+                    <p class="project-subtitle">SOUND DESIGN</p>
+                    <p class="project-description">
+                        Animated short film.
+                    </p>
+                    <a href="shamans.html" class="btn-explore">EXPLORE</a>
+                </div>
+            </div>
         </div>
     </section>
-
+    
     <footer>
         <div>
             <h3 class="footer-title">AUDIO ESSENTIA</h3>
@@ -126,20 +130,6 @@
                 }
             });
         });
-
-        // Hero background slideshow — cross-fades through the 7 slides
-        // automatically. Swap the interval below to change the pace.
-        (function initHeroSlideshow() {
-            const slides = document.querySelectorAll('.hero-bg-slide');
-            if (slides.length < 2) return;
-
-            let currentSlide = 0;
-            setInterval(() => {
-                slides[currentSlide].classList.remove('active');
-                currentSlide = (currentSlide + 1) % slides.length;
-                slides[currentSlide].classList.add('active');
-            }, 8000);
-        })();
     </script>
 </body>
 </html>

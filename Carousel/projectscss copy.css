@@ -115,7 +115,7 @@ nav.scrolled {
 .project-section {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 140px 60px 0;
+    padding: 140px 60px 80px;
     position: relative;
 }
 
@@ -123,27 +123,14 @@ nav.scrolled {
     margin-bottom: 40px;
 }
 
-@keyframes fadeInUp {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-}
-
 .project-title {
     font-family: "AlteHaasBold";
-    font-size: 75px;
+    font-size: 96px;
     font-weight: 700;
     letter-spacing: 8px;
     text-transform: uppercase;
     line-height: 0.9;
     margin-bottom: 20px;
-    opacity: 0;
-    animation: fadeInUp 1.5s ease forwards;
 }
 
 .project-subtitle {
@@ -154,14 +141,48 @@ nav.scrolled {
 }
 
 /* ---------------------------------------------------------------
-   SUB-NAV — project names within the carousel.
+   FILTER BAR
+--------------------------------------------------------------- */
+.filter-bar {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+}
+
+.filter-btn {
+    background: transparent;
+    border: 1px solid #404040;
+    color: #808080;
+    font-family: inherit;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+    border-color: #fff;
+    color: #fff;
+}
+
+.filter-btn.active {
+    background: #fff;
+    border-color: #fff;
+    color: #1a1a1a;
+}
+
+/* ---------------------------------------------------------------
+   SUB-NAV — project names within the active category.
+   Font matches the old cross-page project-nav-links exactly;
+   only a bottom divider is kept, no line above.
 --------------------------------------------------------------- */
 .sub-project-nav {
     padding-bottom: 14px;
     margin-bottom: 50px;
     border-bottom: 1px solid #404040;
-    opacity: 0;
-    animation: fadeInUp 1.5s ease 0.3s forwards;
 }
 
 .sub-project-nav-links {
@@ -214,7 +235,7 @@ nav.scrolled {
 .carousel-track {
     display: flex;
     transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
-    align-items: center;
+    align-items: flex-start;
 }
 
 .carousel-slide {
@@ -222,7 +243,7 @@ nav.scrolled {
     display: grid;
     grid-template-columns: 1.4fr 1fr;
     gap: 60px;
-    align-items: center;
+    align-items: start;
     min-height: 560px;
 }
 
@@ -298,7 +319,7 @@ nav.scrolled {
     color: #1a1a1a;
 }
 
-/* Credits block (carousel + lightbox) */
+/* Credits block */
 .slide-credits {
     width: 100%;
     max-width: 480px;
@@ -325,13 +346,6 @@ nav.scrolled {
 .credit-name {
     font-size: 13px;
     color: #f5f5f5;
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-
-.credit-name:hover {
-    color: #fff;
-    text-decoration: underline;
 }
 
 .credit-role {
@@ -342,33 +356,8 @@ nav.scrolled {
     text-align: right;
 }
 
-/* Carousel credits only: full section width (like before), but each row
-   is split into two even halves — the name stays on one line in the left
-   half, and the role starts exactly at the halfway point and truncates
-   with an ellipsis if it doesn't fit in the right half. */
-.carousel-slide .credit-row {
-    display: grid;
-    grid-template-columns: 0.6fr 1.4fr;
-    column-gap: 16px;
-    align-items: baseline;
-
-}
-
-.carousel-slide .credit-name {
-    white-space: nowrap;
-    overflow: hidden;
-}
-
-.carousel-slide .credit-role {
-    text-align: left;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-align: right;
-}
-
-/* Carousel arrows — flex siblings of the viewport, not overlaid on top of
-   it, so overflow:hidden on the viewport never clips them. */
+/* Carousel arrows — now flex siblings of the viewport, not overlaid on
+   top of it, so overflow:hidden on the viewport never clips them. */
 .carousel-arrow {
     flex: 0 0 auto;
     background: rgba(26, 26, 26, 0.9);
@@ -402,10 +391,9 @@ nav.scrolled {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 16px;
-    padding-top: 8px;
-    padding-bottom: 22px;
-    border-bottom: 1px solid #404040;
+    margin-top: 40px;
+    border-top: 1px solid #404040;
+    padding-top: 24px;
 }
 
 .carousel-counter {
@@ -413,7 +401,6 @@ nav.scrolled {
     font-size: 13px;
     letter-spacing: 2px;
     color: #808080;
-    
 }
 
 .carousel-counter #counterCurrent {
@@ -448,301 +435,6 @@ nav.scrolled {
     background: #fff;
     width: 24px;
     border-radius: 4px;
-}
-
-/* ---------------------------------------------------------------
-   MORE PROJECTS — hover-reveal grid, sits below the carousel.
-   Tiles show media + a short description on hover only. Clicking
-   opens the lightbox, which is the only place credits appear.
---------------------------------------------------------------- */
-.more-projects-section {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 20px 60px 120px;
-}
-
-.more-projects-header {
-    margin-bottom: 30px;
-}
-
-.more-projects-title {
-    font-family: "AlteHaasBold";
-    font-size: 36px;
-    font-weight: 700;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-}
-
-.more-projects-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 4px;
-}
-
-.grid-tile {
-    position: relative;
-    overflow: hidden;
-    cursor: pointer;
-}
-
-.grid-tile::before {
-    content: '';
-    display: block;
-    padding-bottom: 66%;
-}
-
-.grid-media-wrapper {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
-.grid-media {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    border: 0;
-    transition: transform 0.5s ease;
-}
-
-.grid-tile:hover .grid-media {
-    transform: scale(1.05);
-}
-
-.grid-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.75) 100%);
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 24px;
-    transition: background 0.4s ease;
-}
-
-.grid-tile:hover .grid-overlay {
-    background: linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.92) 100%);
-}
-
-.grid-subtitle {
-    font-size: 9px;
-    color: #808080;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    opacity: 0.85;
-}
-
-.grid-title {
-    font-family: "AlteHaasBold";
-    font-size: 20px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: #fff;
-    margin-top: 6px;
-    transform: translateY(0);
-    transition: transform 0.4s ease;
-}
-
-.grid-tile:hover .grid-title {
-    transform: translateY(-4px);
-}
-
-.grid-description {
-    font-size: 12px;
-    line-height: 1.7;
-    color: #d0d0d0;
-    margin-top: 12px;
-    opacity: 0;
-    max-height: 0;
-    overflow: hidden;
-    transition: opacity 0.4s ease, max-height 0.4s ease;
-}
-
-.grid-tile:hover .grid-description {
-    opacity: 1;
-    max-height: 140px;
-}
-
-.grid-hint {
-    font-size: 11px;
-    font-style: italic;
-    color: #a0a0a0;
-    letter-spacing: 0.3px;
-    text-transform: none;
-    margin-top: 8px;
-    opacity: 0;
-    max-height: 0;
-    overflow: hidden;
-    transition: opacity 0.4s ease 0.05s, max-height 0.4s ease 0.05s;
-}
-
-.grid-tile:hover .grid-hint {
-    opacity: 1;
-    max-height: 24px;
-}
-
-/* Touch devices ("hover: none") don't support hover at all — instead,
-   whichever tile is scrolled into the center band of the viewport gets
-   the same reveal via JS toggling .in-view (see setupInViewObserver). */
-@media (hover: none) {
-    .grid-tile.in-view .grid-overlay {
-        background: linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.92) 100%);
-    }
-
-    .grid-tile.in-view .grid-media {
-        transform: scale(1.05);
-    }
-
-    .grid-tile.in-view .grid-title {
-        transform: translateY(-4px);
-    }
-
-    .grid-tile.in-view .grid-description {
-        opacity: 1;
-        max-height: 140px;
-    }
-
-    .grid-tile.in-view .grid-hint {
-        opacity: 1;
-        max-height: 24px;
-    }
-}
-
-/* ---------------------------------------------------------------
-   PROJECT LIGHTBOX
-   .lightbox-content itself no longer scrolls — it just sizes and clips
-   the popup. The new .lightbox-scroll wrapper inside it holds the
-   actual scrollable content (media + info), so .lightbox-close can sit
-   directly in .lightbox-content and stay fixed in place as you scroll.
---------------------------------------------------------------- */
-.project-lightbox {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 3000;
-    align-items: center;
-    justify-content: center;
-    padding: 40px;
-}
-
-.project-lightbox.active {
-    display: flex;
-}
-
-.lightbox-backdrop {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.95);
-}
-
-.lightbox-content {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    max-width: 1100px;
-    max-height: 90vh;
-    background: #1a1a1a;
-    border: 1px solid #404040;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
-
-.lightbox-scroll {
-    flex: 1 1 auto;
-    min-height: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
-}
-
-.lightbox-media {
-    position: relative;
-    width: auto;
-    margin: 40px 50px 0;
-    aspect-ratio: 16 / 9;
-    overflow: hidden;
-    flex: 0 0 auto;
-}
-
-.lightbox-media-el {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    border: 0;
-}
-
-.lightbox-info {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    width: 100%;
-    padding: 36px 50px 50px;
-}
-
-.lightbox-info .slide-description,
-.lightbox-info .slide-credits {
-    max-width: 100%;
-}
-
-/* Subtle scrollbar — used site-wide */
-html {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
-}
-
-::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-}
-
-::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.3);
-}
-
-.lightbox-close {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    background: rgba(26, 26, 26, 0.9);
-    border: 1px solid #404040;
-    color: #fff;
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    line-height: 1;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    z-index: 2;
-}
-
-.lightbox-close:hover {
-    background: rgba(64, 64, 64, 0.9);
-    border-color: #fff;
-    transform: scale(1.1);
 }
 
 /* ---------------------------------------------------------------
@@ -823,12 +515,22 @@ footer {
     }
 
     .project-section {
-        padding: 110px 30px 0;
+        padding: 110px 30px 60px;
     }
 
     .project-title {
         font-size: 48px;
         letter-spacing: 4px;
+    }
+
+    .filter-bar {
+        gap: 8px;
+        margin-bottom: 20px;
+    }
+
+    .filter-btn {
+        font-size: 9px;
+        padding: 8px 14px;
     }
 
     .sub-project-nav {
@@ -884,36 +586,6 @@ footer {
         align-items: flex-start;
     }
 
-    .more-projects-section {
-        padding: 10px 30px 80px;
-    }
-
-    .more-projects-header {
-        margin-bottom: 20px;
-    }
-
-    .more-projects-title {
-        font-size: 26px;
-        letter-spacing: 2px;
-    }
-
-    .more-projects-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 2px;
-    }
-
-    .lightbox-media {
-        margin: 24px 20px 0;
-    }
-
-    .lightbox-info {
-        padding: 24px 20px 30px;
-    }
-
-    .project-lightbox {
-        padding: 16px;
-    }
-
     footer {
         padding: 80px 30px 40px;
     }
@@ -941,7 +613,7 @@ footer {
     }
 
     .project-section {
-        padding: 100px 20px 0;
+        padding: 100px 20px 50px;
     }
 
     .slide-media-wrapper {
@@ -951,10 +623,6 @@ footer {
     .carousel-arrow {
         width: 32px;
         height: 32px;
-    }
-
-    .more-projects-grid {
-        grid-template-columns: 1fr;
     }
 }
 
