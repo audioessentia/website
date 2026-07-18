@@ -73,7 +73,7 @@
                 <div class="collective-grid">
                     <div class="collective-member">
                         <div class="member-info">
-                            <h3 class="member-name">Dan Hawryluk</h3>
+                            <h3 class="member-name"><a href="aboutus.html#dan-hawryluk">Dan Hawryluk</a></h3>
                             <p class="member-role">Sound Designer & Re-Recording Mixer</p>
                         </div>
                     </div>
@@ -140,9 +140,19 @@
             gallery.style.transform = `translateX(-${galleryPositions[galleryIndex] * itemWidth}px)`;
         }
 
-        // Lightbox
+        // ---------------------------------------------------------------
+        // LIGHTBOX
+        //
+        // HISTORY HANDLING — opening the lightbox pushes a history entry
+        // so the browser's back button closes the lightbox and lands back
+        // on this page (instead of navigating away, e.g. to the Home
+        // page). Closing it any other way (X button, clicking outside,
+        // Escape) calls history.back() itself so that pushed entry gets
+        // cleaned up and a second back-button press isn't needed later.
+        // ---------------------------------------------------------------
         let currentLightboxGallery = 0;
         let currentLightboxIndex = 0;
+        let lightboxHistoryPushed = false;
 
         function openLightbox(galleryIndex, imageIndex) {
             currentLightboxGallery = galleryIndex;
@@ -152,13 +162,30 @@
             img.src = galleries[galleryIndex][imageIndex];
             lightbox.classList.add('active');
             document.body.style.overflow = 'hidden';
+
+            history.pushState({ lightbox: true }, '', '#gallery');
+            lightboxHistoryPushed = true;
         }
 
-        function closeLightbox() {
+        function closeLightbox(fromPopState) {
             const lightbox = document.getElementById('lightbox');
             lightbox.classList.remove('active');
             document.body.style.overflow = 'auto';
+
+            if (lightboxHistoryPushed) {
+                lightboxHistoryPushed = false;
+                if (!fromPopState) {
+                    history.back();
+                }
+            }
         }
+
+        window.addEventListener('popstate', () => {
+            const lightbox = document.getElementById('lightbox');
+            if (lightbox.classList.contains('active')) {
+                closeLightbox(true);
+            }
+        });
 
         function lightboxNav(direction) {
             const gallery = galleries[currentLightboxGallery];
@@ -178,7 +205,7 @@
         // Close lightbox on escape
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
-                closeLightbox();
+                closeLightbox(false);
             }
             if (e.key === 'ArrowLeft') {
                 lightboxNav(-1);
@@ -191,7 +218,7 @@
         // Close lightbox on background click
         document.getElementById('lightbox').addEventListener('click', (e) => {
             if (e.target.id === 'lightbox') {
-                closeLightbox();
+                closeLightbox(false);
             }
         });
 

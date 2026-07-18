@@ -910,6 +910,26 @@ footer {
         padding: 24px 20px 30px;
     }
 
+    /* Credit rows in the "More Projects" lightbox sit name-and-role side
+       by side on desktop. On narrow screens a long role (e.g. "Sound
+       Designer & Re-Recording Mixer" on Au Revoir Mon Monde) doesn't have
+       room next to the name and was overlapping it. Stack them instead so
+       the role wraps cleanly underneath. This only targets the plain
+       .credit-row used in the lightbox — the carousel's own credit rows
+       use a more specific selector (.carousel-slide .credit-row) and are
+       untouched. */
+    .credit-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+        padding: 12px 0;
+    }
+
+    .credit-role {
+        text-align: left;
+        white-space: normal;
+    }
+
     .project-lightbox {
         padding: 16px;
     }

@@ -595,12 +595,26 @@
         // LIGHTBOX — opened when a grid tile is clicked. Media stays a
         // fixed size; the info panel below it (description + credits)
         // scrolls independently if it's taller than the available space.
-        // ---------------------------------------------------------------
+        //
+        // HISTORY HANDLING — opening the lightbox pushes a history entry.
+        // That means the browser's back button closes the lightbox and
+        // lands back on the Projects page (instead of leaving the page
+        // entirely, e.g. back to the Home page). Closing the lightbox any
+        // other way (X button, clicking outside, Escape) calls
+        // history.back() itself so that pushed entry gets cleaned up and
+        // a second back-button press isn't needed later.
+        // --------------------------------------------------------------
         const projectLightbox = document.getElementById('projectLightbox');
         const lightboxMedia = document.getElementById('lightboxMedia');
         const lightboxInfo = document.getElementById('lightboxInfo');
         const lightboxClose = document.getElementById('lightboxClose');
         const lightboxBackdrop = document.getElementById('lightboxBackdrop');
+
+        let lightboxHistoryPushed = false;
+
+        function slugify(str) {
+            return str.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+        }
 
         function openLightbox(index) {
             const project = gridData[index];
@@ -627,20 +641,43 @@
 
             projectLightbox.classList.add('active');
             document.body.style.overflow = 'hidden';
+
+            // Push a history entry so the back button closes the lightbox
+            // instead of navigating away from the Projects page.
+            history.pushState({ lightbox: true }, '', `#${slugify(project.title)}`);
+            lightboxHistoryPushed = true;
         }
 
-        function closeLightbox() {
+        function closeLightbox(fromPopState) {
             projectLightbox.classList.remove('active');
             document.body.style.overflow = 'auto';
             lightboxMedia.innerHTML = '';
+
+            if (lightboxHistoryPushed) {
+                lightboxHistoryPushed = false;
+                // If we're not already responding to a popstate (i.e. the
+                // person closed the lightbox by clicking X / outside /
+                // Escape), undo the history entry we pushed when opening
+                // it so the URL/history stack stays clean.
+                if (!fromPopState) {
+                    history.back();
+                }
+            }
         }
 
-        lightboxClose.addEventListener('click', closeLightbox);
-        lightboxBackdrop.addEventListener('click', closeLightbox);
+        // Back-button support: closes the lightbox instead of leaving the page.
+        window.addEventListener('popstate', () => {
+            if (projectLightbox.classList.contains('active')) {
+                closeLightbox(true);
+            }
+        });
+
+        lightboxClose.addEventListener('click', () => closeLightbox(false));
+        lightboxBackdrop.addEventListener('click', () => closeLightbox(false));
 
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && projectLightbox.classList.contains('active')) {
-                closeLightbox();
+                closeLightbox(false);
             }
         });
 

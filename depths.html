@@ -104,49 +104,49 @@
                 <div class="collective-grid">
                     <div class="collective-member">
                         <div class="member-info">
-                            <h3 class="member-name">Dan Hawryluk</h3>
+                            <h3 class="member-name"><a href="aboutus.html#dan-hawryluk">Dan Hawryluk</a></h3>
                             <p class="member-role">Creative Director, Sound Editor & Re-Recording Mixer</p>
                         </div>
                     </div>
                     <div class="collective-member">
                         <div class="member-info">
-                            <h3 class="member-name">John Gregory</h3>
+                            <h3 class="member-name"><a href="aboutus.html#john-gregory">John Gregory</a></h3>
                             <p class="member-role">Co-Creative Director, Supervising Sound Editor, Re-Recording Mixer & International Talent Coordinator</p>
                         </div>
                     </div>
                     <div class="collective-member">
                         <div class="member-info">
-                            <h3 class="member-name">Eloísa Sandoval García</h3>
+                            <h3 class="member-name"><a href="aboutus.html#eloisa-sandoval">Eloísa Sandoval García</a></h3>
                             <p class="member-role">Sound Designer, ADR Editor, Voice Processing & Web Developer</p>
                         </div>
                     </div>
                     <div class="collective-member">
                         <div class="member-info">
-                            <h3 class="member-name">Steven Tsia</h3>
+                            <h3 class="member-name"><a href="aboutus.html#steven-tsia">Steven Tsia</a></h3>
                             <p class="member-role">Video Editor, Sound Designer & ADR Recordist</p>
                         </div>
                     </div>
                     <div class="collective-member">
                         <div class="member-info">
-                            <h3 class="member-name">Raine Edgar</h3>
+                            <h3 class="member-name"><a href="aboutus.html#raine-edgar">Raine Edgar</a></h3>
                             <p class="member-role">Technical Sound Designer & VFX Artist</p>
                         </div>
                     </div>
                     <div class="collective-member">
                         <div class="member-info">
-                            <h3 class="member-name">Sidharth Satheesh</h3>
+                            <h3 class="member-name"><a href="aboutus.html#sidharth-satheesh">Sidharth Satheesh</a></h3>
                             <p class="member-role">Media Composer & Music Producer</p>
                         </div>
                     </div>
                     <div class="collective-member">
                         <div class="member-info">
-                            <h3 class="member-name">Joel Tong</h3>
+                            <h3 class="member-name"><a href="aboutus.html#joel-tong">Joel Tong</a></h3>
                             <p class="member-role">Media Composer & Music Producer</p>
                         </div>
                     </div>
                     <div class="collective-member">
                         <div class="member-info">
-                            <h3 class="member-name">Luz Salcedo</h3>
+                            <h3 class="member-name"><a href="aboutus.html#luz-salcedo">Luz Salcedo</a></h3>
                             <p class="member-role">Lead Video Editor</p>
                         </div>
                     </div>
@@ -213,9 +213,19 @@
             gallery.style.transform = `translateX(-${galleryPositions[galleryIndex] * itemWidth}px)`;
         }
 
-        // Lightbox
+        // ---------------------------------------------------------------
+        // LIGHTBOX
+        //
+        // HISTORY HANDLING — opening the lightbox pushes a history entry
+        // so the browser's back button closes the lightbox and lands back
+        // on this page (instead of navigating away, e.g. to the Home
+        // page). Closing it any other way (X button, clicking outside,
+        // Escape) calls history.back() itself so that pushed entry gets
+        // cleaned up and a second back-button press isn't needed later.
+        // ---------------------------------------------------------------
         let currentLightboxGallery = 0;
         let currentLightboxIndex = 0;
+        let lightboxHistoryPushed = false;
 
         function openLightbox(galleryIndex, imageIndex) {
             currentLightboxGallery = galleryIndex;
@@ -225,13 +235,30 @@
             img.src = galleries[galleryIndex][imageIndex];
             lightbox.classList.add('active');
             document.body.style.overflow = 'hidden';
+
+            history.pushState({ lightbox: true }, '', '#gallery');
+            lightboxHistoryPushed = true;
         }
 
-        function closeLightbox() {
+        function closeLightbox(fromPopState) {
             const lightbox = document.getElementById('lightbox');
             lightbox.classList.remove('active');
             document.body.style.overflow = 'auto';
+
+            if (lightboxHistoryPushed) {
+                lightboxHistoryPushed = false;
+                if (!fromPopState) {
+                    history.back();
+                }
+            }
         }
+
+        window.addEventListener('popstate', () => {
+            const lightbox = document.getElementById('lightbox');
+            if (lightbox.classList.contains('active')) {
+                closeLightbox(true);
+            }
+        });
 
         function lightboxNav(direction) {
             const gallery = galleries[currentLightboxGallery];
@@ -251,7 +278,7 @@
         // Close lightbox on escape
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
-                closeLightbox();
+                closeLightbox(false);
             }
             if (e.key === 'ArrowLeft') {
                 lightboxNav(-1);
@@ -264,7 +291,7 @@
         // Close lightbox on background click
         document.getElementById('lightbox').addEventListener('click', (e) => {
             if (e.target.id === 'lightbox') {
-                closeLightbox();
+                closeLightbox(false);
             }
         });
 
