@@ -848,6 +848,17 @@ footer {
         gap: 8px;
     }
 
+    /* .carousel-track vertically centers each slide (nice on desktop,
+       where DEPTHS/STRAIN/A SHAMAN'S TALE sit side-by-side with the
+       media). But the track's own height is set by the tallest slide
+       (DEPTHS, with the most credits) — so on mobile, shorter slides
+       like STRAIN and A SHAMAN'S TALE were getting centered inside that
+       taller box, leaving empty space above the image. Pin slides to the
+       top of the track on mobile instead. */
+    .carousel-track {
+        align-items: flex-start;
+    }
+
     .carousel-slide {
         grid-template-columns: 1fr;
         gap: 24px;
