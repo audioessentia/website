@@ -543,11 +543,13 @@
             if (e.key === 'ArrowRight') nextSlide();
         });
 
-        // Optional autoplay — pauses while the pointer is over the carousel.
-        // `isHovering` is checked inside the tick itself (not just via
-        // clearInterval) so a tick that was already queued right as the
-        // pointer enters can't sneak a slide change past a click.
+        // Optional autoplay — pauses while the pointer is over the carousel,
+        // and is skipped entirely on mobile (≤768px, same breakpoint used
+        // everywhere else on the site) since scrolling should be manual
+        // there. `mobileMediaQuery.change` also catches someone resizing
+        // the browser or rotating a tablet across that breakpoint mid-visit.
         let isHovering = false;
+        const mobileMediaQuery = window.matchMedia('(max-width: 768px)');
 
         function autoplayTick() {
             if (!isHovering) nextSlide();
@@ -555,10 +557,12 @@
 
         function startAutoplay() {
             clearInterval(autoplayTimer);
+            if (mobileMediaQuery.matches) return;
             autoplayTimer = setInterval(autoplayTick, 7000);
         }
 
         startAutoplay();
+        mobileMediaQuery.addEventListener('change', startAutoplay);
 
         carouselEl.addEventListener('mouseenter', () => {
             isHovering = true;
