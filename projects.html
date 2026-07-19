@@ -416,6 +416,7 @@
         const counterTotal = document.getElementById('counterTotal');
         const subProjectNavLinks = document.getElementById('subProjectNavLinks');
         const carouselEl = document.getElementById('workCarousel');
+        const carouselViewport = document.querySelector('.carousel-viewport');
 
         function pad(n) {
             return n < 10 ? `0${n}` : `${n}`;
@@ -500,7 +501,24 @@
             });
 
             updateSubNavActiveState();
+            syncViewportHeight();
         }
+
+        // All slides sit side-by-side in .carousel-track (that's what lets
+        // translateX slide between them), so the track's own height is
+        // naturally set by the TALLEST slide (DEPTHS, with the most
+        // credits) even though only one slide is visible at a time. That
+        // left empty space below shorter slides (STRAIN, A SHAMAN'S TALE)
+        // before the counter/dots row. Fix: explicitly set the viewport's
+        // height to match only the currently active slide, and clip the
+        // rest with overflow:hidden (already set in CSS).
+        function syncViewportHeight() {
+            const activeSlide = track.children[currentIndex];
+            if (!activeSlide || !carouselViewport) return;
+            carouselViewport.style.height = `${activeSlide.offsetHeight}px`;
+        }
+
+        window.addEventListener('resize', syncViewportHeight);
 
         function goToSlide(index) {
             const total = carouselData.length;
