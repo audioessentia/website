@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Audio Essentia — Projects</title>
+    <title>Audio Essentia</title>
     <link rel="icon" type="image/svg+xml" href="Media/Favicon/favicon.svg">
-    <link rel="stylesheet" href="projectscss.css">
+    <link rel="stylesheet" href="chilambcss.css">
 </head>
 <body>
     <nav id="nav">
@@ -18,7 +18,7 @@
             </button>
             <ul class="nav-links" id="navLinks">
                 <li><a href="index.html">HOME</a></li>
-                <li><a href="projects.html" class="active">PROJECTS</a></li>
+                <li><a href="projects.html">PROJECTS</a></li>
                 <li><a href="aboutus.html">ABOUT US</a></li>
                 <li><a href="calendar.html">EVENT CALENDAR</a></li>
                 <li><a href="contact.html">CONTACT</a></li>
@@ -27,67 +27,45 @@
     </nav>
 
     <main class="main-content">
-        <section class="project-section" id="work">
+
+        <!-- A SHAMAN'S TALE Project -->
+        <section class="project-section" id="shamans-tale">
             <div class="project-header">
-                <h1 class="project-title">FEATURED PROJECTS</h1>
+                <h1 class="project-title">CHILAMB</h1>
+                <p class="project-subtitle">SOUND DESIGN</p>
             </div>
 
-            <!-- Sub-nav: lists the projects in the carousel, jumps to that slide -->
-            <div class="sub-project-nav" id="subProjectNav">
-                <ul class="sub-project-nav-links" id="subProjectNavLinks"></ul>
-            </div>
 
-            <div class="work-carousel" id="workCarousel">
-                <div class="carousel-frame">
-                    <button class="carousel-arrow prev" id="prevSlide" aria-label="Previous project">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
-                        </svg>
-                    </button>
-
-                    <div class="carousel-viewport">
-                        <div class="carousel-track" id="carouselTrack">
-                            <!-- Slides are injected by JS from carouselData below -->
-                        </div>
-                    </div>
-
-                    <button class="carousel-arrow next" id="nextSlide" aria-label="Next project">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
-                        </svg>
-                    </button>
+            <div class="project-content">
+                <div class="project-description">
+                    <p>A Shaman's Tale is an animated short film that weaves together consciousness exploration, Indigenous wisdom, and transformative sound design. Created by filmmaker Jules Guérin and sonically redesigned by Dan Hawryluk, the film guides viewers through a profound shamanic journey.</p>
+                    
+                    <p>The redesign incorporates Robert Monroe's pioneering "Gateway Tapes" consciousness research, Four Tet's ethereal musical compositions, and authentic Shipibo Icaros performed by Maestro Ricardo Amaringo from Peru's Nihue Rao Centro Espiritual.</p>
+                    
                 </div>
 
-                <div class="carousel-footer">
-                    <div class="carousel-counter">
-                        <span id="counterCurrent">01</span>
-                        <span class="counter-divider">/</span>
-                        <span id="counterTotal">04</span>
+                <div class="project-meta">
+                    <div class="meta-item">
+                        <div class="meta-label">FORMAT</div>
+                        <div class="meta-value">5.1 & Stereo</div>
                     </div>
-                    <div class="carousel-dots" id="carouselDots"></div>
+                    <div class="meta-item">
+                        <div class="meta-label">TOOLS</div>
+                        <div class="meta-value">Pro Tools, Ableton Live</div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">MEDIUM</div>
+                        <div class="meta-value">Animated Short</div>
+                    </div>
                 </div>
             </div>
-        </section>
 
-        <!-- ---------------------------------------------------------------
-             MORE PROJECTS — hover-reveal grid, everything not in the
-             carousel above. Hover any tile to see a short description;
-             click opens the full project (with credits) in a lightbox.
-        --------------------------------------------------------------- -->
         <section class="more-projects-section" id="moreProjects">
-            <div class="more-projects-header">
-                <h2 class="more-projects-title"><BR>FROM THE COLLECTIVE</h2>
-            </div>
             <div class="more-projects-grid" id="moreProjectsGrid">
                 <!-- Tiles are injected by JS from gridData below -->
             </div>
         </section>
-    </main>
 
-    <!-- ---------------------------------------------------------------
-         PROJECT LIGHTBOX — opened when a "More Projects" tile is clicked.
-         Media stays fixed size; the info panel below it scrolls.
-    --------------------------------------------------------------- -->
     <div class="project-lightbox" id="projectLightbox">
         <div class="lightbox-backdrop" id="lightboxBackdrop"></div>
         <div class="lightbox-content">
@@ -98,7 +76,38 @@
             </div>
         </div>
     </div>
+    </main>
 
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" onclick="closeLightbox()">×</button>
+        <button class="lightbox-arrow prev" onclick="lightboxNav(-1)">
+            <svg viewBox="0 0 24 24">
+                <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+            </svg>
+        </button>
+        <div class="lightbox-content">
+            <img id="lightbox-img" src="" alt="Gallery image">
+        </div>
+        <button class="lightbox-arrow next" onclick="lightboxNav(1)">
+            <svg viewBox="0 0 24 24">
+                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+            </svg>
+        </button>
+    </div>
+        <section class="more-projects-section" id="moreProjects">
+            <div class="collective-section">
+                <h2 class="collective-title">COLLECTIVE</h2>
+                <div class="collective-grid">
+                    <div class="collective-member">
+                        <div class="member-info">
+                            <h3 class="member-name"><a href="aboutus.html#dan-hawryluk">Dan Hawryluk</a></h3>
+                            <p class="member-role">Sound Designer & Re-Recording Mixer</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     <footer>
         <div>
             <h3 class="footer-title">AUDIO ESSENTIA</h3>
@@ -112,7 +121,7 @@
         </div>
     </footer>
 
-    <script>
+   <script>
         // ---------------------------------------------------------------
         // TEAM LINKS — maps a credit name (as it appears in the arrays
         // below) to its anchor on aboutus.html. Add new people/aliases
@@ -177,55 +186,7 @@
         //                   below, opened larger in a lightbox on click.
         // ---------------------------------------------------------------
 
-        const carouselData = [
-            {
-                title: "DEPTHS",
-                subtitle: "4D SOUND INSTALLATION",
-                type: "image",
-                src: "Media/Depths/Depths_1.webp",
-                description: "A 4D spatial audio installation that explores consciousness by combining advanced spatial audio technology with Indigenous wisdom traditions.",
-                explore: true,
-                link: "depths.html",
-                credits: [
-                    ["John Gregory", "Co-Creative Director, Supervising Sound Editor, Re-Recording Mixer And International Talent Coordinator"],
-                    ["Dan Hawryluk", "Creative Director, Sound Editor and Re-Recording Mixer"],
-                    ["Eloísa Sandoval", "ADR Editor, Voice Processing, Sound designer & Web Developer"],
-                    ["Steven Tsia", "Video Editor, Sound Designer, ADR Recordist"],
-                    ["Raine Edgar", "VFX Artist & Technical Sound Designer"],
-                    ["Sidharth Satheesh", "Media Composer & Music Producer"],
-                    ["Joel Tong", "Media Composer & Music Producer"],
-                    ["Luz Salcedo", "Lead Video Editor"],
-                ]
-            },
-                        {
-                title: "A SHAMAN'S TALE",
-                subtitle: "ANIMATED SHORT FILM",
-                type: "image",
-                src: "Media/Shamans/AST_2.webp",
-                description: "Animated short film that weaves together consciousness exploration, Indigenous wisdom, and transformative sound design.",
-                explore: true,
-                link: "shamans.html",
-                credits: [
-                    ["Dan Hawryluk", "Re-Recording Mixer & Sound Designer"],
-                ]
-            },
-            {
-                title: "STRAIN",
-                subtitle: "SOUND DESIGN",
-                type: "image",
-                src: "Media/Strain/Strain.webp",
-                description: "A late shift at a cannabis grow-op takes a strange turn when a worker samples the product, only for the night to spiral out of control.",
-                explore: false,
-                link: "",
-                credits: [
-                    ["John Gregory", "Re-Recording Mixer & Sound Designer"],
-                    ["Dan Hawryluk", "Re-Recording Mixer & Sound Designer"],
-                    ["Steven Tsia", "Sound Designer"],
-                    ["Eloísa Sandoval", "Sound Designer"],
-                    ["Sidharth Satheesh", "Media Composer & Music Producer"]
-                ]
-            }
-        ];
+
 
         const gridData = [
             {
@@ -278,134 +239,6 @@
                     ["John Gregory", "Foley Recordist, Sound Designer & Music Editor"],
                     ["Steven Tsia", "Foley Artist & Sound Designer"],
                     ["Eloísa Sandoval", "ADR Recordist & Dialogue Editor"]
-                ]
-            },
-            {
-                title: "ABHYUHAM",
-                subtitle: "Short Film Sound Editing",
-                type: "image",
-                src: "Media/Abhyuham/Abhyuham.webp",
-                description: "Jayarajans father Rajan has been locked away in central prison. Years later Manjari, the lawyer, tells him that Rajan was wrongly accused. To prove Rajans innocence, they have to find the real culprit. Can they find him?",
-                explore: false,
-                link: "",
-                imdb: "https://www.imdb.com/title/tt26895979/fullcredits/?ref_=tt_cst_sm#amzn1.imdb.concept.name_credit_category.ce258419-131b-41f0-b2c5-227f5d9b719f",
-                credits: [
-                    ["John Gregory", "Assistant Sound Editor"]
-                ]
-            },
-            {
-                title: "KUMARI",
-                subtitle: "FEATURE FILM MUSIC RECORDING",
-                type: "image",
-                src: "Media/Kumari/Kumari_2.webp",
-                description: "The world of Kumari, who is married off far away in Kanhirangat, a cursed land beyond Illymala, in the west. A naive Kumari arrives in the cursed land, where people are ready to sacrifice their lives to preserve tradition.",
-                explore: false,
-                link: "",
-                lightboxType: "vimeo",
-                lightboxSrc: "https://www.youtube.com/embed/dGzKcctHnQU?si=DRdEfIZ4sd7T2DEq",
-                imdb: "https://www.imdb.com/title/tt13531020/fullcredits/?ref_=tt_cst_sm#amzn1.imdb.concept.name_credit_category.aad1533c-6974-45a4-ba98-5f2f43286cfc",
-                credits: [
-                    ["John Gregory", "Music Recordist"]
-                ]
-            },
-            {
-                title: "BOOTHAYANAM",
-                subtitle: "Short Film Music Composition",
-                type: "image",
-                src: "Media/Bhoothayanam/Bhoothayanam.webp",
-                description: "Lonely and desperate, an elderly matriarch will go to any length to be reunited with her beloved granddaughter.",
-                explore: false,
-                link: "",
-                lightboxType: "vimeo",
-                lightboxSrc: "https://www.youtube.com/embed/8eE9Jelmi6A?si=PeY1jFrvnqQhJOvZ",
-                imdb: "https://www.imdb.com/title/tt35766105/fullcredits/?ref_=tt_cst_sm#amzn1.imdb.concept.name_credit_category.00f5faa0-5f76-4eb5-87a1-ec8d484d1779",
-                credits: [
-                    ["Sidharth Satheesh", "Music Composer"]
-                ]
-            },
-            {
-                title: "LAND OF INSPIRATION SEEKERS",
-                subtitle: "ADVERTISEMENT AUDIO POST",
-                type: "image",
-                src: "Media/Uttarakhand/InspirationSeekers.webp",
-                description: "How vibrant cultural experiences make Uttarakhand the perfect winter destination for inspiration seekers and creativity chasers.",
-                explore: false,
-                link: "",
-                lightboxType: "vimeo",
-                lightboxSrc: "https://www.youtube.com/embed/ronVb5ijTFQ?si=trSgXUxAXNQb6T3M",
-                credits: [
-                    ["John Gregory", "Sound Editing & Re-Recording Mixer"]
-                ]
-            },
-            {
-                title: "EXPERIENCE TRUE TRANQUILITY",
-                subtitle: "ADVERTISEMENT AUDIO POST",
-                type: "image",
-                src: "Media/Uttarakhand/UttarakhandDivinity.webp",
-                description: "The spiritual essence of Uttarakhand lies in its many timeless destinations, leaving visitors feeling invigorated and mindfully aware.",
-                explore: false,
-                link: "",
-                lightboxType: "vimeo",
-                lightboxSrc: "https://www.youtube.com/embed/Y8ObIEbNKA8?si=cJopObPLoumkMb59",
-                credits: [
-                    ["John Gregory", "Sound Editing & Re-Recording Mixer"]
-                ]
-            },
-            {
-                title: "UTTARAKHAND'S HIDDEN TREASURES",
-                subtitle: "ADVERTISEMENT AUDIO POST",
-                type: "image",
-                src: "Media/Uttarakhand/HiddenTreasures.webp",
-                description: "Uncover the true culture of Uttarakhand and explore its hidden offbeat treasures for curious explorers and wanderers.",
-                explore: false,
-                link: "",
-                lightboxType: "vimeo",
-                lightboxSrc: "https://www.youtube.com/embed/Rl7iBeqGSjE?si=diK6Fl8A0XcpIYR4",
-                credits: [
-                    ["John Gregory", "Sound Editing & Re-Recording Mixer"]
-                ]
-            },
-            {
-                title: "DJINN",
-                subtitle: "FEATURE FILM ADR RECORDING",
-                type: "image",
-                src: "Media/Djinn/Djinn.webp",
-                description: "A lady encounters a supernatural things during a tour and a horror experience with a sudden appearance of a man called jinn and the story goes on the horror path.",
-                explore: false,
-                link: "",
-                lightboxType: "vimeo",
-                lightboxSrc: "https://www.youtube.com/embed/_m10SQwPx4o?si=l_pBjwFME1IHU9NW&amp;start=5",
-                imdb: "https://www.imdb.com/title/tt10285752/fullcredits/?ref_=tt_cst_sm#amzn1.imdb.concept.name_credit_category.ce258419-131b-41f0-b2c5-227f5d9b719f",
-                credits: [
-                    ["John Gregory", "Music Recordist"]
-                ]
-            },
-            {
-                title: "MANJUMMEL BOYS",
-                subtitle: "FEATURE FILM ADR RECORDING",
-                type: "image",
-                src: "Media/Manjummel/MB_2.webp",
-                description: "A group of friends get into a daring rescue mission to save their friend from Guna Caves, a perilously deep pit from where nobody has ever been brought back.",
-                explore: false,
-                link: "",
-                imdb: "https://www.imdb.com/title/tt26458038/fullcredits/?ref_=tt_cst_sm#amzn1.imdb.concept.name_credit_category.ce258419-131b-41f0-b2c5-227f5d9b719f",
-                credits: [
-                    ["John Gregory", "ADR Recordist"]
-                ]
-            },
-            {
-                title: "POACHER",
-                subtitle: "TV SHOW ADR RECORDING",
-                type: "image",
-                src: "Media/Poacher/Poacher.webp",
-                description: "A group of Indian Forest Service officers, NGO workers, police constables and Good Samaritans risk their lives trying to track down the biggest elephant ivory poachers in the history of India and bring them to justice.",
-                explore: false,
-                link: "",
-                lightboxType: "vimeo",
-                lightboxSrc: "https://www.youtube.com/embed/DdEJtvzT7jc?si=ciho01wyq83t-SeV",
-                imdb: "https://www.imdb.com/title/tt24364990/fullcredits/?ref_=tt_cst_sm#amzn1.imdb.concept.name_credit_category.ce258419-131b-41f0-b2c5-227f5d9b719f",
-                credits: [
-                    ["John Gregory", "ADR Recordist"]
                 ]
             },
             {
@@ -533,177 +366,6 @@
             return exploreBtn + imdbBtn;
         }
 
-        // ---------------------------------------------------------------
-        // STATE — carousel
-        // ---------------------------------------------------------------
-        let currentIndex = 0;
-        let autoplayTimer = null;
-
-        const track = document.getElementById('carouselTrack');
-        const dotsContainer = document.getElementById('carouselDots');
-        const counterCurrent = document.getElementById('counterCurrent');
-        const counterTotal = document.getElementById('counterTotal');
-        const subProjectNavLinks = document.getElementById('subProjectNavLinks');
-        const carouselEl = document.getElementById('workCarousel');
-        const carouselViewport = document.querySelector('.carousel-viewport');
-
-        function pad(n) {
-            return n < 10 ? `0${n}` : `${n}`;
-        }
-
-        // ---------------------------------------------------------------
-        // SUB-NAV: project names for the carousel
-        // ---------------------------------------------------------------
-        function buildSubNav() {
-            subProjectNavLinks.innerHTML = '';
-
-            carouselData.forEach((slide, i) => {
-                const li = document.createElement('li');
-                const link = document.createElement('a');
-                link.href = '#';
-                link.textContent = slide.title;
-                if (i === currentIndex) link.classList.add('active');
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    goToSlide(i);
-                });
-                li.appendChild(link);
-                subProjectNavLinks.appendChild(li);
-            });
-        }
-
-        function updateSubNavActiveState() {
-            [...subProjectNavLinks.querySelectorAll('a')].forEach((link, i) => {
-                link.classList.toggle('active', i === currentIndex);
-            });
-        }
-
-        // ---------------------------------------------------------------
-        // CAROUSEL BUILD
-        // ---------------------------------------------------------------
-        function buildSlides() {
-            track.innerHTML = '';
-            dotsContainer.innerHTML = '';
-
-            carouselData.forEach((slide, i) => {
-                const slideEl = document.createElement('div');
-                slideEl.className = 'carousel-slide';
-
-                const mediaEl = renderMedia(slide, 'slide-media');
-
-                slideEl.innerHTML = `
-                    <div class="slide-media-wrapper">
-                        ${mediaEl}
-                    </div>
-                    <div class="slide-info">
-                        <p class="slide-subtitle">${slide.subtitle}</p>
-                        <h2 class="slide-title">${slide.title}</h2>
-                        <p class="slide-description">${slide.description}</p>
-                        ${renderActionButtons(slide)}
-                        <div class="slide-credits">
-                            <p class="credits-label">CREDITS</p>
-                            ${renderCreditsRows(slide.credits)}
-                        </div>
-                    </div>
-                `;
-                track.appendChild(slideEl);
-
-                const dot = document.createElement('button');
-                dot.className = 'carousel-dot';
-                dot.setAttribute('aria-label', `Go to ${slide.title}`);
-                dot.addEventListener('click', () => goToSlide(i));
-                dotsContainer.appendChild(dot);
-            });
-
-            counterTotal.textContent = pad(carouselData.length || 0);
-            currentIndex = Math.min(currentIndex, Math.max(carouselData.length - 1, 0));
-            buildSubNav();
-            updateCarousel();
-        }
-
-        function updateCarousel() {
-            track.style.transform = `translateX(-${currentIndex * 100}%)`;
-            counterCurrent.textContent = pad(currentIndex + 1);
-
-            document.querySelectorAll('.carousel-dot').forEach((dot, i) => {
-                dot.classList.toggle('active', i === currentIndex);
-            });
-
-            updateSubNavActiveState();
-            syncViewportHeight();
-        }
-
-        // All slides sit side-by-side in .carousel-track (that's what lets
-        // translateX slide between them), so the track's own height is
-        // naturally set by the TALLEST slide (DEPTHS, with the most
-        // credits) even though only one slide is visible at a time. That
-        // left empty space below shorter slides (STRAIN, A SHAMAN'S TALE)
-        // before the counter/dots row. Fix: explicitly set the viewport's
-        // height to match only the currently active slide, and clip the
-        // rest with overflow:hidden (already set in CSS).
-        function syncViewportHeight() {
-            const activeSlide = track.children[currentIndex];
-            if (!activeSlide || !carouselViewport) return;
-            carouselViewport.style.height = `${activeSlide.offsetHeight}px`;
-        }
-
-        window.addEventListener('resize', syncViewportHeight);
-
-        function goToSlide(index) {
-            const total = carouselData.length;
-            if (total === 0) return;
-            currentIndex = (index + total) % total;
-            updateCarousel();
-        }
-
-        function nextSlide() {
-            goToSlide(currentIndex + 1);
-        }
-
-        function prevSlide() {
-            goToSlide(currentIndex - 1);
-        }
-
-        document.getElementById('nextSlide').addEventListener('click', nextSlide);
-        document.getElementById('prevSlide').addEventListener('click', prevSlide);
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft') prevSlide();
-            if (e.key === 'ArrowRight') nextSlide();
-        });
-
-        // Optional autoplay — pauses while the pointer is over the carousel,
-        // and is skipped entirely on mobile (≤768px, same breakpoint used
-        // everywhere else on the site) since scrolling should be manual
-        // there. `mobileMediaQuery.change` also catches someone resizing
-        // the browser or rotating a tablet across that breakpoint mid-visit.
-        let isHovering = false;
-        const mobileMediaQuery = window.matchMedia('(max-width: 768px)');
-
-        function autoplayTick() {
-            if (!isHovering) nextSlide();
-        }
-
-        function startAutoplay() {
-            clearInterval(autoplayTimer);
-            if (mobileMediaQuery.matches) return;
-            autoplayTimer = setInterval(autoplayTick, 7000);
-        }
-
-        startAutoplay();
-        mobileMediaQuery.addEventListener('change', startAutoplay);
-
-        carouselEl.addEventListener('mouseenter', () => {
-            isHovering = true;
-            clearInterval(autoplayTimer);
-        });
-
-        carouselEl.addEventListener('mouseleave', () => {
-            isHovering = false;
-            startAutoplay();
-        });
-
-        buildSlides();
 
         // ---------------------------------------------------------------
         // MORE PROJECTS GRID — hover reveals a short description (and a

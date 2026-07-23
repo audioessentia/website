@@ -154,60 +154,33 @@ nav.scrolled {
 }
 
 /* ---------------------------------------------------------------
-   SUB-NAV — project names within the carousel.
---------------------------------------------------------------- */
-.sub-project-nav {
-    padding-bottom: 14px;
-    margin-bottom: 50px;
-    border-bottom: 1px solid #404040;
-    opacity: 0;
-    animation: fadeInUp 1.5s ease 0.3s forwards;
-}
+   WORK CAROUSEL — modeled on markclennon.com/motion's individual clip
+   pages: one full-bleed project at a time (media spans the entire
+   viewport width, breaking out of .project-section's max-width:1400px
+   via the left:50% / translateX trick below); a PREVIOUS CLIP / NEXT UP
+   text nav row right under the media; title + subtitle + description
+   below that, left-aligned and re-contained to the same 1400px column
+   as the rest of the page; and a CREDITS/HIDE toggle that expands a
+   collapsible credits panel. A filmstrip of thumbnails sits below the
+   whole carousel (separate block further down) for jumping between
+   projects, mirroring the clip-thumbnail row on the reference site.
 
-.sub-project-nav-links {
-    display: flex;
-    gap: 30px;
-    flex-wrap: wrap;
-    list-style: none;
-}
-
-.sub-project-nav-links a {
-    color: #808080;
-    text-decoration: none;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    transition: color 0.3s ease;
-    padding-bottom: 4px;
-    border-bottom: 1px solid transparent;
-}
-
-.sub-project-nav-links a:hover {
-    color: #fff;
-}
-
-.sub-project-nav-links a.active {
-    color: #fff;
-    border-bottom: 1px solid #fff;
-}
-
-/* ---------------------------------------------------------------
-   WORK CAROUSEL
+   --media-h controls the fixed height of the media itself (overridden
+   per breakpoint below) — this is the "height budget" for the visual
+   part of the carousel; the nav row + info block add a bit more height
+   under it.
 --------------------------------------------------------------- */
 .work-carousel {
     margin-top: 20px;
-}
-
-.carousel-frame {
+    width: 100vw;
     position: relative;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    --media-h: 560px;
 }
 
 .carousel-viewport {
-    flex: 1;
+    width: 100%;
     overflow: hidden;
     transition: height 0.4s ease;
 }
@@ -215,22 +188,20 @@ nav.scrolled {
 .carousel-track {
     display: flex;
     transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
-    align-items: center;
+    align-items: flex-start;
 }
 
 .carousel-slide {
     flex: 0 0 100%;
-    display: grid;
-    grid-template-columns: 1.4fr 1fr;
-    gap: 60px;
-    align-items: center;
-    min-height: 560px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .slide-media-wrapper {
     position: relative;
     width: 100%;
-    height: 560px;
+    height: var(--media-h);
     overflow: hidden;
 }
 
@@ -251,6 +222,10 @@ nav.scrolled {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 32px 60px 0;
 }
 
 .slide-subtitle {
@@ -268,15 +243,15 @@ nav.scrolled {
     letter-spacing: 4px;
     text-transform: uppercase;
     line-height: 1.1;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
 }
 
 .slide-description {
     font-size: 15px;
     line-height: 1.9;
     color: #d0d0d0;
-    max-width: 480px;
-    margin-bottom: 30px;
+    max-width: 620px;
+    margin-bottom: 24px;
 }
 
 .btn-explore {
@@ -291,7 +266,7 @@ nav.scrolled {
     text-transform: uppercase;
     transition: all 0.3s ease;
     width: fit-content;
-    margin-bottom: 30px;
+    margin-right: 16px;
 }
 
 .btn-explore:hover {
@@ -299,12 +274,95 @@ nav.scrolled {
     color: #1a1a1a;
 }
 
-/* Credits block (carousel + lightbox) */
+/* PREVIOUS CLIP / NEXT UP — plain text nav row directly under the
+   media, replacing circular arrow buttons, matching the Motion
+   reference's clip pages. */
+.slide-nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 18px 60px 0;
+}
+
+.clip-nav {
+    background: none;
+    border: none;
+    color: #808080;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0;
+    transition: color 0.3s ease;
+}
+
+.clip-nav:hover {
+    color: #fff;
+}
+
+.clip-nav-arrow {
+    font-size: 14px;
+}
+
+/* CREDITS / HIDE toggle — plain text link, same visual language as
+   the nav row above it. */
+.credits-toggle {
+    background: none;
+    border: none;
+    color: #808080;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 12px 0;
+    transition: color 0.3s ease;
+}
+
+.credits-toggle:hover {
+    color: #fff;
+}
+
+.slide-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 4px;
+}
+
+/* Credits block — static/always-open when used in the lightbox (no
+   .collapsible class there); collapsed behind the CREDITS/HIDE toggle
+   when used in the carousel (.collapsible, opened via .open). */
 .slide-credits {
     width: 100%;
     max-width: 480px;
     border-top: 1px solid #404040;
     padding-top: 20px;
+    margin-top: 20px;
+}
+
+.slide-credits.collapsible {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    border-top: none;
+    padding-top: 0;
+    margin-top: 0;
+    transition: max-height 0.5s ease, opacity 0.4s ease, padding-top 0.4s ease, margin-top 0.4s ease;
+}
+
+.slide-credits.collapsible.open {
+    max-height: 2000px;
+    opacity: 1;
+    border-top: 1px solid #404040;
+    padding-top: 20px;
+    margin-top: 8px;
 }
 
 .credits-label {
@@ -343,112 +401,67 @@ nav.scrolled {
     text-align: right;
 }
 
-/* Carousel credits only: full section width (like before), but each row
-   is split into two even halves — the name stays on one line in the left
-   half, and the role starts exactly at the halfway point and truncates
-   with an ellipsis if it doesn't fit in the right half. */
-.carousel-slide .credit-row {
-    display: grid;
-    grid-template-columns: 0.6fr 1.4fr;
-    column-gap: 16px;
-    align-items: baseline;
-
+/* ---------------------------------------------------------------
+   FILMSTRIP — row of thumbnails below the carousel that lets you
+   jump straight to any project, mirroring the clip-thumbnail row at
+   the bottom of markclennon.com/motion's individual clip pages.
+--------------------------------------------------------------- */
+.carousel-filmstrip {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    max-width: 1400px;
+    margin: 24px auto 0;
+    padding: 24px 60px 60px;
+    border-top: 1px solid #404040;
+    scrollbar-width: thin;
 }
 
-.carousel-slide .credit-name {
-    white-space: nowrap;
-    overflow: hidden;
-}
-
-.carousel-slide .credit-role {
+.filmstrip-item {
+    flex: 0 0 180px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
     text-align: left;
+    opacity: 0.55;
+    transition: opacity 0.3s ease;
+}
+
+.filmstrip-item:hover,
+.filmstrip-item.active {
+    opacity: 1;
+}
+
+.filmstrip-media-wrapper {
+    width: 100%;
+    height: 100px;
+    overflow: hidden;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.3s ease;
+}
+
+.filmstrip-item.active .filmstrip-media-wrapper {
+    border-color: #fff;
+}
+
+.filmstrip-media {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border: 0;
+}
+
+.filmstrip-title {
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #d0d0d0;
+    margin-top: 10px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    text-align: right;
-}
-
-/* Carousel arrows — flex siblings of the viewport, not overlaid on top of
-   it, so overflow:hidden on the viewport never clips them. */
-.carousel-arrow {
-    flex: 0 0 auto;
-    background: rgba(26, 26, 26, 0.9);
-    border: 1px solid #404040;
-    color: #fff;
-    width: 54px;
-    height: 54px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    z-index: 100;
-}
-
-.carousel-arrow:hover {
-    background: rgba(64, 64, 64, 0.9);
-    border-color: #fff;
-    transform: scale(1.1);
-}
-
-.carousel-arrow svg {
-    width: 24px;
-    height: 24px;
-    fill: currentColor;
-}
-
-/* Carousel footer: counter + dots */
-.carousel-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 16px;
-    padding-top: 8px;
-    padding-bottom: 22px;
-    border-bottom: 1px solid #404040;
-}
-
-.carousel-counter {
-    font-family: "AlteHaasBold";
-    font-size: 13px;
-    letter-spacing: 2px;
-    color: #808080;
-    
-}
-
-.carousel-counter #counterCurrent {
-    color: #fff;
-}
-
-.counter-divider {
-    margin: 0 6px;
-}
-
-.carousel-dots {
-    display: flex;
-    gap: 12px;
-}
-
-.carousel-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #404040;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    padding: 0;
-}
-
-.carousel-dot:hover {
-    background: #808080;
-}
-
-.carousel-dot.active {
-    background: #fff;
-    width: 24px;
-    border-radius: 4px;
 }
 
 /* ---------------------------------------------------------------
@@ -478,7 +491,7 @@ nav.scrolled {
 .more-projects-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 0.4px;
+    gap: 4px;
 }
 
 .grid-tile {
@@ -832,42 +845,12 @@ footer {
         letter-spacing: 4px;
     }
 
-    .sub-project-nav {
-        margin-bottom: 30px;
+    .work-carousel {
+        --media-h: 320px;
     }
 
-    .sub-project-nav-links {
-        gap: 18px;
-    }
-
-    .sub-project-nav-links a {
-        font-size: 9px;
-        letter-spacing: 1px;
-    }
-
-    .carousel-frame {
-        gap: 8px;
-    }
-
-    /* .carousel-track vertically centers each slide (nice on desktop,
-       where DEPTHS/STRAIN/A SHAMAN'S TALE sit side-by-side with the
-       media). But the track's own height is set by the tallest slide
-       (DEPTHS, with the most credits) — so on mobile, shorter slides
-       like STRAIN and A SHAMAN'S TALE were getting centered inside that
-       taller box, leaving empty space above the image. Pin slides to the
-       top of the track on mobile instead. */
-    .carousel-track {
-        align-items: flex-start;
-    }
-
-    .carousel-slide {
-        grid-template-columns: 1fr;
-        gap: 24px;
-        min-height: auto;
-    }
-
-    .slide-media-wrapper {
-        height: 260px;
+    .slide-info {
+        padding: 24px 20px 0;
     }
 
     .slide-title {
@@ -875,50 +858,40 @@ footer {
         letter-spacing: 2px;
     }
 
-    .slide-description,
-    .slide-credits {
+    .slide-description {
         max-width: 100%;
     }
 
-    /* The carousel's own credit rows (.carousel-slide .credit-row) use a
-       fixed 0.6fr/1.4fr split with the name locked to one line via
-       white-space: nowrap + overflow: hidden — on phones that chopped
-       longer names. Stack the full name above the role instead, same
-       pattern as the lightbox credit fix. */
-    .carousel-slide .credit-row {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 4px;
-        padding: 12px 0;
+    .btn-explore {
+        margin-right: 10px;
+        margin-bottom: 10px;
     }
 
-    .carousel-slide .credit-name {
-        white-space: normal;
-        overflow: visible;
+    .slide-nav-row {
+        padding: 14px 20px 0;
     }
 
-    .carousel-slide .credit-role {
-        text-align: left;
-        white-space: normal;
-        overflow: visible;
-        text-overflow: clip;
+    .clip-nav {
+        font-size: 9px;
+        letter-spacing: 1.5px;
+        gap: 5px;
     }
 
-    .carousel-arrow {
-        width: 36px;
-        height: 36px;
+    .carousel-filmstrip {
+        gap: 10px;
+        padding: 18px 20px 40px;
     }
 
-    .carousel-arrow svg {
-        width: 18px;
-        height: 18px;
+    .filmstrip-item {
+        flex: 0 0 130px;
     }
 
-    .carousel-footer {
-        flex-direction: column;
-        gap: 20px;
-        align-items: flex-start;
+    .filmstrip-media-wrapper {
+        height: 74px;
+    }
+
+    .filmstrip-title {
+        font-size: 9px;
     }
 
     .more-projects-section {
@@ -951,10 +924,7 @@ footer {
        by side on desktop. On narrow screens a long role (e.g. "Sound
        Designer & Re-Recording Mixer" on Au Revoir Mon Monde) doesn't have
        room next to the name and was overlapping it. Stack them instead so
-       the role wraps cleanly underneath. This only targets the plain
-       .credit-row used in the lightbox — the carousel's own credit rows
-       use a more specific selector (.carousel-slide .credit-row) and are
-       untouched. */
+       the role wraps cleanly underneath. */
     .credit-row {
         flex-direction: column;
         align-items: flex-start;
@@ -1001,13 +971,16 @@ footer {
         padding: 100px 20px 0;
     }
 
-    .slide-media-wrapper {
-        height: 220px;
+    .work-carousel {
+        --media-h: 240px;
     }
 
-    .carousel-arrow {
-        width: 32px;
-        height: 32px;
+    .filmstrip-item {
+        flex: 0 0 110px;
+    }
+
+    .filmstrip-media-wrapper {
+        height: 62px;
     }
 
     .more-projects-grid {

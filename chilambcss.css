@@ -1,0 +1,817 @@
+@font-face {
+    font-family: 'AlteHaasBold';
+    src: url('Fonts/AlteHaasGroteskBold.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'AlteHaasRegular';
+    src: url('Fonts/AlteHaasGroteskRegular.woff') format('woff');
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "AlteHaasRegular", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #1a1a1a;
+    color: #f5f5f5;
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+/* Navigation */
+nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 20px 50px;
+    background: transparent;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(80px);
+}
+
+nav.scrolled {
+    background: rgba(26, 26, 26, 0.9);
+    backdrop-filter: blur(20px);
+    padding: 20px 50px;
+}
+
+.nav-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #fff;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+.nav-links {
+    display: flex;
+    gap: 50px;
+    list-style: none;
+}
+
+.nav-links a {
+    color: #f5f5f5;
+    text-decoration: none;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: #686868;
+}
+
+.mobile-menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    background: none;
+    border: none;
+    z-index: 1001;
+}
+
+.hamburger-line {
+    width: 25px;
+    height: 3px;
+    background: #fff;
+    margin: 3px 0;
+    transition: all 0.3s ease;
+    transform-origin: center;
+}
+
+.mobile-menu-toggle.active .hamburger-line:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+
+.mobile-menu-toggle.active .hamburger-line:nth-child(2) {
+    opacity: 0;
+}
+
+.mobile-menu-toggle.active .hamburger-line:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Project Navigation */
+.project-nav {
+    position: relative;
+    background: rgba(26, 26, 26, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid #404040;
+    z-index: 999;
+    padding: 12px 60px;
+    margin-top: 60px;
+}
+
+.project-nav-links {
+    max-width: 1600px;
+    margin: 0 auto;
+    display: flex;
+    gap: 40px;
+    list-style: none;
+}
+
+.project-nav-links a {
+    color: #808080;
+    text-decoration: none;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    transition: color 0.3s ease;
+}
+
+.project-nav-links a:hover,
+.project-nav-links a.active {
+    color: #fff;
+}
+
+/* Main Content */
+.main-content {
+    padding-top: 60px;
+    min-height: 100vh;
+}
+
+/* Project Section */
+.project-section {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 80px 60px;
+    position: relative;
+}
+
+.project-header {
+    margin-bottom: 60px;
+}
+
+.project-title {
+    font-family: "AlteHaasBold";
+    font-size: 96px;
+    font-weight: 700;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    line-height: 0.9;
+    margin-bottom: 20px;
+}
+
+.project-subtitle {
+    font-size: 12px;
+    color: #808080;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+/* Content Grid */
+.project-content {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 80px;
+    margin-bottom: 80px;
+}
+
+.project-description {
+    font-size: 16px;
+    line-height: 2;
+    color: #f5f5f5;
+}
+
+.project-description p {
+    margin-bottom: 24px;
+}
+
+/* Meta Information */
+.project-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.meta-item {
+    border-top: 1px solid #404040;
+    padding-top: 15px;
+}
+
+.meta-label {
+    font-size: 10px;
+    color: #808080;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+}
+
+.meta-value {
+    font-size: 14px;
+    color: #fff;
+}
+
+/* Video Section */
+.video-section {
+    width: 100%;
+    margin: 60px 0;
+    background: #000;
+}
+
+.video-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Collective Section */
+.collective-section {
+    border-top: 1px solid #404040;
+    padding-top: 60px;
+    margin-top: 80px;
+}
+
+.collective-title {
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+    color: #808080;
+}
+
+.collective-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.collective-member {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 16px 0;
+    background: transparent;
+    border-bottom: 1px solid #2a2a2a;
+    transition: all 0.3s ease;
+}
+
+.collective-member:hover {
+    border-bottom-color: #404040;
+}
+
+.collective-member:hover .member-name {
+    color: #fff;
+}
+
+.member-info {
+    display: flex;
+    flex-direction: row;
+    gap: 0;
+    align-items: baseline;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.member-name {
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+    text-transform: none;
+    line-height: 1;
+    color: #f5f5f5;
+    transition: color 0.3s ease;
+}
+
+/* Member names are links to their entry on the About Us page — same
+   color as the plain text by default, underline on hover, and they
+   inherit the hover-brightening the whole row already gets. */
+.member-name a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.member-name a:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+.member-role {
+    font-size: 10px;
+    color: #606060;
+    letter-spacing: 1px;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+/* Lightbox */
+.lightbox {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+}
+
+.lightbox.active {
+    display: flex;
+}
+
+.lightbox-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+}
+
+.lightbox-content img {
+    max-width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(26, 26, 26, 0.8);
+    border: 1px solid #404040;
+    color: #fff;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 24px;
+    transition: all 0.3s ease;
+    z-index: 2001;
+}
+
+.lightbox-close:hover {
+    background: rgba(64, 64, 64, 0.9);
+    border-color: #fff;
+    transform: scale(1.1);
+}
+
+.lightbox-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(26, 26, 26, 0.8);
+    border: 1px solid #404040;
+    color: #fff;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 2001;
+}
+
+.lightbox-arrow:hover {
+    background: rgba(64, 64, 64, 0.9);
+    border-color: #fff;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.lightbox-arrow.prev {
+    left: 40px;
+}
+
+.lightbox-arrow.next {
+    right: 40px;
+}
+
+.lightbox-arrow svg {
+    width: 28px;
+    height: 28px;
+    fill: currentColor;
+}
+
+/* Footer */
+footer {
+    padding: 100px 60px 60px;
+    border-top: 1px solid #404040;
+    margin-top: 120px;
+}
+
+.footer-title {
+    font-family: "AlteHaasBold";
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+.footer-text {
+    color: #808080;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+.more-projects-section {
+    max-width: 21400px;
+    margin: 0 ;
+}
+
+.more-projects-header {
+    margin-bottom: 30px;
+}
+
+.more-projects-title {
+    font-family: "AlteHaasBold";
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.more-projects-grid {
+    display: grid;
+    grid-template-columns: repeat(2,2fr);
+    width: 1400px;
+    gap: 10px;
+}
+
+.grid-tile {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.grid-tile::before {
+    content: '';
+    display: block;
+    padding-bottom: 66%;
+}
+
+.grid-media-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.grid-media {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border: 0;
+    transition: transform 0.5s ease;
+}
+
+.grid-tile:hover .grid-media {
+    transform: scale(1.05);
+}
+
+.grid-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.75) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 24px;
+    transition: background 0.4s ease;
+}
+
+.grid-tile:hover .grid-overlay {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.92) 100%);
+}
+
+.grid-subtitle {
+    font-size: 9px;
+    color: #808080;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.85;
+}
+
+.grid-title {
+    font-family: "AlteHaasBold";
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #fff;
+    margin-top: 6px;
+    transform: translateY(0);
+    transition: transform 0.4s ease;
+}
+
+.grid-tile:hover .grid-title {
+    transform: translateY(-4px);
+}
+
+.grid-description {
+    font-size: 12px;
+    line-height: 1.7;
+    color: #d0d0d0;
+    margin-top: 12px;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.4s ease, max-height 0.4s ease;
+}
+
+.grid-tile:hover .grid-description {
+    opacity: 1;
+    max-height: 140px;
+}
+
+.grid-hint {
+    font-size: 11px;
+    font-style: italic;
+    color: #a0a0a0;
+    letter-spacing: 0.3px;
+    text-transform: none;
+    margin-top: 8px;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.4s ease 0.05s, max-height 0.4s ease 0.05s;
+}
+
+.grid-tile:hover .grid-hint {
+    opacity: 1;
+    max-height: 24px;
+}
+
+/* Touch devices ("hover: none") don't support hover at all — instead,
+   whichever tile is scrolled into the center band of the viewport gets
+   the same reveal via JS toggling .in-view (see setupInViewObserver). */
+@media (hover: none) {
+    .grid-tile.in-view .grid-overlay {
+        background: linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.92) 100%);
+    }
+
+    .grid-tile.in-view .grid-media {
+        transform: scale(1.05);
+    }
+
+    .grid-tile.in-view .grid-title {
+        transform: translateY(-4px);
+    }
+
+    .grid-tile.in-view .grid-description {
+        opacity: 1;
+        max-height: 140px;
+    }
+
+    .grid-tile.in-view .grid-hint {
+        opacity: 1;
+        max-height: 24px;
+    }
+}
+
+/* ---------------------------------------------------------------
+   PROJECT LIGHTBOX
+   .lightbox-content itself no longer scrolls — it just sizes and clips
+   the popup. The new .lightbox-scroll wrapper inside it holds the
+   actual scrollable content (media + info), so .lightbox-close can sit
+   directly in .lightbox-content and stay fixed in place as you scroll.
+--------------------------------------------------------------- */
+.project-lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+}
+
+.project-lightbox.active {
+    display: flex;
+}
+
+.lightbox-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.95);
+}
+
+.lightbox-content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 1100px;
+    max-height: 90vh;
+    background: #1a1a1a;
+    border: 1px solid #404040;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.lightbox-scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+.lightbox-media {
+    position: relative;
+    width: auto;
+    margin: 40px 50px 0;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    flex: 0 0 auto;
+}
+
+.lightbox-media-el {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border: 0;
+}
+
+.lightbox-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    padding: 36px 50px 50px;
+}
+
+.lightbox-info .slide-description,
+.lightbox-info .slide-credits {
+    max-width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    nav {
+        padding: 15px 20px;
+    }
+
+    .nav-container {
+        position: relative;
+    }
+
+    .logo {
+        font-size: 20px;
+        letter-spacing: 2px;
+    }
+
+    .mobile-menu-toggle {
+        display: flex;
+    }
+
+    .nav-links {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100vh;
+        background: rgba(26, 26, 26, 0.98);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+        transition: left 0.3s ease;
+        z-index: 999;
+    }
+
+    .nav-links.active {
+        left: 0;
+    }
+
+    .nav-links a {
+        font-size: 18px;
+        letter-spacing: 2px;
+        padding: 15px 20px;
+        border-bottom: 1px solid #404040;
+        width: 200px;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .nav-links a:hover {
+        background: #404040;
+        color: #ffffff;
+    }
+
+    .project-nav {
+        padding: 12px 20px;
+        margin-top: 60px;
+        position: relative;
+        z-index: 900;
+    }
+
+    .project-nav-links {
+        max-width: 100%;
+        padding: 0 20px;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .project-nav-links a {
+        font-size: 12px;
+        letter-spacing: 1px;
+        padding: 10px 0;
+        border-bottom: none;
+    }
+
+    .lightbox-arrow {
+        width: 50px;
+        height: 50px;
+    }
+
+    .lightbox-arrow.prev {
+        left: 10px;
+    }
+
+    .lightbox-arrow.next {
+        right: 10px;
+    }
+
+    .project-title {
+        font-size: 48px;
+        letter-spacing: 4px;
+    }
+
+    .project-section {
+        padding: 60px 30px;
+    }
+
+    .project-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    nav {
+        padding: 12px 15px;
+    }
+
+    .logo {
+        font-size: 18px;
+        letter-spacing: 1px;
+    }
+
+    .hamburger-line {
+        width: 22px;
+        height: 2px;
+    }
+
+    .nav-links a {
+        font-size: 16px;
+        width: 180px;
+        padding: 12px 15px;
+    }
+
+    .project-section {
+        padding: 40px 20px;
+    }
+}
+
+@media (max-width: 320px) {
+    nav {
+        padding: 10px 12px;
+    }
+
+    .logo {
+        font-size: 16px;
+    }
+}
