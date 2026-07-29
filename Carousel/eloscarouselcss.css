@@ -1,0 +1,931 @@
+@font-face {
+    font-family: 'AlteHaasBold';
+    src: url('Fonts/AlteHaasGroteskBold.woff') format('woff');
+}
+
+@font-face {
+    font-family: 'AlteHaasRegular';
+    src: url('Fonts/AlteHaasGroteskRegular.woff') format('woff');
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "AlteHaasRegular", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #1a1a1a;
+    color: #f5f5f5;
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 20px 50px;
+    background: transparent;
+    z-index: 2000;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(80px);
+}
+
+nav.scrolled {
+    background: rgba(26, 26, 26, 0.9);
+    backdrop-filter: blur(20px);
+    padding: 20px 50px;
+}
+
+.nav-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #fff;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+.nav-links {
+    display: flex;
+    gap: 50px;
+    list-style: none;
+}
+
+.nav-links a {
+    color: #f5f5f5;
+    text-decoration: none;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: #686868;
+}
+
+.mobile-menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    background: none;
+    border: none;
+    z-index: 1001;
+}
+
+.hamburger-line {
+    width: 25px;
+    height: 3px;
+    background: #fff;
+    margin: 3px 0;
+    transition: all 0.3s ease;
+    transform-origin: center;
+}
+
+.mobile-menu-toggle.active .hamburger-line:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+
+.mobile-menu-toggle.active .hamburger-line:nth-child(2) {
+    opacity: 0;
+}
+
+.mobile-menu-toggle.active .hamburger-line:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}
+
+.main-content {
+    padding-top: 0;
+    min-height: 100vh;
+}
+
+/* ---------------------------------------------------------------
+   FEATURED HERO — true cover-flow, non-cyclic.
+
+   Two different kinds of "overlap" on purpose, per brief:
+
+   1. NAME + SUBTITLE overlap COMPLETELY with each other. Each is
+      position:fixed at the same screen coordinates for every project
+      (left edge / right edge, vertically centered). Visibility is
+      controlled by `.is-active` — a small JS scrollspy
+      (setupFeaturedActiveTracking, using IntersectionObserver) that
+      toggles the class onto whichever .featured-space currently spans
+      the vertical center of the viewport. Only that one project's text
+      is opacity:1; every other is 0. This is deliberately NOT driven
+      directly by the scroll-timeline: with short rows, more than one
+      row can be "covering" the viewport at once, and a pure per-element
+      view()-timeline fade lets their hold phases overlap — which reads
+      as several names stacked and unreadable. The scrollspy guarantees
+      exactly one at a time, carousel-style.
+
+   2. The IMAGE only partially overlaps its neighbors. It stays in
+      normal document flow and flies through in 3D — entering tipped
+      back above, righting itself and popping forward as it centers,
+      tipping away below as it exits — via CSS scroll-driven animation
+      (animation-timeline: view()), independent of `.is-active`. Because
+      nothing here clips overflow, an image mid-flight can briefly bleed
+      into the row above/below, giving just a sliver of the next/previous
+      project's photo. The centered project's image is always the one on
+      top (see setupFeaturedActiveTracking's distance-based z-index in
+      projects.html).
+
+   Nothing is wheel-hijacked and nothing loops: every .featured-space is a
+   plain block, so scrolling past the last one continues straight into
+   #moreProjects below.
+
+   Progressive enhancement: the image flip is wrapped in @supports
+   (animation-timeline: view()). Chromium and Safari get the full 3D
+   effect; Firefox (lagging on this feature at time of writing) just
+   sees the image at rest. The text crossfade and z-index stacking don't
+   depend on that API at all (IntersectionObserver + plain CSS
+   transitions), so they work the same everywhere.
+--------------------------------------------------------------- */
+.featured-hero {
+    padding: 140px 0 0;
+    /* Nothing here clips between rows (that's what lets neighboring
+       images peek through each other), but the hero's own outer edge
+       DOES need to clip — otherwise the last project's exit animation,
+       which has no "next" row to hide behind, bleeds into #moreProjects
+       below.
+
+       IMPORTANT: this must be clip-path, not overflow:hidden. Any
+       `overflow` value other than `visible` makes an element a CSS
+       scroll container — even if it never actually becomes scrollable —
+       and every .featured-space below declares its own
+       `view-timeline-axis: block`, which binds to the NEAREST ANCESTOR
+       SCROLL CONTAINER. Overflow:hidden here would make .featured-hero
+       itself that container instead of the real document scroller,
+       and since .featured-hero's height always exactly matches its own
+       content, its "scrollport" never moves — silently breaking every
+       scroll-driven animation and the whole carousel. clip-path clips
+       the same way visually without registering as a scroll container,
+       so the timelines keep tracking real page scroll. position:fixed
+       name/subtitle are unaffected either way: fixed elements always
+       escape an ancestor's clipping, overflow or clip-path alike. */
+    clip-path: inset(0);
+}
+
+.featured-hero-title {
+    font-family: "AlteHaasBold";
+    font-size: clamp(26px, 3.6vw, 46px);
+    font-weight: 700;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 0.9;
+    padding: 0 60px 70px;
+    /* Same entrance as the homepage hero's <h1> (see indexcss.css). */
+    opacity: 0;
+    animation: fadeInUp 1.2s ease forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.featured-track {
+    display: block;
+}
+
+.featured-space {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr minmax(280px, 34vw) 1fr;
+    align-items: center;
+    column-gap: 40px;
+    padding: 1.5rem 60px;
+    view-timeline-name: --featured-space;
+    view-timeline-axis: block;
+}
+
+/* z-index is computed and set inline per-row by setupFeaturedActiveTracking
+   (distance from the currently-active index), not by this class — that
+   avoids ties where two non-focused neighbors could end up equal and let
+   DOM order decide who's in front instead of focus state. `.is-active`
+   here only drives the text crossfade below. */
+
+.featured-name {
+    grid-column: 1;
+    font-family: "AlteHaasBold";
+    font-size: clamp(20px, 2.4vw, 36px);
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    line-height: 1.1;
+    justify-self: start;
+    text-align: left;
+    max-width: 280px;
+}
+
+.featured-subtitle {
+    grid-column: 3;
+    font-size: 11px;
+    color: #808080;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    justify-self: end;
+    text-align: right;
+    max-width: 280px;
+}
+
+.featured-media-col {
+    grid-column: 2;
+    perspective: 100rem;
+}
+
+.featured-media-wrapper {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    border-radius: 0;
+    transform-style: preserve-3d;
+    will-change: transform;
+    user-select: none;
+}
+
+.featured-media {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border: 0;
+    border-radius: 0;
+}
+
+.featured-explore {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.45);
+    color: #fff;
+    font-family: "AlteHaasBold";
+    font-size: 13px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+}
+
+a.featured-media-wrapper:hover .featured-explore,
+a.featured-media-wrapper:focus-visible .featured-explore {
+    opacity: 1;
+}
+
+.featured-name,
+.featured-subtitle {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+}
+
+.featured-name {
+    left: 60px;
+}
+
+.featured-subtitle {
+    right: 60px;
+}
+
+.featured-space.is-active .featured-name,
+.featured-space.is-active .featured-subtitle {
+    opacity: 1;
+}
+
+@supports (animation-timeline: view()) {
+    .featured-media-wrapper {
+        animation: featured-cover linear both;
+        animation-timeline: --featured-space;
+    }
+
+    /* The very first project should already be in its settled, centered
+       pose the moment the page loads — not mid-flip waiting for the
+       person to scroll. Binding it to the "exit" portion of its own view
+       range (rather than the full "cover" range used above) means the
+       browser shows the 0% keyframe for the entire entry + hold phase —
+       i.e. flat, no inclination — no matter how much of the row already
+       happens to be on-screen at scroll position zero, and only starts
+       tilting once it genuinely begins scrolling out to make room for
+       the next project. */
+    .featured-space:first-child .featured-media-wrapper {
+        animation-name: featured-cover-first;
+        animation-range: exit 0% exit 100%;
+    }
+}
+
+@keyframes featured-cover {
+    0% {
+        transform: translateY(-100%) rotateX(45deg);
+    }
+    35% {
+        transform: translateY(0) rotateX(45deg);
+    }
+    50% {
+        box-shadow: 0 0 2rem 1rem rgba(0, 0, 0, 0.5);
+        transform: rotateX(0deg) translateZ(10em) scale(1.15);
+    }
+    65% {
+        transform: translateY(0) rotateX(-45deg);
+    }
+    100% {
+        transform: translateY(100%) rotateX(-45deg);
+    }
+}
+
+@keyframes featured-cover-first {
+    0% {
+        box-shadow: 0 0 2rem 1rem rgba(0, 0, 0, 0.5);
+        transform: rotateX(0deg) translateZ(10em) scale(1.15);
+    }
+    100% {
+        transform: translateY(100%) rotateX(-45deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .featured-media-wrapper {
+        animation: none !important;
+        transform: none !important;
+    }
+}
+
+/* ---------------------------------------------------------------
+   MORE PROJECTS — hover-reveal grid, sits below the carousel.
+--------------------------------------------------------------- */
+.more-projects-section {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px 60px 120px;
+}
+
+.more-projects-header {
+    margin-bottom: 30px;
+}
+
+.more-projects-title {
+    font-family: "AlteHaasBold";
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+}
+
+.more-projects-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.4px;
+}
+
+.grid-tile {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.grid-tile::before {
+    content: '';
+    display: block;
+    padding-bottom: 66%;
+}
+
+.grid-media-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.grid-media {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border: 0;
+    transition: transform 0.5s ease;
+}
+
+.grid-tile:hover .grid-media {
+    transform: scale(1.05);
+}
+
+.grid-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.75) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 24px;
+    transition: background 0.4s ease;
+}
+
+.grid-tile:hover .grid-overlay {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.92) 100%);
+}
+
+.grid-subtitle {
+    font-size: 9px;
+    color: #808080;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: 0.85;
+}
+
+.grid-title {
+    font-family: "AlteHaasBold";
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #fff;
+    margin-top: 6px;
+    transform: translateY(0);
+    transition: transform 0.4s ease;
+}
+
+.grid-tile:hover .grid-title {
+    transform: translateY(-4px);
+}
+
+.grid-description {
+    font-size: 12px;
+    line-height: 1.7;
+    color: #d0d0d0;
+    margin-top: 12px;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.4s ease, max-height 0.4s ease;
+}
+
+.grid-tile:hover .grid-description {
+    opacity: 1;
+    max-height: 140px;
+}
+
+.grid-hint {
+    font-size: 11px;
+    font-style: italic;
+    color: #a0a0a0;
+    letter-spacing: 0.3px;
+    text-transform: none;
+    margin-top: 8px;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.4s ease 0.05s, max-height 0.4s ease 0.05s;
+}
+
+.grid-tile:hover .grid-hint {
+    opacity: 1;
+    max-height: 24px;
+}
+
+@media (hover: none) {
+    .grid-tile.in-view .grid-overlay {
+        background: linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.92) 100%);
+    }
+
+    .grid-tile.in-view .grid-media {
+        transform: scale(1.05);
+    }
+
+    .grid-tile.in-view .grid-title {
+        transform: translateY(-4px);
+    }
+
+    .grid-tile.in-view .grid-description {
+        opacity: 1;
+        max-height: 140px;
+    }
+
+    .grid-tile.in-view .grid-hint {
+        opacity: 1;
+        max-height: 24px;
+    }
+}
+
+.btn-explore {
+    display: inline-block;
+    padding: 12px 30px;
+    background: transparent;
+    border: 1px solid #f5f5f5;
+    color: #fff;
+    text-decoration: none;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    width: fit-content;
+    margin-bottom: 30px;
+}
+
+.btn-explore:hover {
+    background: #fff;
+    color: #1a1a1a;
+}
+
+.slide-subtitle {
+    font-size: 11px;
+    color: #808080;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+}
+
+.slide-title {
+    font-family: "AlteHaasBold";
+    font-size: 40px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    line-height: 1.1;
+    margin-bottom: 24px;
+}
+
+.slide-description {
+    font-size: 15px;
+    line-height: 1.9;
+    color: #d0d0d0;
+    max-width: 480px;
+    margin-bottom: 30px;
+}
+
+.slide-credits {
+    width: 100%;
+    max-width: 480px;
+    border-top: 1px solid #404040;
+    padding-top: 20px;
+}
+
+.credits-label {
+    font-size: 10px;
+    color: #808080;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+.credit-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 10px 0;
+    border-bottom: 1px solid #2a2a2a;
+}
+
+.credit-name {
+    font-size: 13px;
+    color: #f5f5f5;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.credit-name:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+.credit-role {
+    font-size: 9px;
+    color: #606060;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-align: right;
+}
+
+.project-lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+}
+
+.project-lightbox.active {
+    display: flex;
+}
+
+.lightbox-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.95);
+}
+
+.lightbox-content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 1100px;
+    max-height: 90vh;
+    background: #1a1a1a;
+    border: 1px solid #404040;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.lightbox-scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+.lightbox-media {
+    position: relative;
+    width: auto;
+    margin: 40px 50px 0;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    flex: 0 0 auto;
+}
+
+.lightbox-media-el {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border: 0;
+}
+
+.lightbox-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    padding: 36px 50px 50px;
+}
+
+.lightbox-info .slide-description,
+.lightbox-info .slide-credits {
+    max-width: 100%;
+}
+
+html {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: rgba(26, 26, 26, 0.9);
+    border: 1px solid #404040;
+    color: #fff;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 2;
+}
+
+.lightbox-close:hover {
+    background: rgba(64, 64, 64, 0.9);
+    border-color: #fff;
+    transform: scale(1.1);
+}
+
+footer {
+    padding: 100px 80px 60px;
+    border-top: 1px solid #404040;
+}
+
+.footer-title {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+.footer-text {
+    color: #808080;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+    nav {
+        padding: 15px 20px;
+    }
+
+    .nav-container {
+        position: relative;
+    }
+
+    .logo {
+        font-size: 20px;
+        letter-spacing: 2px;
+    }
+
+    .mobile-menu-toggle {
+        display: flex;
+    }
+
+    .nav-links {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100vh;
+        background: rgba(26, 26, 26, 0.98);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+        transition: left 0.3s ease;
+        z-index: 999;
+    }
+
+    .nav-links.active {
+        left: 0;
+    }
+
+    .nav-links a {
+        font-size: 18px;
+        letter-spacing: 2px;
+        padding: 15px 20px;
+        border-bottom: 1px solid #404040;
+        width: 200px;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .nav-links a:hover {
+        background: #404040;
+        color: #ffffff;
+    }
+
+    .featured-space {
+        grid-template-columns: 1fr;
+        row-gap: 16px;
+        padding: 60px 24px;
+    }
+
+    .featured-name,
+    .featured-subtitle {
+        position: static !important;
+        transform: none !important;
+        animation: none !important;
+        opacity: 1 !important;
+        grid-column: 1;
+        justify-self: center;
+        text-align: center;
+        max-width: 100%;
+    }
+
+    .featured-media-col {
+        grid-column: 1;
+        perspective: none;
+    }
+
+    .featured-media-wrapper {
+        animation: none !important;
+        transform: none !important;
+        aspect-ratio: 3 / 2;
+    }
+
+    .more-projects-section {
+        padding: 10px 30px 80px;
+    }
+
+    .more-projects-header {
+        margin-bottom: 20px;
+    }
+
+    .more-projects-title {
+        font-size: 26px;
+        letter-spacing: 2px;
+    }
+
+    .more-projects-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2px;
+    }
+
+    .lightbox-media {
+        margin: 24px 20px 0;
+    }
+
+    .lightbox-info {
+        padding: 24px 20px 30px;
+    }
+
+    .credit-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+        padding: 12px 0;
+    }
+
+    .credit-role {
+        text-align: left;
+        white-space: normal;
+    }
+
+    .project-lightbox {
+        padding: 16px;
+    }
+
+    footer {
+        padding: 80px 30px 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    nav {
+        padding: 12px 15px;
+    }
+
+    .logo {
+        font-size: 18px;
+        letter-spacing: 1px;
+    }
+
+    .hamburger-line {
+        width: 22px;
+        height: 2px;
+    }
+
+    .nav-links a {
+        font-size: 16px;
+        width: 180px;
+        padding: 12px 15px;
+    }
+
+    .more-projects-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 320px) {
+    nav {
+        padding: 10px 12px;
+    }
+
+    .logo {
+        font-size: 16px;
+    }
+}

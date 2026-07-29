@@ -22,13 +22,12 @@ body {
     line-height: 1.6;
 }
 
-/* Navigation */
 nav {
     position: fixed;
     top: 0;
     width: 100%;
     padding: 20px 50px;
-    background: transparent;
+    background: rgba(26, 26, 26, 0.25);
     z-index: 2000;
     transition: all 0.3s ease;
     backdrop-filter: blur(80px);
@@ -106,360 +105,348 @@ nav.scrolled {
     transform: rotate(-45deg) translate(6px, -6px);
 }
 
-/* Main Content */
 .main-content {
-    padding-top: 60px;
+    padding-top: 0;
     min-height: 100vh;
 }
 
-.project-section {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 140px 60px 0;
-    position: relative;
+/* ---------------------------------------------------------------
+   FEATURED HERO — non-cyclic scroll-triggered crossfade.
+
+   Name, subtitle, AND image are all position:fixed at the same screen
+   coordinates for every project, and all three fade together, driven by
+   `.is-active` — a JS scrollspy (setupFeaturedActiveTracking) that
+   toggles the class onto whichever .featured-space currently spans the
+   vertical center of the viewport. Only the focused project is
+   opacity:1; everything else is 0. That's what makes the image
+   transition read as a clean fade between pictures instead of a hard
+   cut or a gap — exactly the same mechanism already used for the text.
+
+   Each .featured-space itself has no visible content of its own (all its
+   children are fixed, i.e. pulled out of normal flow) — it's just a
+   scroll-anchor: a fixed-height block that gives the scrollspy something
+   to measure, so each project gets a deliberate, even amount of scroll
+   before handing off to the next. That's also what keeps this
+   non-cyclic: every .featured-space is a plain block in normal
+   document flow, so scrolling past the last one continues straight into
+   #moreProjects below — nothing is wheel-hijacked and nothing loops.
+--------------------------------------------------------------- */
+.featured-hero {
+    padding: 140px 0 0;
+    /* The picture is shorter than the full viewport on purpose — this
+       one variable drives both its height and how far the bottom-
+       anchored UI (scroll indicator, dots, "click to explore" hint)
+       sits from the true bottom of the viewport, so they stay landing
+       on the picture itself rather than the plain page background
+       below it, whatever this value is set to. */
+    --hero-image-height: 75vh;
 }
 
-.project-header {
-    margin-bottom: 40px;
+.featured-hero-title {
+    position: fixed;
+    top: 50%;
+    left: 60px;
+    right: auto;
+    transform: translateY(-50%);
+    font-family: "AlteHaasBold";
+    font-size: clamp(16px, 1.8vw, 22px);
+    font-weight: 700;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    text-align: left;
+    line-height: 1.3;
+    color: rgba(245, 245, 245, 0.85);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+    /* Above the image (z-index 2). */
+    z-index: 15;
+    pointer-events: none;
+    /* Plain opacity-only entrance — since the keyframes below don't
+       touch `transform`, the static translateY(-50%) centering above
+       stays in effect the whole time, no conflict. Then a plain opacity
+       transition afterwards — see `.featured-hero-title.is-hidden`
+       below, toggled by JS (setupFeaturedHeroTitleTracking) so the
+       title only shows while #featuredHero itself is actually in view,
+       not once you've scrolled on into #moreProjects. */
+    opacity: 0;
+    animation: featured-title-fade 1.2s ease forwards;
+    transition: opacity 0.4s ease;
+}
+
+@keyframes featured-title-fade {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.featured-hero-title.is-hidden {
+    opacity: 0 !important;
+}
+
+.scroll-indicator {
+    position: fixed;
+    bottom: calc((100vh - var(--hero-image-height)) / 2 + 26px);
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    z-index: 15;
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+.scroll-indicator.is-hidden {
+    opacity: 0;
+}
+
+.scroll-indicator-label {
+    font-family: "AlteHaasRegular";
+    font-size: 11px;
+    color: #f5f5f5;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+    text-align: center;
+}
+
+.scroll-indicator-arrow {
+    color: #f5f5f5;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.6));
+    animation: scroll-indicator-bounce 1.8s ease-in-out infinite;
+}
+
+@keyframes scroll-indicator-bounce {
+    0%,
+    100% {
+        transform: translateY(0);
+        opacity: 0.6;
+    }
+    50% {
+        transform: translateY(6px);
+        opacity: 1;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .scroll-indicator-arrow {
+        animation: none;
+    }
+}
+
+/* Progress dots — one per featured project, lower-right corner. A quiet
+   "how many are left" indicator: the active project's dot is solid and
+   slightly larger, the rest are dim. Same show/hide behavior as the
+   title and scroll indicator (see setupFeaturedHeroTitleTracking). */
+.featured-dots {
+    position: fixed;
+    bottom: calc((100vh - var(--hero-image-height)) / 2 + 30px);
+    right: 60px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    z-index: 15;
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+.featured-dots.is-hidden {
+    opacity: 0;
+}
+
+.featured-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(245, 245, 245, 0.35);
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.featured-dot.is-active {
+    background: #f5f5f5;
+    transform: scale(1.4);
 }
 
 @keyframes fadeInUp {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
     from {
         opacity: 0;
         transform: translateY(30px);
     }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-.project-title {
-    font-family: "AlteHaasBold";
-    font-size: 75px;
-    font-weight: 700;
-    letter-spacing: 8px;
-    text-transform: uppercase;
-    line-height: 0.9;
-    margin-bottom: 20px;
+.featured-track {
+    display: block;
+    /* This used to carry the entire weight of the transition — first
+       55vh (to let the last project's center-crossing window finish),
+       then 8vh (once candidacy widened to "any overlap"). Neither is
+       needed anymore: setupFeaturedActiveTracking now falls back to the
+       last-active project for as long as nothing else overlaps the
+       viewport, and setupFeaturedHeroTitleTracking doesn't cut that off
+       until #moreProjects has scrolled all the way up to fully cover
+       the screen. Together, that means the hero's fixed content simply
+       stays put through the entire handoff — no gap to bridge with
+       padding here at all.
+    */
+}
+
+/* Pure scroll-anchor — sets the pace of the crossfade (how long each
+   project stays focused before the next takes over). No visible content
+   of its own; see the block comment above. Kept short and uniform
+   across every project (including the last) so #moreProjects arrives
+   soon after STRAIN instead of a long uneventful scroll. */
+.featured-space {
+    position: relative;
+    height: 55vh;
+}
+
+.featured-name,
+.featured-subtitle,
+.featured-media-wrapper {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
     opacity: 0;
-    animation: fadeInUp 1.5s ease forwards;
+    transition: opacity 0.6s ease;
 }
 
-.project-subtitle {
-    font-size: 12px;
-    color: #808080;
+.featured-space.is-active .featured-name,
+.featured-space.is-active .featured-subtitle,
+.featured-space.is-active .featured-media-wrapper {
+    opacity: 1;
+}
+
+.featured-name,
+.featured-subtitle {
+    pointer-events: none;
+    right: 60px;
+    left: auto;
+    text-align: right;
+    /* Always above the image, which sits directly underneath now that
+       it spans full width. */
+    z-index: 10;
+}
+
+.featured-name {
+    top: calc(50% - 6px);
+    transform: translateY(-100%);
+    font-family: "AlteHaasBold";
+    font-size: clamp(28px, 3.4vw, 52px);
+    font-weight: 700;
     letter-spacing: 3px;
     text-transform: uppercase;
+    line-height: 1.1;
+    white-space: nowrap;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.7);
 }
 
-/* ---------------------------------------------------------------
-   SUB-NAV — project names within the carousel.
---------------------------------------------------------------- */
-.sub-project-nav {
-    padding-bottom: 14px;
-    margin-bottom: 50px;
-    border-bottom: 1px solid #404040;
-    opacity: 0;
-    animation: fadeInUp 1.5s ease 0.3s forwards;
-}
-
-.sub-project-nav-links {
-    display: flex;
-    gap: 30px;
-    flex-wrap: wrap;
-    list-style: none;
-}
-
-.sub-project-nav-links a {
-    color: #808080;
-    text-decoration: none;
-    font-size: 10px;
+.featured-subtitle {
+    top: calc(50% + 6px);
+    transform: translateY(0);
+    font-family: "AlteHaasRegular";
+    font-size: 14px;
+    color: #e0e0e0;
+    letter-spacing: 3px;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
-    transition: color 0.3s ease;
-    padding-bottom: 4px;
-    border-bottom: 1px solid transparent;
+    white-space: nowrap;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
 }
 
-.sub-project-nav-links a:hover {
-    color: #fff;
+.featured-media-wrapper {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: block;
+    width: 100vw;
+    height: var(--hero-image-height);
+    border-radius: 0;
+    user-select: none;
+    z-index: 2;
+    /* Only the focused project's image should be clickable/hoverable —
+       the rest are invisible but would otherwise still sit in the
+       document and intercept the pointer. */
+    pointer-events: none;
 }
 
-.sub-project-nav-links a.active {
-    color: #fff;
-    border-bottom: 1px solid #fff;
+.featured-space.is-active .featured-media-wrapper {
+    pointer-events: auto;
 }
 
-/* ---------------------------------------------------------------
-   WORK CAROUSEL
---------------------------------------------------------------- */
-.work-carousel {
-    margin-top: 20px;
-}
-
-.carousel-frame {
-    position: relative;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-.carousel-viewport {
-    flex: 1;
-    overflow: hidden;
-    transition: height 0.4s ease;
-}
-
-.carousel-track {
-    display: flex;
-    transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
-    align-items: center;
-}
-
-.carousel-slide {
-    flex: 0 0 100%;
-    display: grid;
-    grid-template-columns: 1.4fr 1fr;
-    gap: 60px;
-    align-items: center;
-    min-height: 560px;
-}
-
-.slide-media-wrapper {
-    position: relative;
-    width: 100%;
-    height: 560px;
-    overflow: hidden;
-}
-
-.slide-media {
+.featured-media {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
     border: 0;
-    transition: transform 0.6s ease;
+    border-radius: 0;
+    /* Pictures should be less prominent than the project name/subtitle
+       sitting on top of them — dim + slightly desaturate rather than a
+       flat opacity, which would just look washed out against the dark
+       page background. */
+    filter: brightness(0.55) saturate(0.85);
 }
 
-.carousel-slide:hover .slide-media {
-    transform: scale(1.03);
-}
-
-.slide-info {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-.slide-subtitle {
+/* Only rendered in the DOM for projects with a link (see `exploreHint`
+   in buildFeaturedHero) — so it simply doesn't exist for STRAIN, no
+   extra visibility logic needed. Fades in/out with `.is-active` exactly
+   like the name/subtitle/image above it. */
+.featured-explore-hint {
+    position: fixed;
+    bottom: calc((100vh - var(--hero-image-height)) / 2 + 30px);
+    left: 60px;
+    font-family: "AlteHaasRegular";
     font-size: 11px;
-    color: #808080;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    margin-bottom: 16px;
-}
-
-.slide-title {
-    font-family: "AlteHaasBold";
-    font-size: 40px;
-    font-weight: 700;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    line-height: 1.1;
-    margin-bottom: 24px;
-}
-
-.slide-description {
-    font-size: 15px;
-    line-height: 1.9;
-    color: #d0d0d0;
-    max-width: 480px;
-    margin-bottom: 30px;
-}
-
-.btn-explore {
-    display: inline-block;
-    padding: 12px 30px;
-    background: transparent;
-    border: 1px solid #f5f5f5;
-    color: #fff;
-    text-decoration: none;
-    font-size: 10px;
     letter-spacing: 2px;
     text-transform: uppercase;
-    transition: all 0.3s ease;
-    width: fit-content;
-    margin-bottom: 30px;
+    color: rgba(245, 245, 245, 0.65);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    pointer-events: none;
+    z-index: 10;
 }
 
-.btn-explore:hover {
-    background: #fff;
-    color: #1a1a1a;
-}
-
-/* Credits block (carousel + lightbox) */
-.slide-credits {
-    width: 100%;
-    max-width: 480px;
-    border-top: 1px solid #404040;
-    padding-top: 20px;
-}
-
-.credits-label {
-    font-size: 10px;
-    color: #808080;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 12px;
-}
-
-.credit-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    padding: 10px 0;
-    border-bottom: 1px solid #2a2a2a;
-}
-
-.credit-name {
-    font-size: 13px;
-    color: #f5f5f5;
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-
-.credit-name:hover {
-    color: #fff;
-    text-decoration: underline;
-}
-
-.credit-role {
-    font-size: 9px;
-    color: #606060;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    text-align: right;
-}
-
-/* Carousel credits only: full section width (like before), but each row
-   is split into two even halves — the name stays on one line in the left
-   half, and the role starts exactly at the halfway point and truncates
-   with an ellipsis if it doesn't fit in the right half. */
-.carousel-slide .credit-row {
-    display: grid;
-    grid-template-columns: 0.6fr 1.4fr;
-    column-gap: 16px;
-    align-items: baseline;
-
-}
-
-.carousel-slide .credit-name {
-    white-space: nowrap;
-    overflow: hidden;
-}
-
-.carousel-slide .credit-role {
-    text-align: left;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    text-align: right;
-}
-
-/* Carousel arrows — flex siblings of the viewport, not overlaid on top of
-   it, so overflow:hidden on the viewport never clips them. */
-.carousel-arrow {
-    flex: 0 0 auto;
-    background: rgba(26, 26, 26, 0.9);
-    border: 1px solid #404040;
-    color: #fff;
-    width: 54px;
-    height: 54px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    z-index: 100;
-}
-
-.carousel-arrow:hover {
-    background: rgba(64, 64, 64, 0.9);
-    border-color: #fff;
-    transform: scale(1.1);
-}
-
-.carousel-arrow svg {
-    width: 24px;
-    height: 24px;
-    fill: currentColor;
-}
-
-/* Carousel footer: counter + dots */
-.carousel-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 16px;
-    padding-top: 8px;
-    padding-bottom: 22px;
-    border-bottom: 1px solid #404040;
-}
-
-.carousel-counter {
-    font-family: "AlteHaasBold";
-    font-size: 13px;
-    letter-spacing: 2px;
-    color: #808080;
-    
-}
-
-.carousel-counter #counterCurrent {
-    color: #fff;
-}
-
-.counter-divider {
-    margin: 0 6px;
-}
-
-.carousel-dots {
-    display: flex;
-    gap: 12px;
-}
-
-.carousel-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #404040;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    padding: 0;
-}
-
-.carousel-dot:hover {
-    background: #808080;
-}
-
-.carousel-dot.active {
-    background: #fff;
-    width: 24px;
-    border-radius: 4px;
+.featured-space.is-active .featured-explore-hint {
+    opacity: 1;
 }
 
 /* ---------------------------------------------------------------
    MORE PROJECTS — hover-reveal grid, sits below the carousel.
-   Tiles show media + a short description on hover only. Clicking
-   opens the lightbox, which is the only place credits appear.
 --------------------------------------------------------------- */
 .more-projects-section {
+    position: relative;
+    /* Above the hero's fixed content (image z-index 2, text z-index 10,
+       title/scroll-indicator/dots z-index 15) so as this section scrolls
+       up into place, it visually rises and covers the carousel from the
+       bottom, rather than staying hidden underneath it until it's fully
+       in position. The actual opaque background is a full-viewport-width
+       ::before below (this section itself is a centered 1400px box, too
+       narrow to cover the hero's full-bleed content on wider screens). */
+    z-index: 20;
     max-width: 1400px;
     margin: 0 auto;
     padding: 20px 60px 120px;
+}
+
+.more-projects-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 100vw;
+    transform: translateX(-50%);
+    background: #1a1a1a;
+    z-index: -1;
 }
 
 .more-projects-header {
@@ -590,9 +577,6 @@ nav.scrolled {
     max-height: 24px;
 }
 
-/* Touch devices ("hover: none") don't support hover at all — instead,
-   whichever tile is scrolled into the center band of the viewport gets
-   the same reveal via JS toggling .in-view (see setupInViewObserver). */
 @media (hover: none) {
     .grid-tile.in-view .grid-overlay {
         background: linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.92) 100%);
@@ -617,13 +601,95 @@ nav.scrolled {
     }
 }
 
-/* ---------------------------------------------------------------
-   PROJECT LIGHTBOX
-   .lightbox-content itself no longer scrolls — it just sizes and clips
-   the popup. The new .lightbox-scroll wrapper inside it holds the
-   actual scrollable content (media + info), so .lightbox-close can sit
-   directly in .lightbox-content and stay fixed in place as you scroll.
---------------------------------------------------------------- */
+.btn-explore {
+    display: inline-block;
+    padding: 12px 30px;
+    background: transparent;
+    border: 1px solid #f5f5f5;
+    color: #fff;
+    text-decoration: none;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    width: fit-content;
+    margin-bottom: 30px;
+}
+
+.btn-explore:hover {
+    background: #fff;
+    color: #1a1a1a;
+}
+
+.slide-subtitle {
+    font-size: 11px;
+    color: #808080;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+}
+
+.slide-title {
+    font-family: "AlteHaasBold";
+    font-size: 40px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    line-height: 1.1;
+    margin-bottom: 24px;
+}
+
+.slide-description {
+    font-size: 15px;
+    line-height: 1.9;
+    color: #d0d0d0;
+    max-width: 480px;
+    margin-bottom: 30px;
+}
+
+.slide-credits {
+    width: 100%;
+    max-width: 480px;
+    border-top: 1px solid #404040;
+    padding-top: 20px;
+}
+
+.credits-label {
+    font-size: 10px;
+    color: #808080;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+.credit-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 10px 0;
+    border-bottom: 1px solid #2a2a2a;
+}
+
+.credit-name {
+    font-size: 13px;
+    color: #f5f5f5;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.credit-name:hover {
+    color: #fff;
+    text-decoration: underline;
+}
+
+.credit-role {
+    font-size: 9px;
+    color: #606060;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-align: right;
+}
+
 .project-lightbox {
     display: none;
     position: fixed;
@@ -696,7 +762,6 @@ nav.scrolled {
     max-width: 100%;
 }
 
-/* Subtle scrollbar — used site-wide */
 html {
     scrollbar-width: thin;
     scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
@@ -746,9 +811,6 @@ html {
     transform: scale(1.1);
 }
 
-/* ---------------------------------------------------------------
-   FOOTER — matches index.html exactly
---------------------------------------------------------------- */
 footer {
     padding: 100px 80px 60px;
     border-top: 1px solid #404040;
@@ -769,7 +831,6 @@ footer {
     text-transform: uppercase;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     nav {
         padding: 15px 20px;
@@ -823,102 +884,37 @@ footer {
         color: #ffffff;
     }
 
-    .project-section {
-        padding: 110px 30px 0;
+    /* Same fixed-position crossfade system as desktop — it's simple
+       enough now (no more 3D/perspective) to work fine at any size.
+       Just tighten the insets and shrink the scroll-pace height a bit
+       for smaller screens. */
+    .featured-space {
+        height: 45vh;
     }
 
-    .project-title {
-        font-size: 48px;
-        letter-spacing: 4px;
+    .featured-hero-title {
+        top: 90px;
+        left: 20px;
     }
 
-    .sub-project-nav {
-        margin-bottom: 30px;
+    .featured-dots {
+        right: 20px;
+        bottom: calc((100vh - var(--hero-image-height)) / 2 + 20px);
     }
 
-    .sub-project-nav-links {
-        gap: 18px;
+    .featured-explore-hint {
+        left: 20px;
+        bottom: calc((100vh - var(--hero-image-height)) / 2 + 20px);
     }
 
-    .sub-project-nav-links a {
-        font-size: 9px;
-        letter-spacing: 1px;
+    .featured-name,
+    .featured-subtitle {
+        right: 20px;
+        left: auto;
     }
 
-    .carousel-frame {
-        gap: 8px;
-    }
-
-    /* .carousel-track vertically centers each slide (nice on desktop,
-       where DEPTHS/STRAIN/A SHAMAN'S TALE sit side-by-side with the
-       media). But the track's own height is set by the tallest slide
-       (DEPTHS, with the most credits) — so on mobile, shorter slides
-       like STRAIN and A SHAMAN'S TALE were getting centered inside that
-       taller box, leaving empty space above the image. Pin slides to the
-       top of the track on mobile instead. */
-    .carousel-track {
-        align-items: flex-start;
-    }
-
-    .carousel-slide {
-        grid-template-columns: 1fr;
-        gap: 24px;
-        min-height: auto;
-    }
-
-    .slide-media-wrapper {
-        height: 260px;
-    }
-
-    .slide-title {
-        font-size: 26px;
-        letter-spacing: 2px;
-    }
-
-    .slide-description,
-    .slide-credits {
-        max-width: 100%;
-    }
-
-    /* The carousel's own credit rows (.carousel-slide .credit-row) use a
-       fixed 0.6fr/1.4fr split with the name locked to one line via
-       white-space: nowrap + overflow: hidden — on phones that chopped
-       longer names. Stack the full name above the role instead, same
-       pattern as the lightbox credit fix. */
-    .carousel-slide .credit-row {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 4px;
-        padding: 12px 0;
-    }
-
-    .carousel-slide .credit-name {
-        white-space: normal;
-        overflow: visible;
-    }
-
-    .carousel-slide .credit-role {
-        text-align: left;
-        white-space: normal;
-        overflow: visible;
-        text-overflow: clip;
-    }
-
-    .carousel-arrow {
-        width: 36px;
-        height: 36px;
-    }
-
-    .carousel-arrow svg {
-        width: 18px;
-        height: 18px;
-    }
-
-    .carousel-footer {
-        flex-direction: column;
-        gap: 20px;
-        align-items: flex-start;
+    .featured-media-wrapper {
+        width: 100vw;
     }
 
     .more-projects-section {
@@ -947,14 +943,6 @@ footer {
         padding: 24px 20px 30px;
     }
 
-    /* Credit rows in the "More Projects" lightbox sit name-and-role side
-       by side on desktop. On narrow screens a long role (e.g. "Sound
-       Designer & Re-Recording Mixer" on Au Revoir Mon Monde) doesn't have
-       room next to the name and was overlapping it. Stack them instead so
-       the role wraps cleanly underneath. This only targets the plain
-       .credit-row used in the lightbox — the carousel's own credit rows
-       use a more specific selector (.carousel-slide .credit-row) and are
-       untouched. */
     .credit-row {
         flex-direction: column;
         align-items: flex-start;
@@ -995,19 +983,6 @@ footer {
         font-size: 16px;
         width: 180px;
         padding: 12px 15px;
-    }
-
-    .project-section {
-        padding: 100px 20px 0;
-    }
-
-    .slide-media-wrapper {
-        height: 220px;
-    }
-
-    .carousel-arrow {
-        width: 32px;
-        height: 32px;
     }
 
     .more-projects-grid {

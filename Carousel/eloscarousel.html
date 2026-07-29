@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Essentia — Projects</title>
+    <link rel="icon" type="image/svg+xml" href="Media/Favicon/favicon.svg">
+    <link rel="stylesheet" href="eloscarouselcss.css">
+</head>
+<body>
+    <nav id="nav">
+        <div class="nav-container">
+            <a href="index.html" class="logo">AUDIO ESSENTIA</a>
+            <button class="mobile-menu-toggle" id="menuToggle">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">HOME</a></li>
+                <li><a href="projects.html" class="active">PROJECTS</a></li>
+                <li><a href="aboutus.html">ABOUT US</a></li>
+                <li><a href="calendar.html">EVENT CALENDAR</a></li>
+                <li><a href="contact.html">CONTACT</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <!-- ---------------------------------------------------------------
+             FEATURED HERO — scroll-driven, non-cyclic. Slides sit in normal
+             document flow (no scroll-jacking, no position:sticky loop), so
+             once the person scrolls past the last featured project the
+             page simply continues into #moreProjects below, exactly like
+             any other section. Project name sits flush left, subtitle
+             flush right, image centered — "EXPLORE" appears on hover over
+             the image only for projects with a dedicated page (`link` set
+             in featuredData). No counter, no dots, no credits here.
+        --------------------------------------------------------------- -->
+        <section class="featured-hero" id="featuredHero">
+            <h1 class="featured-hero-title">FEATURED PROJECTS</h1>
+            <div class="featured-track" id="featuredTrack">
+                <!-- Slides injected by JS from featuredData below -->
+            </div>
+        </section>
+
+        <!-- ---------------------------------------------------------------
+             MORE PROJECTS — hover-reveal grid, everything not featured
+             above. Hover any tile to see a short description; click opens
+             the full project (with credits) in a lightbox.
+        --------------------------------------------------------------- -->
+        <section class="more-projects-section" id="moreProjects">
+            <div class="more-projects-header">
+                <h2 class="more-projects-title"><BR>FROM THE COLLECTIVE</h2>
+            </div>
+            <div class="more-projects-grid" id="moreProjectsGrid">
+                <!-- Tiles are injected by JS from gridData below -->
+            </div>
+        </section>
+    </main>
+
+    <!-- ---------------------------------------------------------------
+         PROJECT LIGHTBOX — opened when a "More Projects" tile is clicked.
+         Media stays fixed size; the info panel below it scrolls.
+    --------------------------------------------------------------- -->
+    <div class="project-lightbox" id="projectLightbox">
+        <div class="lightbox-backdrop" id="lightboxBackdrop"></div>
+        <div class="lightbox-content">
+            <button class="lightbox-close" id="lightboxClose" aria-label="Close">×</button>
+            <div class="lightbox-scroll">
+                <div class="lightbox-media" id="lightboxMedia"></div>
+                <div class="lightbox-info" id="lightboxInfo"></div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div>
+            <h3 class="footer-title">AUDIO ESSENTIA</h3>
+            <p class="footer-text">EXPLORING CONSCIOUSNESS THROUGH SOUND</p>
+            <a href="https://instagram.com/audioessentia/" target="_blank" style="display: inline-flex; align-items: center; gap: 10px; margin-top: 20px; text-decoration: none; transition: opacity 0.3s ease;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" fill="#808080"/>
+                </svg>
+                <span style="color: #808080; font-size: 11px; letter-spacing: 1px; text-transform: uppercase;">@audioessentia</span>
+            </a>
+        </div>
+    </footer>
+
+    <script>
+        // ---------------------------------------------------------------
+        // TEAM LINKS — maps a credit name (as it appears in the arrays
+        // below) to its anchor on aboutus.html. Add new people/aliases
+        // here as they join — the key must match the name string used in
+        // `credits` EXACTLY (case-sensitive). Any name not found here
+        // falls back to aboutus.html#collective (the team section in
+        // general), per creditLink() below.
+        // ---------------------------------------------------------------
+        const teamLinks = {
+            "Dan Hawryluk": "dan-hawryluk",
+            "John Gregory": "john-gregory",
+            "Raine Edgar": "raine-edgar",
+            "Steven Tsia": "steven-tsia",
+            "Eloísa Sandoval": "eloisa-sandoval",
+            "Eloísa Sandoval García": "eloisa-sandoval",
+            "Sidharth Satheesh": "sidharth-satheesh",
+            "Luz Salcedo": "luz-salcedo",
+            "Joel Tong": "joel-tong",
+            "Vanessa Yuen": "vanessa-yuen",
+            "Vanessa Yuen (樂凡)": "vanessa-yuen",
+            "Axel Braaten": "axel-braaten"
+        };
+
+        function creditLink(name) {
+            const slug = teamLinks[name];
+            return slug ? `aboutus.html#${slug}` : `aboutus.html#collective`;
+        }
+
+        // ---------------------------------------------------------------
+        // FEATURED DATA
+        // Shown in the scroll-driven hero at the top of the page. Only
+        // `title`, `subtitle`, `src`/`type` and `link` are used here —
+        // credits are intentionally not rendered in this section anymore.
+        // Set `link` to a project page to make the image hover/clickable
+        // ("EXPLORE" appears on hover); leave it empty to show the image
+        // as non-interactive (e.g. STRAIN, which has no dedicated page).
+        // ---------------------------------------------------------------
+        const featuredData = [
+            {
+                title: "DEPTHS",
+                subtitle: "4D SOUND INSTALLATION",
+                type: "image",
+                src: "Media/Depths/Depths_1.webp",
+                link: "depths.html"
+            },
+            {
+                title: "A SHAMAN'S TALE",
+                subtitle: "ANIMATED SHORT FILM </BR> AUDIO POST",
+                type: "image",
+                src: "Media/Shamans/AST_2.webp",
+                link: "shamans.html"
+            },
+            {
+                title: "CHILAMB",
+                subtitle: "ANIMATED SHORT FILM </BR> AUDIO POST",
+                type: "image",
+                src: "Media/Chilamb/Chilamb_2.webp",
+                link: "chilamb.html"
+            },
+            {
+                title: "STRAIN",
+                subtitle: "SHORT FILM </BR> AUDIO POST",
+                type: "image",
+                src: "Media/Strain/Strain.webp",
+                link: ""
+            }
+        ];
+
+        // ---------------------------------------------------------------
+        // PROJECT DATA ("More Projects" grid + lightbox)
+        // Replace `src` with real media per project (image path, video path,
+        // or an embed URL). `type` controls how it's rendered:
+        //   'image'  -> <img src="...">
+        //   'video'  -> <video> for a self-hosted file (autoplays, muted, looped)
+        //   'vimeo'  -> <iframe> using the player.vimeo.com URL from Vimeo's
+        //               "Embed" share option
+        //   'youtube'-> <iframe> using the youtube.com/embed/VIDEO_ID URL
+        //               from YouTube's Share → Embed code (copy the src="..."
+        //               value out of the <iframe> YouTube gives you — the
+        //               normal youtube.com/watch?v=... link will NOT work here)
+        //   'embed'  -> generic fallback, same iframe rendering, for any other
+        //               host that gives you an embeddable iframe src
+        // `explore` (true/false) controls whether the EXPLORE button shows —
+        // only set true for projects that have a real dedicated page to link to.
+        // `link` is only used when explore is true.
+        // `imdb` (optional) — full IMDb title URL. When present, a "VIEW ON
+        // IMDB" button is shown in the lightbox alongside the EXPLORE button.
+        // `credits` is an array of [name, role] pairs shown under the description.
+        // Each name is automatically linked via creditLink() above.
+        //
+        // `lightboxType`/`lightboxSrc` (optional) — set these if you want the
+        // lightbox popup to show different media than the grid tile itself,
+        // e.g. a static image thumbnail in the grid but the actual video when
+        // someone clicks in for the full view. Same type values as above
+        // ('image'/'video'/'vimeo'/'youtube'/'embed'). If omitted, the
+        // lightbox just reuses the tile's own type/src.
+        // ---------------------------------------------------------------
+
+        const gridData = [
+            {
+                title: "KNIGHT TERROR",
+                subtitle: "FEATURE FILM AUDIO POST",
+                type: "image",
+                src: "Media/KT/KT.webp",
+                description: "At a remote campsite retreat, a startup's knight mascot begins killing employees. The Knightly staff must solve the murders while navigating office drama as bodies pile up.",
+                explore: false,
+                link: "",
+                imdb: "https://www.imdb.com/title/tt38079921/fullcredits/?ref_=tt_cst_sm#amzn1.imdb.concept.name_credit_category.ce258419-131b-41f0-b2c5-227f5d9b719f",
+                credits: [
+                    ["John Gregory", "Re-Recording Mixer & Sound Designer"],
+                    ["Dan Hawryluk", "Re-Recording Mixer & Sound Designer"],
+                    ["Steven Tsia", "Sound Designer"],
+                    ["Axel Braaten", "Sound Designer"],
+                    ["Eloísa Sandoval", "Dialogue Editor"]
+                ]
+            },
+            {
+                title: "DANCE MOM",
+                subtitle: "SHORT FILM AUDIO POST",
+                type: "image",
+                src: "Media/DanceMom/DanceMom.webp",
+                description: "A character drama about an estranged father and his daughter reconnecting through a dance recital.",
+                explore: false,
+                link: "",
+                imdb: "https://www.imdb.com/title/tt32642300/fullcredits/?ref_=tt_cst_sm#amzn1.imdb.concept.name_credit_category.ce258419-131b-41f0-b2c5-227f5d9b719f",
+                credits: [
+                    ["John Gregory", "Foley Recordist & Foley Editor"],
+                    ["Steven Tsia", "Foley Artist & Foley Editor"],
+                    ["Eloísa Sandoval", "ADR Recordist & Dialogue Editor"],
+                    ["Raine Edgar", "Dialogue Editor"]
+                ]
+            },
+            {
+                title: "KILLER VACANCY",
+                subtitle: "SHORT FILM AUDIO POST",
+                type: "image",
+                src: "Media/KV/KV.webp",
+                description: "A fragile young woman moves into a shared house, where she discovers that her strange roommates have a twisted idea of a practical joke.",
+                explore: false,
+                link: "",
+                imdb: "https://www.imdb.com/title/tt37830452/fullcredits/?ref_=tt_cst_sm#amzn1.imdb.concept.name_credit_category.ce258419-131b-41f0-b2c5-227f5d9b719f",
+                lightboxType: "vimeo",
+                lightboxSrc: "https://www.youtube.com/embed/RmIxKVxTm0s?si=hvSfEhy4eErWxabT",
+                credits: [
+                    ["Dan Hawryluk", "Re-Recording Mixer"],
+                    ["Axel Braaten", "Re-Recording Mixer"],
+                    ["John Gregory", "Foley Recordist, Sound Designer & Music Editor"],
+                    ["Steven Tsia", "Foley Artist & Sound Designer"],
+                    ["Eloísa Sandoval", "ADR Recordist & Dialogue Editor"]
+                ]
+            },
+            {
+                title: "ABHYUHAM",
+                subtitle: "Short Film Sound Editing",
+                type: "image",
+                src: "Media/Abhyuham/Abhyuham.webp",
+                description: "Jayarajans father Rajan has been locked away in central prison. Years later Manjari, the lawyer, tells him that Rajan was wrongly accused. To prove Rajans innocence, they have to find the real culprit. Can they find him?",
+                explore: false,
+                link: "",
+                imdb: "https://www.imdb.com/title/tt26895979/fullcredits/?ref_=tt_cst_sm#amzn1.imdb.concept.name_credit_category.ce258419-131b-41f0-b2c5-227f5d9b719f",
+                credits: [
+                    ["John Gregory", "Assistant Sound Editor"]
+                ]
+            },
+            {
+                title: "KUMARI",
+                subtitle: "FEATURE FILM MUSIC RECORDING",
+                type: "image",
+                src: "Media/Kumari/Kumari_2.webp",
+                description: "The world of Kumari, who is married off far away in Kanhirangat, a cursed land beyond Illymala, in the west. A naive Kumari arrives in the cursed land, where people are ready to sacrifice their lives to preserve tradition.",
+                explore: false,
+                link: "",
+                lightboxType: "vimeo",
+                lightboxSrc: "https://www.youtube.com/embed/dGzKcctHnQU?si=DRdEfIZ4sd7T2DEq",
+                imdb: "https://www.imdb.com/title/tt13531020/fullcredits/?ref_=tt_cst_sm#amzn1.imdb.concept.name_credit_category.aad1533c-6974-45a4-ba98-5f2f43286cfc",
+                credits: [
+                    ["John Gregory", "Music Recordist"]
+                ]
+            },
+            {
+                title: "BOOTHAYANAM",
+                subtitle: "Short Film Music Composition",
+                type: "image",
+                src: "Media/Bhoothayanam/Bhoothayanam.webp",
+                description: "Lonely and desperate, an elderly matriarch will go to any length to be reunited with her beloved granddaughter.",
+                explore: false,
+                link: "",
+                lightboxType: "vimeo",
+                lightboxSrc: "https://www.youtube.com/embed/8eE9Jelmi6A?si=PeY1jFrvnqQhJOvZ",
+                imdb: "https://www.imdb.com/title/tt35766105/fullcredits/?ref_=tt_cst_sm#amzn1.imdb.concept.name_credit_category.00f5faa0-5f76-4eb5-87a1-ec8d484d1779",
+                credits: [
+                    ["Sidharth Satheesh", "Music Composer"]
+                ]
+            },
+            {
+                title: "LAND OF INSPIRATION SEEKERS",
+                subtitle: "ADVERTISEMENT AUDIO POST",
+                type: "image",
+                src: "Media/Uttarakhand/InspirationSeekers.webp",
+                description: "How vibrant cultural experiences make Uttarakhand the perfect winter destination for inspiration seekers and creativity chasers.",
+                explore: false,
+                link: "",
+                lightboxType: "vimeo",
+                lightboxSrc: "https://www.youtube.com/embed/ronVb5ijTFQ?si=trSgXUxAXNQb6T3M",
+                credits: [
+                    ["John Gregory", "Sound Editing & Re-Recording Mixer"]
+                ]
+            },
+            {
+                title: "EXPERIENCE TRUE TRANQUILITY",
+                subtitle: "ADVERTISEMENT AUDIO POST",
+                type: "image",
+                src: "Media/Uttarakhand/UttarakhandDivinity.webp",
+                description: "The spiritual essence of Uttarakhand lies in its many timeless destinations, leaving visitors feeling invigorated and mindfully aware.",
+                explore: false,
+                link: "",
+                lightboxType: "vimeo",
+                lightboxSrc: "https://www.youtube.com/embed/Y8ObIEbNKA8?si=cJopObPLoumkMb59",
+                credits: [
+                    ["John Gregory", "Sound Editing & Re-Recording Mixer"]
+                ]
+            },
+            {
+                title: "UTTARAKHAND'S HIDDEN TREASURES",
+                subtitle: "ADVERTISEMENT AUDIO POST",
+                type: "image",
+                src: "Media/Uttarakhand/HiddenTreasures.webp",
+                description: "Uncover the true culture of Uttarakhand and explore its hidden offbeat treasures for curious explorers and wanderers.",
+                explore: false,
+                link: "",
+                lightboxType: "vimeo",
+                lightboxSrc: "https://www.youtube.com/embed/Rl7iBeqGSjE?si=diK6Fl8A0XcpIYR4",
+                credits: [
+                    ["John Gregory", "Sound Editing & Re-Recording Mixer"]
+                ]
+            },
+            {
+                title: "DJINN",
+                subtitle: "FEATURE FILM ADR RECORDING",
+                type: "image",
+                src: "Media/Djinn/Djinn.webp",
+                description: "A lady encounters a supernatural things during a tour and a horror experience with a sudden appearance of a man called jinn and the story goes on the horror path.",
+                explore: false,
+                link: "",
+                lightboxType: "vimeo",
+                lightboxSrc: "https://www.youtube.com/embed/_m10SQwPx4o?si=l_pBjwFME1IHU9NW&amp;start=5",
+                imdb: "https://www.imdb.com/title/tt10285752/fullcredits/?ref_=tt_cst_sm#amzn1.imdb.concept.name_credit_category.ce258419-131b-41f0-b2c5-227f5d9b719f",
+                credits: [
+                    ["John Gregory", "Music Recordist"]
+                ]
+            },
+            {
+                title: "MANJUMMEL BOYS",
+                subtitle: "FEATURE FILM ADR RECORDING",
+                type: "image",
+                src: "Media/Manjummel/MB_2.webp",
+                description: "A group of friends get into a daring rescue mission to save their friend from Guna Caves, a perilously deep pit from where nobody has ever been brought back.",
+                explore: false,
+                link: "",
+                imdb: "https://www.imdb.com/title/tt26458038/fullcredits/?ref_=tt_cst_sm#amzn1.imdb.concept.name_credit_category.ce258419-131b-41f0-b2c5-227f5d9b719f",
+                credits: [
+                    ["John Gregory", "ADR Recordist"]
+                ]
+            },
+            {
+                title: "POACHER",
+                subtitle: "TV SHOW ADR RECORDING",
+                type: "image",
+                src: "Media/Poacher/Poacher.webp",
+                description: "A group of Indian Forest Service officers, NGO workers, police constables and Good Samaritans risk their lives trying to track down the biggest elephant ivory poachers in the history of India and bring them to justice.",
+                explore: false,
+                link: "",
+                lightboxType: "vimeo",
+                lightboxSrc: "https://www.youtube.com/embed/DdEJtvzT7jc?si=ciho01wyq83t-SeV",
+                imdb: "https://www.imdb.com/title/tt24364990/fullcredits/?ref_=tt_cst_sm#amzn1.imdb.concept.name_credit_category.ce258419-131b-41f0-b2c5-227f5d9b719f",
+                credits: [
+                    ["John Gregory", "ADR Recordist"]
+                ]
+            },
+            {
+                title: "YONA",
+                subtitle: "ANIMATED SHORT FILM SOUND RE-DESIGN",
+                type: "image",
+                src: "Media/Yona/YonaPhoto.webp",
+                description: "After an expedition that went wrong, Chester Cornell, American Captain of the Union finds himself deeply wounded. As he is about to die, an unexpected encounter will make him face his fears and doubts",
+                explore: false,
+                link: "",
+                lightboxType: "vimeo",
+                lightboxSrc: "https://www.youtube.com/embed/KuOoTvratBA?si=kiW4ExZoUAy9m2A4",
+                credits: [
+                    ["John Gregory", "Sound Designer & Re-Recording Mixer"],
+                    ["Sidharth Satheesh", "Media Composer"]
+                ]
+            },
+            {
+                title: "AU REVOIR MON MONDE",
+                subtitle: "ANIMATED SHORT FILM SOUND RE-DESIGN",
+                type: "image",
+                src: "Media/ARMM/ARMM_4.webp",
+                description: "As the world comes to an end, a man trapped in a fish costume races against the clock toward a mysterious tower.",
+                explore: false,
+                link: "",
+                lightboxType: "vimeo",
+                lightboxSrc: "https://www.youtube.com/embed/N45cEg8qGx0?si=G9EJLAgnrkpKSw1Y",
+                credits: [
+                    ["Eloísa Sandoval", "Sound Designer & Re-Recording Mixer"]
+                ]
+            },
+            {
+                title: "WARFRAME: A NEW WAR",
+                subtitle: "VIDEO GAME TRAILER SOUND RE-DESIGN",
+                type: "image",
+                src: "Media/Warframe/Warframe.webp",
+                description: "Embark on an epic Quest across an expansive new adventure, as you race to unite the factions and discover the most dramatic conflict burning in the Origin System - the one within yourself.",
+                explore: false,
+                link: "",
+                lightboxType: "vimeo",
+                lightboxSrc: "https://player.vimeo.com/video/1176342540?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479",
+                credits: [
+                    ["Steven Tsia", "Sound Designer & Re-Recording Mixer"]
+                ]
+            },
+            {
+                title: "MARATHON REVEAL CINEMATIC",
+                subtitle: "VIDEO GAME TRAILER SOUND RE-DESIGN",
+                type: "image",
+                src: "Media/Marathon/Marathon.webp",
+                description: "A team-based extraction shooter. Choose your Runner and scavenge the lost colony of Tau Ceti IV for fortune, power, and answers to Tau Ceti's secrets.",
+                explore: false,
+                link: "",
+                lightboxType: "vimeo",
+                lightboxSrc: "https://www.youtube.com/embed/8GHGXk0p8wk?si=BwFTJl52gndJoUhH",
+                credits: [
+                    ["Ailean Yuzwa", "Sound Designer & Re-Recording Mixer"]
+                ]
+            },
+            {
+                title: "The BioShock 2 Trailer",
+                subtitle: "VIDEO GAME TRAILER SOUND RE-DESIGN",
+                type: "image",
+                src: "Media/BioShock/BioShock.webp",
+                description: "BioShock 2 follows Subject Delta, a prototype Big Daddy fighting through the ruined underwater city of Rapture. He must rescue his former Little Sister, Eleanor, from her mother, Sofia Lamb, who now controls the city's cult-like survivors.",
+                explore: false,
+                link: "",
+                lightboxType: "vimeo",
+                lightboxSrc: "https://www.youtube.com/embed/2NncmpOnIxA?si=6HMaiU8gcUlwd5-u",
+                credits: [
+                    ["Raine Edgar", "Sound Designer & Re-Recording Mixer"]
+                ]
+            },
+            {
+                title: "The First Berserker Khazan",
+                subtitle: "VIDEO GAME TRAILER SOUND RE-DESIGN",
+                type: "image",
+                src: "Media/Khazan/Khazan.webp",
+                description: "The First Berserker: Khazan is a hardcore action RPG based on DNF (Dungeon & Fighter) Universe that will be available on PlayStation 5. As Khazan, the great general of the Pell Los Empire who overcame death, players will unveil the incidents that led to his downfall and seek vengeance on his enemies.",
+                explore: false,
+                link: "",
+                lightboxType: "vimeo",
+                lightboxSrc: "https://www.youtube.com/embed/-6hEc8oXvuU?si=Zt8G0n6EtzWKfTSm",
+                credits: [
+                    ["Axel Braaten", "Sound Designer & Re-Recording Mixer"]
+                ]
+            }
+        ];
+
+        // ---------------------------------------------------------------
+        // SHARED HELPER — renders the media element (img/video/iframe) for
+        // any project object, used by the grid and the lightbox.
+        // ---------------------------------------------------------------
+        function renderMedia(slide, className) {
+            if (slide.type === 'video') {
+                return `<video class="${className}" src="${slide.src}" autoplay muted loop playsinline></video>`;
+            }
+            if (slide.type === 'vimeo' || slide.type === 'youtube' || slide.type === 'embed') {
+                return `<iframe class="${className}" src="${slide.src}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" allowfullscreen title="${slide.title}"></iframe>`;
+            }
+            return `<img class="${className}" src="${slide.src}" alt="${slide.title}">`;
+        }
+
+        function renderCreditsRows(credits) {
+            return credits.map(([name, role]) => `
+                <div class="credit-row">
+                    <a class="credit-name" href="${creditLink(name)}">${name}</a>
+                    <span class="credit-role">${role}</span>
+                </div>
+            `).join('');
+        }
+
+        // Shared helper — builds the EXPLORE + VIEW ON IMDB buttons for a
+        // project object, used in the lightbox.
+        function renderActionButtons(project) {
+            const exploreBtn = project.explore && project.link
+                ? `<a href="${project.link}" class="btn-explore">EXPLORE</a>`
+                : '';
+
+            const imdbBtn = project.imdb
+                ? `<a href="${project.imdb}" target="_blank" rel="noopener" class="btn-explore">VIEW ON IMDB</a>`
+                : '';
+
+            return exploreBtn + imdbBtn;
+        }
+
+        // ---------------------------------------------------------------
+        // FEATURED HERO BUILD
+        // Pure scroll — no autoplay, no wheel-hijacking, no counter. Each
+        // slide is a plain block in normal document flow, so scrolling
+        // past the last one continues straight into #moreProjects. The
+        // "cover flow" zoom/settle effect is driven entirely by CSS
+        // (animation-timeline: view()) in projectscss.css; browsers
+        // without support (Firefox, at time of writing) just see the
+        // images at rest — still fully readable and clickable.
+        // ---------------------------------------------------------------
+        const featuredTrack = document.getElementById('featuredTrack');
+
+        function buildFeaturedHero() {
+            featuredTrack.innerHTML = '';
+
+            featuredData.forEach((project, i) => {
+                const space = document.createElement('div');
+                space.className = 'featured-space';
+                // The first project starts already centered/settled (see
+                // the featured-cover-first keyframes + is-active default
+                // below), so it needs to be visible with zero scrolling.
+                if (i === 0) space.classList.add('is-active');
+
+                const mediaEl = renderMedia(project, 'featured-media');
+                const hasLink = Boolean(project.link);
+
+                const mediaBlock = hasLink
+                    ? `<a class="featured-media-wrapper" href="${project.link}" aria-label="Explore ${project.title}">
+                           ${mediaEl}
+                           <span class="featured-explore">EXPLORE</span>
+                       </a>`
+                    : `<div class="featured-media-wrapper">${mediaEl}</div>`;
+
+                space.innerHTML = `
+                    <h2 class="featured-name">${project.title}</h2>
+                    <div class="featured-media-col">${mediaBlock}</div>
+                    <p class="featured-subtitle">${project.subtitle}</p>
+                `;
+
+                featuredTrack.appendChild(space);
+            });
+
+            setupFeaturedActiveTracking();
+        }
+
+        // ---------------------------------------------------------------
+        // FEATURED ACTIVE TRACKING — a "scrollspy": whichever
+        // .featured-space currently spans the exact vertical center of
+        // the viewport gets `.is-active`. That class is what actually
+        // shows its name/subtitle (position:fixed, opacity driven by
+        // this class, not by the scroll-timeline) and lifts its image's
+        // z-index above the others — so only one project is ever legible
+        // at a time, and its photo is always the one on top while
+        // neighbors merely peek through underneath.
+        // ---------------------------------------------------------------
+        function setupFeaturedActiveTracking() {
+            const spaces = Array.from(document.querySelectorAll('.featured-space'));
+            if (!spaces.length) return;
+
+            function applyActive(index) {
+                spaces.forEach((space, i) => {
+                    space.classList.toggle('is-active', i === index);
+                    // Distance-based z-index, not a plain active/inactive
+                    // binary: the focused project is always strictly
+                    // higher than every other row, and rows further from
+                    // it sit further back — so two non-focused neighbors
+                    // (e.g. STRAIN and A SHAMAN'S TALE) can never tie and
+                    // let DOM order decide who's "in front" instead of
+                    // focus state.
+                    space.style.zIndex = String(spaces.length - Math.abs(i - index));
+                });
+            }
+
+            applyActive(0);
+
+            const activeObserver = new IntersectionObserver((entries) => {
+                const intersecting = entries.filter((entry) => entry.isIntersecting);
+
+                if (!intersecting.length) {
+                    // Nothing spans the center line right now — most
+                    // commonly because we've scrolled past the last
+                    // project into #moreProjects (or haven't reached the
+                    // first one yet). Previously this just returned
+                    // early and left the last-known active row's name/
+                    // subtitle stuck visible; clear it instead so the
+                    // fixed-position text actually disappears once
+                    // there's no featured project to attach it to.
+                    spaces.forEach((space) => space.classList.remove('is-active'));
+                    return;
+                }
+
+                // If more than one row is (briefly) spanning the center
+                // line at once, pick whichever is genuinely closest to
+                // true viewport center — keeps a single deterministic
+                // winner instead of letting two rows tie.
+                const viewportCenter = window.innerHeight / 2;
+                let winner = intersecting[0].target;
+                let winnerDist = Infinity;
+
+                intersecting.forEach((entry) => {
+                    const rect = entry.target.getBoundingClientRect();
+                    const rowCenter = rect.top + rect.height / 2;
+                    const dist = Math.abs(rowCenter - viewportCenter);
+                    if (dist < winnerDist) {
+                        winnerDist = dist;
+                        winner = entry.target;
+                    }
+                });
+
+                const index = spaces.indexOf(winner);
+                if (index !== -1) applyActive(index);
+            }, {
+                root: null,
+                rootMargin: '-50% 0px -50% 0px',
+                threshold: 0
+            });
+
+            spaces.forEach((space) => activeObserver.observe(space));
+        }
+
+        buildFeaturedHero();
+
+        // ---------------------------------------------------------------
+        // MORE PROJECTS GRID — hover reveals a short description (and a
+        // "click to see credits" hint) on the tile itself; clicking opens
+        // the full project (with credits) in a lightbox. On touch devices
+        // (no hover), the tile currently centered in the viewport as the
+        // user scrolls gets the same reveal automatically.
+        // ---------------------------------------------------------------
+        const moreProjectsGrid = document.getElementById('moreProjectsGrid');
+
+        function buildGrid() {
+            moreProjectsGrid.innerHTML = '';
+
+            gridData.forEach((project, i) => {
+                const tile = document.createElement('div');
+                tile.className = 'grid-tile';
+
+                const mediaEl = renderMedia(project, 'grid-media');
+
+                tile.innerHTML = `
+                    <div class="grid-media-wrapper">
+                        ${mediaEl}
+                    </div>
+                    <div class="grid-overlay">
+                        <p class="grid-subtitle">${project.subtitle}</p>
+                        <h3 class="grid-title">${project.title}</h3>
+                        <p class="grid-description">${project.description}</p>
+                        <p class="grid-hint">Click to see credits</p>
+                    </div>
+                `;
+
+                tile.addEventListener('click', () => openLightbox(i));
+                moreProjectsGrid.appendChild(tile);
+            });
+
+            setupInViewObserver();
+        }
+
+        // ---------------------------------------------------------------
+        // LIGHTBOX — opened when a grid tile is clicked. Media stays a
+        // fixed size; the info panel below it (description + credits)
+        // scrolls independently if it's taller than the available space.
+        //
+        // HISTORY HANDLING — opening the lightbox pushes a history entry.
+        // That means the browser's back button closes the lightbox and
+        // lands back on the Projects page (instead of leaving the page
+        // entirely, e.g. back to the Home page). Closing the lightbox any
+        // other way (X button, clicking outside, Escape) calls
+        // history.back() itself so that pushed entry gets cleaned up and
+        // a second back-button press isn't needed later.
+        // --------------------------------------------------------------
+        const projectLightbox = document.getElementById('projectLightbox');
+        const lightboxMedia = document.getElementById('lightboxMedia');
+        const lightboxInfo = document.getElementById('lightboxInfo');
+        const lightboxClose = document.getElementById('lightboxClose');
+        const lightboxBackdrop = document.getElementById('lightboxBackdrop');
+
+        let lightboxHistoryPushed = false;
+
+        function slugify(str) {
+            return str.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+        }
+
+        function openLightbox(index) {
+            const project = gridData[index];
+            if (!project) return;
+
+            const lightboxMediaSource = {
+                type: project.lightboxType || project.type,
+                src: project.lightboxSrc || project.src,
+                title: project.title
+            };
+
+            lightboxMedia.innerHTML = renderMedia(lightboxMediaSource, 'lightbox-media-el');
+
+            lightboxInfo.innerHTML = `
+                <p class="slide-subtitle">${project.subtitle}</p>
+                <h2 class="slide-title">${project.title}</h2>
+                <p class="slide-description">${project.description}</p>
+                ${renderActionButtons(project)}
+                <div class="slide-credits">
+                    <p class="credits-label">CREDITS</p>
+                    ${renderCreditsRows(project.credits)}
+                </div>
+            `;
+
+            projectLightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            // Push a history entry so the back button closes the lightbox
+            // instead of navigating away from the Projects page.
+            history.pushState({ lightbox: true }, '', `#${slugify(project.title)}`);
+            lightboxHistoryPushed = true;
+        }
+
+        function closeLightbox(fromPopState) {
+            projectLightbox.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            lightboxMedia.innerHTML = '';
+
+            if (lightboxHistoryPushed) {
+                lightboxHistoryPushed = false;
+                // If we're not already responding to a popstate (i.e. the
+                // person closed the lightbox by clicking X / outside /
+                // Escape), undo the history entry we pushed when opening
+                // it so the URL/history stack stays clean.
+                if (!fromPopState) {
+                    history.back();
+                }
+            }
+        }
+
+        // Back-button support: closes the lightbox instead of leaving the page.
+        window.addEventListener('popstate', () => {
+            if (projectLightbox.classList.contains('active')) {
+                closeLightbox(true);
+            }
+        });
+
+        lightboxClose.addEventListener('click', () => closeLightbox(false));
+        lightboxBackdrop.addEventListener('click', () => closeLightbox(false));
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && projectLightbox.classList.contains('active')) {
+                closeLightbox(false);
+            }
+        });
+
+        // ---------------------------------------------------------------
+        // TOUCH "IN VIEW" REVEAL — on devices without hover, whichever
+        // tile is centered in the viewport as the person scrolls gets its
+        // info revealed automatically, standing in for hover.
+        // ---------------------------------------------------------------
+        function setupInViewObserver() {
+            if (!window.matchMedia('(hover: none)').matches) return;
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    entry.target.classList.toggle('in-view', entry.isIntersecting);
+                });
+            }, {
+                root: null,
+                rootMargin: '-40% 0px -40% 0px',
+                threshold: 0
+            });
+
+            document.querySelectorAll('.grid-tile').forEach(tile => observer.observe(tile));
+        }
+
+        buildGrid();
+
+        // Nav scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('nav');
+            if (window.pageYOffset > 100) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
+            document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : 'auto';
+        });
+
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                menuToggle.classList.remove('active');
+                navLinks.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            });
+        });
+    </script>
+</body>
+</html>
