@@ -892,25 +892,45 @@ footer {
         height: 45vh;
     }
 
+    /* Mobile-only: centered horizontally instead of flush left (desktop
+       keeps left: 60px / text-align: left from the base rule above). */
     .featured-hero-title {
+        padding-top: 30px;
         top: 90px;
-        left: 20px;
+        left: 0;
+        right: 0;
+        text-align: center;
     }
 
+    /* Mobile-only: dots stack vertically instead of running horizontally
+       (desktop keeps flex-direction: row from the base rule above). */
     .featured-dots {
         right: 20px;
         bottom: calc((100vh - var(--hero-image-height)) / 2 + 20px);
+        flex-direction: column;
     }
 
-    .featured-explore-hint {
-        left: 20px;
-        bottom: calc((100vh - var(--hero-image-height)) / 2 + 20px);
-    }
-
+    /* Mobile-only: title + subtitle are centered horizontally instead of
+       right-aligned (they're right-aligned on desktop, see the base
+       .featured-name/.featured-subtitle rule above). */
     .featured-name,
     .featured-subtitle {
-        right: 20px;
-        left: auto;
+        left: 0;
+        right: 0;
+        text-align: center;
+    }
+
+    /* Mobile-only: the "click to explore project" hint moves from the
+       bottom-left corner (desktop position) to sit directly beneath the
+       centered title + subtitle instead. 50% + 34px lands just under
+       the subtitle's own box (subtitle starts at 50% + 6px and is ~22px
+       tall at this font-size/line-height), with a small gap above it. */
+    .featured-explore-hint {
+        left: 0;
+        right: 0;
+        top: calc(50% + 34px);
+        bottom: auto;
+        text-align: center;
     }
 
     .featured-media-wrapper {
