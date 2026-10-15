@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Audio Essentia - Dates</title>
+    <title>Audio Essentia - About Us</title>
     <link rel="icon" type="image/svg+xml" href="Media/Favicon/favicon.svg">
     <link rel="stylesheet" href="aboutuscss.css">
 </head>
@@ -53,14 +53,19 @@
             <div class="collective-grid">
                 <!--
                     Each member-card has an id matching the slugs used in
-                    work.html's teamLinks object (e.g. id="dan-hawryluk").
+                    projects.html's teamLinks object (e.g. id="dan-hawryluk").
                     Keep these in sync: if a name changes here, update the
                     matching key in teamLinks too.
+
+                    PERFORMANCE: every photo has loading="lazy" so only the
+                    ones near the screen download. The photos should also be
+                    resized to ~600px wide and converted to .webp — run this
+                    from the repo root, then change each ".jpeg" below to ".webp":
+                    for f in Media/Collective/*.jpeg; do ffmpeg -i "$f" -vf "scale=600:-2" -c:v libwebp -quality 80 "${f%.jpeg}.webp"; done
                 -->
                 <div class="member-card" id="dan-hawryluk">
                     <div class="member-image">
-                        <!-- <div class="member-placeholder">DH</div> !-->
-                        <img src="Media/Collective/Dan.jpeg" alt="Dan Hawryluk">
+                        <img src="Media/Collective/Dan.jpeg" alt="Dan Hawryluk" loading="lazy" decoding="async">
                     </div>
                     <div class="member-info">
                         <h3 class="member-name">Dan Hawryluk</h3>
@@ -73,30 +78,33 @@
 
                 <div class="member-card" id="john-gregory">
                     <div class="member-image">
-                        <img src="Media/Collective/John.jpeg" alt="John Gregory">
+                        <img src="Media/Collective/John.jpeg" alt="John Gregory" loading="lazy" decoding="async">
                     </div>
                     <div class="member-info">
                         <h3 class="member-name">John Gregory</h3>
                         <p class="member-role">Co-Creative Director, Supervising Sound Editor, Re-Recording Mixer And International Talent Coordinator</p>
                         <p class="member-bio">
                             Supervising Sound Editor credited on 15+ films, over 100 commercial projects, and immersive media productions.
+                        </p>
                     </div>
                 </div>
 
                 <div class="member-card" id="raine-edgar">
                     <div class="member-image">
-                        <img src="Media/Collective/Raine.jpeg" alt="Raine Edgar">
+                        <img src="Media/Collective/Raine.jpeg" alt="Raine Edgar" loading="lazy" decoding="async">
                     </div>
                     <div class="member-info">
                         <h3 class="member-name">Raine Edgar</h3>
                         <p class="member-role">VFX Artist and Technical Sound Designer</p>
                         <p class="member-bio">
                             Vancouver-based sound designer and audio programmer focused on providing clean, adaptive soundscapes that enhance interactive narratives.
+                        </p>
                     </div>
                 </div>
+
                 <div class="member-card" id="steven-tsia">
                     <div class="member-image">
-                        <img src="Media/Collective/Steven.jpeg" alt="Steven Tsia">
+                        <img src="Media/Collective/Steven.jpeg" alt="Steven Tsia" loading="lazy" decoding="async">
                     </div>
                     <div class="member-info">
                         <h3 class="member-name">Steven Tsia</h3>
@@ -106,9 +114,10 @@
                         </p>
                     </div>
                 </div>
+
                 <div class="member-card" id="eloisa-sandoval">
                     <div class="member-image">
-                        <img src="Media/Collective/Eloise.jpeg" alt="Eloísa Sandoval">
+                        <img src="Media/Collective/Eloise.jpeg" alt="Eloísa Sandoval" loading="lazy" decoding="async">
                     </div>
                     <div class="member-info">
                         <h3 class="member-name">Eloísa Sandoval García</h3>
@@ -121,7 +130,7 @@
 
                 <div class="member-card" id="sidharth-satheesh">
                     <div class="member-image">
-                        <img src="Media/Collective/Sidharth.jpeg" alt="Sidharth Satheesh">
+                        <img src="Media/Collective/Sidharth.jpeg" alt="Sidharth Satheesh" loading="lazy" decoding="async">
                     </div>
                     <div class="member-info">
                         <h3 class="member-name">Sidharth Satheesh</h3>
@@ -131,9 +140,10 @@
                         </p>
                     </div>
                 </div>
+
                 <div class="member-card" id="axel-braaten">
                     <div class="member-image">
-                        <img src="Media/Collective/Axel.webp" alt="Axel Braaten">
+                        <img src="Media/Collective/Axel.webp" alt="Axel Braaten" loading="lazy" decoding="async">
                     </div>
                     <div class="member-info">
                         <h3 class="member-name">Axel Braaten</h3>
@@ -143,9 +153,10 @@
                         </p>
                     </div>
                 </div>
+
                 <div class="member-card" id="luz-salcedo">
                     <div class="member-image">
-                        <img src="Media/Collective/Luz.jpeg" alt="Luz Salcedo">
+                        <img src="Media/Collective/Luz.jpeg" alt="Luz Salcedo" loading="lazy" decoding="async">
                     </div>
                     <div class="member-info">
                         <h3 class="member-name">Luz Salcedo</h3>
@@ -158,7 +169,7 @@
 
                 <div class="member-card" id="joel-tong">
                     <div class="member-image">
-                        <img src="Media/Collective/Joel.jpeg" alt="Joel Tong">
+                        <img src="Media/Collective/Joel.jpeg" alt="Joel Tong" loading="lazy" decoding="async">
                     </div>
                     <div class="member-info">
                         <h3 class="member-name">Joel Tong</h3>
@@ -172,7 +183,7 @@
                 
                 <div class="member-card" id="vanessa-yuen">
                     <div class="member-image">
-                        <img src="Media/Collective/Vanessa.jpeg" alt="Vanessa Yuen">
+                        <img src="Media/Collective/Vanessa.jpeg" alt="Vanessa Yuen" loading="lazy" decoding="async">
                     </div>
                     <div class="member-info">
                         <h3 class="member-name">Vanessa Yuen (樂凡)</h3>

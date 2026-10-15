@@ -21,8 +21,8 @@
                 <li><a href="index.html">HOME</a></li>
                 <li><a href="projects.html">PROJECTS</a></li>
                 <li><a href="aboutus.html">ABOUT US</a></li>
-                <li><a class="active" href="calendar.html">EVENT CALENDAR</a></li>
-                <li><a href="contact.html">CONTACT</a></li>
+                <li><a href="calendar.html">EVENT CALENDAR</a></li>
+                <li><a class="active" href="contact.html">CONTACT</a></li>
             </ul>
         </div>
     </nav>
@@ -97,7 +97,6 @@
         </div>
     </section>
 
-    <!-- Footer -->
     <footer>
         <div>
             <h3 class="footer-title">AUDIO ESSENTIA</h3>
@@ -111,73 +110,73 @@
         </div>
     </footer>
 
-<script>
-            // Mobile Menu JavaScript
-            function initializeMobileMenu() {
-                // Create hamburger menu button if it doesn't exist
-                const navContainer = document.querySelector('.nav-container');
-                const navLinks = document.querySelector('.nav-links');
-                
-                const hamburger = document.querySelector('.mobile-menu-toggle');
+    <script>
+        // Mobile Menu
+        // (Previously this was attached twice — once directly and once via
+        // the readyState check — so every tap toggled the menu open and
+        // straight back closed. It now initializes exactly once.)
+        function initializeMobileMenu() {
+            const navContainer = document.querySelector('.nav-container');
+            const navLinks = document.querySelector('.nav-links');
+            const hamburger = document.querySelector('.mobile-menu-toggle');
 
-                // Toggle mobile menu
-                hamburger.addEventListener('click', function() {
-                    this.classList.toggle('active');
-                    navLinks.classList.toggle('active');
-                    document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : 'auto';
+            // Toggle mobile menu
+            hamburger.addEventListener('click', function() {
+                this.classList.toggle('active');
+                navLinks.classList.toggle('active');
+                document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : 'auto';
+            });
+
+            // Close menu when clicking on nav links
+            const navLinkItems = document.querySelectorAll('.nav-links a');
+            navLinkItems.forEach(link => {
+                link.addEventListener('click', function() {
+                    hamburger.classList.remove('active');
+                    navLinks.classList.remove('active');
+                    document.body.style.overflow = 'auto';
                 });
+            });
 
-                // Close menu when clicking on nav links
-                const navLinkItems = document.querySelectorAll('.nav-links a');
-                navLinkItems.forEach(link => {
-                    link.addEventListener('click', function() {
-                        hamburger.classList.remove('active');
-                        navLinks.classList.remove('active');
-                        document.body.style.overflow = 'auto';
-                    });
-                });
+            // Close menu when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!navContainer.contains(event.target) && navLinks.classList.contains('active')) {
+                    hamburger.classList.remove('active');
+                    navLinks.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            });
 
-                // Close menu when clicking outside
-                document.addEventListener('click', function(event) {
-                    if (!navContainer.contains(event.target) && navLinks.classList.contains('active')) {
-                        hamburger.classList.remove('active');
-                        navLinks.classList.remove('active');
-                        document.body.style.overflow = 'auto';
-                    }
-                });
+            // Close menu on window resize if screen becomes larger
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    hamburger.classList.remove('active');
+                    navLinks.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            });
 
-                // Close menu on window resize if screen becomes larger
-                window.addEventListener('resize', function() {
-                    if (window.innerWidth > 768) {
-                        hamburger.classList.remove('active');
-                        navLinks.classList.remove('active');
-                        document.body.style.overflow = 'auto';
-                    }
-                });
+            // Handle escape key to close menu
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape' && navLinks.classList.contains('active')) {
+                    hamburger.classList.remove('active');
+                    navLinks.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        }
 
-                // Handle escape key to close menu
-                document.addEventListener('keydown', function(event) {
-                    if (event.key === 'Escape' && navLinks.classList.contains('active')) {
-                        hamburger.classList.remove('active');
-                        navLinks.classList.remove('active');
-                        document.body.style.overflow = 'auto';
-                    }
-                });
-            }
-
-            // Initialize mobile menu when DOM is loaded
+        if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initializeMobileMenu);
+        } else {
+            initializeMobileMenu();
+        }
 
-            // Also initialize if the script is loaded after DOM is ready
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', initializeMobileMenu);
-            } else {
-                initializeMobileMenu();
-            }
-
-        // This script is for the floating particles that are in the background
+        // Floating background particles. Only runs if the page actually
+        // has a <div id="particles"></div> — it didn't before, which made
+        // this throw an error on every load.
         function createParticles() {
             const container = document.getElementById('particles');
+            if (!container) return;
             const particleCount = 50;
             
             for (let i = 0; i < particleCount; i++) {
@@ -190,7 +189,7 @@
             }
         }
 
-        // this part of the script is for smooth scrolling for navigation links
+        // Smooth scrolling for in-page links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -205,17 +204,14 @@
         });
 
         // Parallax effect for hero section
+        const hero = document.querySelector('.hero');
         window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            const hero = document.querySelector('.hero');
             if (hero) {
-                hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+                hero.style.transform = `translateY(${window.pageYOffset * 0.5}px)`;
             }
-        });
+        }, { passive: true });
 
-        // Initialize particles when page loads
         createParticles();
-
     </script>
 </body>
 </html>

@@ -6,6 +6,8 @@
     <title>Audio Essentia</title>
     <link rel="icon" type="image/svg+xml" href="Media/Favicon/favicon.svg">
     <link rel="stylesheet" href="indexcss.css">
+    <!-- Start fetching the first hero image immediately, before CSS/JS parse -->
+    <link rel="preload" as="image" href="Media/Depths/Depths_1.webp">
 </head>
 <body>
 
@@ -28,20 +30,24 @@
     </nav>
 
     <!-- ---------------------------------------------------------------
-         HERO — DEPTHS takeover. 7 background photos cross-fade behind a
-         dark gradient (see .hero::before in the CSS) so "SOUND
-         COLLECTIVE" and the explore button stay readable.
-         Swap the 7 image paths below for the real files.
+         HERO — DEPTHS takeover. Background photos cross-fade behind a
+         dark gradient (see .hero::before in the CSS).
+
+         PERFORMANCE: only the FIRST slide has its image set directly.
+         The rest use data-bg and are loaded one slide ahead by the
+         slideshow script below, so the page only downloads one photo
+         before it's visible instead of all of them at once.
+         To add a slide: copy a line and set data-bg (not style).
     --------------------------------------------------------------- -->
     <section class="hero" id="hero">
         <div class="hero-bg" id="heroBg">
             <div class="hero-bg-slide active" style="background-image: url('Media/Depths/Depths_1.webp');"></div>
-            <div class="hero-bg-slide" style="background-image: url('Media/Depths/Depths_2.webp');"></div>
-            <div class="hero-bg-slide" style="background-image: url('Media/Depths/Depths_3.webp');"></div>
-            <div class="hero-bg-slide" style="background-image: url('Media/Depths/Depths_4.webp');"></div>
-            <div class="hero-bg-slide" style="background-image: url('Media/Depths/Depths_5.webp');"></div>
-            <div class="hero-bg-slide" style="background-image: url('Media/Depths/Depths_10.webp');"></div>
-        <!--    <div class="hero-bg-slide" style="background-image: url('Media/Depths/Depths_7.webp');"></div> -->
+            <div class="hero-bg-slide" data-bg="Media/Depths/Depths_2.webp"></div>
+            <div class="hero-bg-slide" data-bg="Media/Depths/Depths_3.webp"></div>
+            <div class="hero-bg-slide" data-bg="Media/Depths/Depths_4.webp"></div>
+            <div class="hero-bg-slide" data-bg="Media/Depths/Depths_5.webp"></div>
+            <div class="hero-bg-slide" data-bg="Media/Depths/Depths_10.webp"></div>
+        <!--    <div class="hero-bg-slide" data-bg="Media/Depths/Depths_7.webp"></div> -->
         </div>
 
         <div class="hero-content">
@@ -127,17 +133,31 @@
             });
         });
 
-        // Hero background slideshow — cross-fades through the 7 slides
-        // automatically. Swap the interval below to change the pace.
+        // Hero background slideshow — cross-fades through the slides
+        // automatically. Change the interval below to change the pace.
+        // Each slide's image is loaded one step ahead of when it's shown
+        // (8 seconds of lead time), so it's ready before it fades in.
         (function initHeroSlideshow() {
             const slides = document.querySelectorAll('.hero-bg-slide');
             if (slides.length < 2) return;
+
+            function loadSlide(slide) {
+                if (slide.dataset.bg) {
+                    slide.style.backgroundImage = `url('${slide.dataset.bg}')`;
+                    delete slide.dataset.bg;
+                }
+            }
+
+            // Queue the second slide once the first screen has fully loaded.
+            window.addEventListener('load', () => loadSlide(slides[1]));
 
             let currentSlide = 0;
             setInterval(() => {
                 slides[currentSlide].classList.remove('active');
                 currentSlide = (currentSlide + 1) % slides.length;
+                loadSlide(slides[currentSlide]); // safety net if 'load' hadn't fired yet
                 slides[currentSlide].classList.add('active');
+                loadSlide(slides[(currentSlide + 1) % slides.length]);
             }, 8000);
         })();
     </script>

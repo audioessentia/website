@@ -128,11 +128,21 @@
         // ---------------------------------------------------------------
         // FEATURED DATA
         // Shown in the scroll-driven hero at the top of the page. Only
-        // `title`, `subtitle`, `src`/`type` and `link` are used here —
-        // credits are intentionally not rendered in this section anymore.
-        // Set `link` to a project page to make the image clickable;
+        // `title`, `subtitle`, `src`/`type`, `poster` and `link` are used
+        // here. Set `link` to a project page to make the image clickable;
         // leave it empty to show the image as non-interactive (e.g.
-        // STRAIN, which has no dedicated page). No hover effect for now.
+        // STRAIN, which has no dedicated page).
+        //
+        // `poster` (optional, videos only) — a still image (.webp) shown
+        // instantly while the video buffers. Strongly recommended: grab
+        // one with
+        //   ffmpeg -ss 1 -i input.mp4 -frames:v 1 -c:v libwebp -quality 80 poster.webp
+        // then set e.g. poster: "Media/Depths/DepthsPoster.webp".
+        //
+        // PERFORMANCE: videos are NOT downloaded up front anymore. Only
+        // the project currently on screen plays (see applyActive in
+        // setupFeaturedActiveTracking); the others stay paused with
+        // preload="none" until the person scrolls to them.
         // ---------------------------------------------------------------
         const featuredData = [
             {
@@ -140,6 +150,7 @@
                 subtitle: "4D SOUND INSTALLATION",
                 type: "video",
                 src: "Media/Depths/DepthsVisuals_Stevo_3.mp4",
+                poster: "",
                 link: "depths.html"
             },
             {
@@ -154,6 +165,7 @@
                 subtitle: "ANIMATED SHORT FILM AUDIO POST",
                 type: "video",
                 src: "Media/Shamans/AST_2.mp4",
+                poster: "",
                 link: "shamans.html"
             },
             {
@@ -170,7 +182,7 @@
         // Replace `src` with real media per project (image path, video path,
         // or an embed URL). `type` controls how it's rendered:
         //   'image'  -> <img src="...">
-        //   'video'  -> <video> for a self-hosted file (autoplays, muted, looped)
+        //   'video'  -> <video> for a self-hosted file (muted, looped)
         //   'vimeo'  -> <iframe> using the player.vimeo.com URL from Vimeo's
         //               "Embed" share option
         //   'youtube'-> <iframe> using the youtube.com/embed/VIDEO_ID URL
@@ -193,6 +205,11 @@
         // someone clicks in for the full view. Same type values as above
         // ('image'/'video'/'vimeo'/'youtube'/'embed'). If omitted, the
         // lightbox just reuses the tile's own type/src.
+        //
+        // PERFORMANCE: grid images are lazy-loaded (only fetched as they
+        // scroll near the screen) and embeds only load when a tile is
+        // clicked, so adding more projects here doesn't slow the page's
+        // first load.
         // ---------------------------------------------------------------
 
         const gridData = [
@@ -465,16 +482,31 @@
 
         // ---------------------------------------------------------------
         // SHARED HELPER — renders the media element (img/video/iframe) for
-        // any project object, used by the grid and the lightbox.
+        // any project object, used by the featured hero, the grid and the
+        // lightbox.
+        //
+        // opts.eager = true  -> load immediately (used only for the very
+        //                       first featured project, which is on screen
+        //                       the moment the page opens)
+        // otherwise          -> images are lazy-loaded and videos use
+        //                       preload="none", so nothing downloads until
+        //                       it's actually needed.
+        //
+        // Videos no longer carry the `autoplay` attribute — playback is
+        // started/stopped explicitly by applyActive() below, so only the
+        // project currently on screen ever plays (and downloads).
         // ---------------------------------------------------------------
-        function renderMedia(slide, className) {
+        function renderMedia(slide, className, opts = {}) {
             if (slide.type === 'video') {
-                return `<video class="${className}" src="${slide.src}" autoplay muted loop playsinline></video>`;
+                const poster = slide.poster ? ` poster="${slide.poster}"` : '';
+                const preload = opts.eager ? 'auto' : 'none';
+                return `<video class="${className}" src="${slide.src}" muted loop playsinline preload="${preload}"${poster}></video>`;
             }
             if (slide.type === 'vimeo' || slide.type === 'youtube' || slide.type === 'embed') {
-                return `<iframe class="${className}" src="${slide.src}" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" allowfullscreen title="${slide.title}"></iframe>`;
+                return `<iframe class="${className}" src="${slide.src}" loading="lazy" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" allowfullscreen title="${slide.title}"></iframe>`;
             }
-            return `<img class="${className}" src="${slide.src}" alt="${slide.title}">`;
+            const loading = opts.eager ? 'eager' : 'lazy';
+            return `<img class="${className}" src="${slide.src}" alt="${slide.title}" loading="${loading}" decoding="async">`;
         }
 
         function renderCreditsRows(credits) {
@@ -508,6 +540,11 @@
         // #moreProjects. Name/subtitle/image are all position:fixed and
         // crossfade via `.is-active` (see setupFeaturedActiveTracking) —
         // no gaps, no scroll-driven CSS API, works the same everywhere.
+        //
+        // Video playback is handled entirely by applyActive() inside
+        // setupFeaturedActiveTracking — the active project's video is
+        // play()'d explicitly (which also fixes the old "first video sits
+        // on a blank frame until you scroll" issue), all others paused.
         // ---------------------------------------------------------------
         const featuredTrack = document.getElementById('featuredTrack');
         const featuredDots = document.getElementById('featuredDots');
@@ -523,7 +560,7 @@
                 // scrolling required.
                 if (i === 0) space.classList.add('is-active');
 
-                const mediaEl = renderMedia(project, 'featured-media');
+                const mediaEl = renderMedia(project, 'featured-media', { eager: i === 0 });
                 const hasLink = Boolean(project.link);
 
                 const mediaBlock = hasLink
@@ -551,27 +588,6 @@
                 featuredDots.appendChild(dot);
             });
 
-            // Videos are inserted with the `autoplay` attribute, but
-            // browsers can be inconsistent about honoring that
-            // immediately for elements inserted via innerHTML — it can
-            // sit on its very first (blank) frame until some other event
-            // nudges the browser to actually start decoding/painting it
-            // (a page scroll being a common accidental trigger, which is
-            // exactly why the first project's video was only appearing
-            // "after scrolling a little"). Explicitly calling .play()
-            // right after insertion is the reliable way to get it going
-            // immediately instead of depending on that side effect.
-            featuredTrack.querySelectorAll('video.featured-media').forEach((video) => {
-                const playPromise = video.play();
-                if (playPromise && typeof playPromise.catch === 'function') {
-                    playPromise.catch(() => {
-                        /* Autoplay blocked — nothing to do; muted autoplay
-                           is allowed in every modern browser, so this is
-                           just a safety net, not an expected path. */
-                    });
-                }
-            });
-
             setupFeaturedActiveTracking();
         }
 
@@ -579,20 +595,13 @@
         // FEATURED ACTIVE TRACKING — a scroll-driven "scrollspy". On every
         // scroll (throttled to one recalculation per animation frame),
         // this directly measures every .featured-space's current position
-        // via getBoundingClientRect() and picks whichever one's box
-        // currently spans the exact vertical center of the viewport.
+        // via getBoundingClientRect() and picks whichever one is closest
+        // to the vertical center of the viewport.
         //
-        // This used to be an IntersectionObserver with a zero-height
-        // rootMargin (`-50% 0px -50% 0px`) sitting at viewport center —
-        // clever, but IntersectionObserver is explicitly allowed by spec
-        // to coalesce/skip intermediate intersection states when
-        // geometry changes quickly. During a fast flick or trackpad
-        // momentum scroll, a short-lived crossing could be skipped
-        // entirely, silently leaving that project's fixed name/subtitle/
-        // image stuck at opacity:0. Recomputing directly from real
-        // geometry on every frame can't get stuck that way: even if one
-        // frame is skipped, the very next one re-derives the correct
-        // current state from scratch.
+        // (Direct measurement rather than an IntersectionObserver, because
+        // IO can skip short-lived intersection states during fast flicks
+        // and leave a project stuck at opacity:0. Recomputing from real
+        // geometry every frame can't get stuck that way.)
         // ---------------------------------------------------------------
         let heroOverlappingNextSection = false;
 
@@ -605,10 +614,28 @@
             // for why this exists.
             let lastActiveIndex = 0;
 
+            // Marks the active project AND controls video playback: only
+            // the active project's video plays; every other one is paused.
+            // Paused videos with preload="none" don't download at all, so
+            // the A SHAMAN'S TALE video costs nothing until someone
+            // actually scrolls to it. index = -1 pauses everything (used
+            // once #moreProjects covers the screen).
             function applyActive(index) {
                 if (index !== -1) lastActiveIndex = index;
                 spaces.forEach((space, i) => {
-                    space.classList.toggle('is-active', i === index);
+                    const isOn = i === index;
+                    space.classList.toggle('is-active', isOn);
+                    const video = space.querySelector('video');
+                    if (video) {
+                        if (isOn) {
+                            if (video.paused) {
+                                const p = video.play();
+                                if (p && typeof p.catch === 'function') p.catch(() => {});
+                            }
+                        } else if (!video.paused) {
+                            video.pause();
+                        }
+                    }
                 });
                 dots.forEach((dot, i) => {
                     dot.classList.toggle('is-active', i === index);
@@ -632,11 +659,7 @@
                 spaces.forEach((space, i) => {
                     const rect = space.getBoundingClientRect();
                     // A candidate if ANY part of its box is currently in
-                    // the viewport — not just if it spans the exact
-                    // center line. For every transition except the very
-                    // last one this makes no practical difference (spaces
-                    // are contiguous, so there's always exactly one that
-                    // spans center at any given scroll position anyway).
+                    // the viewport.
                     if (rect.bottom > 0 && rect.top < window.innerHeight) {
                         const rowCenter = rect.top + rect.height / 2;
                         const dist = Math.abs(rowCenter - viewportCenter);
@@ -647,17 +670,10 @@
                     }
                 });
 
-                // Once you've scrolled past the last project's own box
-                // entirely, `winner` goes back to -1 here — but
-                // #moreProjects hasn't necessarily finished scrolling
-                // into place yet (see setupFeaturedHeroTitleTracking:
-                // the cutoff now waits until it's fully covering the
-                // screen, not just the moment it first peeks in). Rather
-                // than show nothing in between — which is exactly the
-                // blank gap that was the actual complaint — keep
-                // whichever project was last active. Visually, the
-                // fixed hero content just stays put, covering the whole
-                // screen, right up until the real handoff moment.
+                // Once you've scrolled past the last project's own box,
+                // keep whichever project was last active until
+                // #moreProjects fully covers the screen (see
+                // setupFeaturedHeroTitleTracking) — avoids a blank gap.
                 applyActive(winner === -1 ? lastActiveIndex : winner);
             }
 
@@ -676,13 +692,11 @@
 
         // ---------------------------------------------------------------
         // FEATURED HERO UI TRACKING — the title, "SCROLL DOWN" indicator,
-        // and dots are all position:fixed over the pictures. Same
-        // direct-measurement approach as setupFeaturedActiveTracking
-        // above (rather than an IntersectionObserver) for the same
-        // reliability reason: checks #moreProjects's real position on
-        // every scroll frame, so it can't miss the moment it starts
-        // appearing and get stuck showing hero UI over the next section,
-        // or vice versa.
+        // and dots are all position:fixed over the pictures. Checks
+        // #moreProjects's real position on every scroll frame and hides
+        // the hero UI once #moreProjects has scrolled all the way up to
+        // fully cover the viewport (rect.top <= 0), so nothing blank is
+        // ever exposed in between.
         // ---------------------------------------------------------------
         function setupFeaturedHeroTitleTracking() {
             const heroTitle = document.querySelector('.featured-hero-title');
@@ -697,25 +711,6 @@
                 ticking = false;
 
                 const rect = moreProjectsSection.getBoundingClientRect();
-                // Previously: rect.top < window.innerHeight (fires the
-                // instant #moreProjects first peeks in at the bottom of
-                // the screen). That's what caused the blank-gap
-                // complaint: the hero's fixed content would vanish right
-                // then, but #moreProjects still had almost a full
-                // viewport-height of normal scrolling left before its
-                // own content actually reached the top of the screen —
-                // exposing plain page background in between.
-                //
-                // Waiting for rect.top <= 0 instead means #moreProjects
-                // has scrolled all the way up to fully cover the
-                // viewport before the cutoff fires — combined with the
-                // sticky fallback in setupFeaturedActiveTracking (which
-                // keeps the last project's fixed content showing for
-                // that whole stretch), the hero content now stays put
-                // covering the screen for exactly as long as it takes
-                // #moreProjects to finish scrolling into place, so the
-                // swap itself is instant with nothing ever exposed
-                // in between.
                 const overlapping = rect.top <= 0;
 
                 if (overlapping === heroOverlappingNextSection) return;
@@ -728,6 +723,8 @@
                 if (heroOverlappingNextSection) {
                     document.querySelectorAll('.featured-space').forEach((space) => {
                         space.classList.remove('is-active');
+                        const video = space.querySelector('video');
+                        if (video && !video.paused) video.pause();
                     });
                     document.querySelectorAll('.featured-dot').forEach((dot) => {
                         dot.classList.remove('is-active');
@@ -749,29 +746,11 @@
         }
 
         // IMPORTANT: buildFeaturedHero() must run before
-        // setupFeaturedHeroTitleTracking(), not after. Here's why this
-        // was the actual bug behind "the first project's picture and
-        // name don't show until I scroll a little":
-        //
-        // setupFeaturedHeroTitleTracking() measures #moreProjects's
-        // position via getBoundingClientRect() the moment it runs. If it
-        // ran BEFORE buildFeaturedHero(), the page was still artificially
-        // short — .featured-track had its 55vh bottom padding, but none
-        // of the four .featured-space blocks (55vh each) had been
-        // inserted yet, so #moreProjects was sitting far higher up in
-        // the (temporarily) much shorter document than it would end up
-        // once the real content existed. That could make its measured
-        // position register as "already overlapping the viewport," which
-        // set heroOverlappingNextSection = true immediately — before a
-        // single .featured-space even existed to clear. Then
-        // buildFeaturedHero() ran, added .is-active to the first project
-        // as intended, but its own setupFeaturedActiveTracking() checks
-        // that same flag first and — finding it already (wrongly) true —
-        // immediately stripped .is-active straight back off again. Only
-        // scrolling (which re-runs both recalculations against the now-
-        // correct, fully-built page) fixed it.
-        //
-        // Building the real content first means #moreProjects is only
+        // setupFeaturedHeroTitleTracking(). If the tracking measured
+        // #moreProjects before the featured slides existed, the page would
+        // be artificially short, #moreProjects would wrongly register as
+        // "already covering the screen", and the first project would be
+        // hidden until the person scrolled. Building first means it's only
         // ever measured against the page's true, final layout.
         buildFeaturedHero();
 
@@ -849,7 +828,8 @@
                 title: project.title
             };
 
-            lightboxMedia.innerHTML = renderMedia(lightboxMediaSource, 'lightbox-media-el');
+            // eager: the lightbox is on screen the moment it opens.
+            lightboxMedia.innerHTML = renderMedia(lightboxMediaSource, 'lightbox-media-el', { eager: true });
 
             lightboxInfo.innerHTML = `
                 <p class="slide-subtitle">${project.subtitle}</p>
@@ -861,6 +841,14 @@
                     ${renderCreditsRows(project.credits)}
                 </div>
             `;
+
+            // A self-hosted video in the lightbox no longer has autoplay,
+            // so start it explicitly.
+            const lbVideo = lightboxMedia.querySelector('video');
+            if (lbVideo) {
+                const p = lbVideo.play();
+                if (p && typeof p.catch === 'function') p.catch(() => {});
+            }
 
             projectLightbox.classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -935,7 +923,7 @@
             } else {
                 nav.classList.remove('scrolled');
             }
-        });
+        }, { passive: true });
 
         // Mobile menu
         const menuToggle = document.getElementById('menuToggle');

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Audio Essentia</title>
+    <title>Audio Essentia - DEPTHS</title>
     <link rel="icon" type="image/svg+xml" href="Media/Favicon/favicon.svg">
     <link rel="stylesheet" href="depthscss.css">
 </head>
@@ -34,6 +34,11 @@
                 <p class="project-subtitle">4D SOUND INSTALLATION</p>
             </div>
 
+            <!--
+                PERFORMANCE: the first 3 images are visible on desktop, so
+                they load normally. Images 4+ are off-screen until the
+                gallery arrows are used, so they're lazy-loaded.
+            -->
             <div class="photo-gallery">
                 <div class="gallery-wrapper">
                     <button class="gallery-arrow prev" onclick="moveGallery(-1, 0)">
@@ -44,19 +49,19 @@
                     
                     <div class="gallery-container" id="gallery-0">
                         <div class="gallery-item" onclick="openLightbox(0, 0)">
-                            <img src="Media/Depths/Depths_1.webp" alt="Depths Project 1">
+                            <img src="Media/Depths/Depths_1.webp" alt="Depths Project 1" decoding="async">
                         </div>
                         <div class="gallery-item" onclick="openLightbox(0, 1)">
-                            <img src="Media/Depths/Depths_2.webp" alt="Depths Project 2">
+                            <img src="Media/Depths/Depths_2.webp" alt="Depths Project 2" decoding="async">
                         </div>
                         <div class="gallery-item" onclick="openLightbox(0, 2)">
-                            <img src="Media/Depths/Depths_4.webp" alt="Depths Project 4">
+                            <img src="Media/Depths/Depths_4.webp" alt="Depths Project 4" decoding="async">
                         </div>
                         <div class="gallery-item" onclick="openLightbox(0, 3)">
-                            <img src="Media/Depths/Depths_5.webp" alt="Depths Project 5">
+                            <img src="Media/Depths/Depths_5.webp" alt="Depths Project 5" loading="lazy" decoding="async">
                         </div>
                         <div class="gallery-item" onclick="openLightbox(0, 4)">
-                            <img src="Media/Depths/Depths_6.webp" alt="Depths Project 6">
+                            <img src="Media/Depths/Depths_6.webp" alt="Depths Project 6" loading="lazy" decoding="async">
                         </div>
                     </div>
                     
@@ -155,16 +160,16 @@
         </section>
     </main>
 
-    <!-- Lightbox -->
+    <!-- Lightbox (img has no src until opened, so nothing loads up front) -->
     <div class="lightbox" id="lightbox">
-        <button class="lightbox-close" onclick="closeLightbox()">×</button>
+        <button class="lightbox-close" onclick="closeLightbox(false)">×</button>
         <button class="lightbox-arrow prev" onclick="lightboxNav(-1)">
             <svg viewBox="0 0 24 24">
                 <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
             </svg>
         </button>
         <div class="lightbox-content">
-            <img id="lightbox-img" src="" alt="Gallery image">
+            <img id="lightbox-img" alt="Gallery image">
         </div>
         <button class="lightbox-arrow next" onclick="lightboxNav(1)">
             <svg viewBox="0 0 24 24">
@@ -227,6 +232,10 @@
         let currentLightboxIndex = 0;
         let lightboxHistoryPushed = false;
 
+        function lightboxIsOpen() {
+            return document.getElementById('lightbox').classList.contains('active');
+        }
+
         function openLightbox(galleryIndex, imageIndex) {
             currentLightboxGallery = galleryIndex;
             currentLightboxIndex = imageIndex;
@@ -254,8 +263,7 @@
         }
 
         window.addEventListener('popstate', () => {
-            const lightbox = document.getElementById('lightbox');
-            if (lightbox.classList.contains('active')) {
+            if (lightboxIsOpen()) {
                 closeLightbox(true);
             }
         });
@@ -275,8 +283,11 @@
             img.src = gallery[currentLightboxIndex];
         }
 
-        // Close lightbox on escape
+        // Keyboard controls — only while the lightbox is open (previously
+        // the arrow keys swapped the hidden lightbox image even when it
+        // was closed, downloading full images in the background).
         document.addEventListener('keydown', (e) => {
+            if (!lightboxIsOpen()) return;
             if (e.key === 'Escape') {
                 closeLightbox(false);
             }
@@ -303,7 +314,7 @@
             } else {
                 nav.classList.remove('scrolled');
             }
-        });
+        }, { passive: true });
 
         // Mobile menu
         const menuToggle = document.getElementById('menuToggle');

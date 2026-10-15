@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Audio Essentia</title>
+    <title>Audio Essentia - A Shaman's Tale</title>
     <link rel="icon" type="image/svg+xml" href="Media/Favicon/favicon.svg">
     <link rel="stylesheet" href="shamanscss.css">
 </head>
@@ -39,6 +39,7 @@
                 <div class="video-container">
                     <iframe src="https://player.vimeo.com/video/1114698558?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
                         allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
+                        allowfullscreen
                         title="A Shaman's Tale">
                     </iframe>
                 </div>
@@ -49,7 +50,6 @@
                     <p>A Shaman's Tale is an animated short film that weaves together consciousness exploration, Indigenous wisdom, and transformative sound design. Created by filmmaker Jules Guérin and sonically redesigned by Dan Hawryluk, the film guides viewers through a profound shamanic journey.</p>
                     
                     <p>The redesign incorporates Robert Monroe's pioneering "Gateway Tapes" consciousness research, Four Tet's ethereal musical compositions, and authentic Shipibo Icaros performed by Maestro Ricardo Amaringo from Peru's Nihue Rao Centro Espiritual.</p>
-                    
                 </div>
 
                 <div class="project-meta">
@@ -82,24 +82,6 @@
         </section>
     </main>
 
-    <!-- Lightbox -->
-    <div class="lightbox" id="lightbox">
-        <button class="lightbox-close" onclick="closeLightbox()">×</button>
-        <button class="lightbox-arrow prev" onclick="lightboxNav(-1)">
-            <svg viewBox="0 0 24 24">
-                <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
-            </svg>
-        </button>
-        <div class="lightbox-content">
-            <img id="lightbox-img" src="" alt="Gallery image">
-        </div>
-        <button class="lightbox-arrow next" onclick="lightboxNav(1)">
-            <svg viewBox="0 0 24 24">
-                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
-            </svg>
-        </button>
-    </div>
-
     <footer>
         <div>
             <h3 class="footer-title">AUDIO ESSENTIA</h3>
@@ -114,114 +96,6 @@
     </footer>
 
     <script>
-        // Gallery positions
-        const galleryPositions = [0];
-        const galleries = [
-            ['Media/Depths_1.JPG', 'Media/Depths_2.JPG', 'Media/Depths_4.JPG', 'Media/Depths_5.JPG', 'Media/Depths_6.JPG']
-        ];
-
-        // Move gallery
-        function moveGallery(direction, galleryIndex) {
-            const gallery = document.getElementById(`gallery-${galleryIndex}`);
-            const items = gallery.children;
-            const itemsToShow = window.innerWidth <= 768 ? 1 : 3;
-            const maxPosition = items.length - itemsToShow;
-            
-            galleryPositions[galleryIndex] += direction;
-            
-            if (galleryPositions[galleryIndex] < 0) {
-                galleryPositions[galleryIndex] = 0;
-            }
-            if (galleryPositions[galleryIndex] > maxPosition) {
-                galleryPositions[galleryIndex] = maxPosition;
-            }
-            
-            const itemWidth = items[0].offsetWidth + 20;
-            gallery.style.transform = `translateX(-${galleryPositions[galleryIndex] * itemWidth}px)`;
-        }
-
-        // ---------------------------------------------------------------
-        // LIGHTBOX
-        //
-        // HISTORY HANDLING — opening the lightbox pushes a history entry
-        // so the browser's back button closes the lightbox and lands back
-        // on this page (instead of navigating away, e.g. to the Home
-        // page). Closing it any other way (X button, clicking outside,
-        // Escape) calls history.back() itself so that pushed entry gets
-        // cleaned up and a second back-button press isn't needed later.
-        // ---------------------------------------------------------------
-        let currentLightboxGallery = 0;
-        let currentLightboxIndex = 0;
-        let lightboxHistoryPushed = false;
-
-        function openLightbox(galleryIndex, imageIndex) {
-            currentLightboxGallery = galleryIndex;
-            currentLightboxIndex = imageIndex;
-            const lightbox = document.getElementById('lightbox');
-            const img = document.getElementById('lightbox-img');
-            img.src = galleries[galleryIndex][imageIndex];
-            lightbox.classList.add('active');
-            document.body.style.overflow = 'hidden';
-
-            history.pushState({ lightbox: true }, '', '#gallery');
-            lightboxHistoryPushed = true;
-        }
-
-        function closeLightbox(fromPopState) {
-            const lightbox = document.getElementById('lightbox');
-            lightbox.classList.remove('active');
-            document.body.style.overflow = 'auto';
-
-            if (lightboxHistoryPushed) {
-                lightboxHistoryPushed = false;
-                if (!fromPopState) {
-                    history.back();
-                }
-            }
-        }
-
-        window.addEventListener('popstate', () => {
-            const lightbox = document.getElementById('lightbox');
-            if (lightbox.classList.contains('active')) {
-                closeLightbox(true);
-            }
-        });
-
-        function lightboxNav(direction) {
-            const gallery = galleries[currentLightboxGallery];
-            currentLightboxIndex += direction;
-            
-            if (currentLightboxIndex < 0) {
-                currentLightboxIndex = gallery.length - 1;
-            }
-            if (currentLightboxIndex >= gallery.length) {
-                currentLightboxIndex = 0;
-            }
-            
-            const img = document.getElementById('lightbox-img');
-            img.src = gallery[currentLightboxIndex];
-        }
-
-        // Close lightbox on escape
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeLightbox(false);
-            }
-            if (e.key === 'ArrowLeft') {
-                lightboxNav(-1);
-            }
-            if (e.key === 'ArrowRight') {
-                lightboxNav(1);
-            }
-        });
-
-        // Close lightbox on background click
-        document.getElementById('lightbox').addEventListener('click', (e) => {
-            if (e.target.id === 'lightbox') {
-                closeLightbox(false);
-            }
-        });
-
         // Nav scroll effect
         window.addEventListener('scroll', () => {
             const nav = document.getElementById('nav');
@@ -230,7 +104,7 @@
             } else {
                 nav.classList.remove('scrolled');
             }
-        });
+        }, { passive: true });
 
         // Mobile menu
         const menuToggle = document.getElementById('menuToggle');
@@ -248,17 +122,6 @@
                 menuToggle.classList.remove('active');
                 navLinks.classList.remove('active');
                 document.body.style.overflow = 'auto';
-            });
-        });
-
-        // Smooth scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
-                }
             });
         });
     </script>
