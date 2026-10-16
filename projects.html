@@ -10,14 +10,14 @@
 <body>
     <nav id="nav">
         <div class="nav-container">
-            <a href="index.html" class="logo">AUDIO ESSENTIA</a>
+            <a href="/" class="logo">AUDIO ESSENTIA</a>
             <button class="mobile-menu-toggle" id="menuToggle">
                 <span class="hamburger-line"></span>
                 <span class="hamburger-line"></span>
                 <span class="hamburger-line"></span>
             </button>
             <ul class="nav-links" id="navLinks">
-                <li><a href="index.html">HOME</a></li>
+                <li><a href="/">HOME</a></li>
                 <li><a href="projects.html" class="active">PROJECTS</a></li>
                 <li><a href="aboutus.html">ABOUT US</a></li>
             <!--    <li><a href="calendar.html">EVENT CALENDAR</a></li> -->
@@ -542,17 +542,66 @@
         // started/stopped explicitly by goToFeatured() below, so only the
         // project currently on screen ever plays.
         // ---------------------------------------------------------------
+        // ---------------------------------------------------------------
+        // MOBILE MEDIA — on screens 768px wide or less, images and videos
+        // load a smaller "-mobile" copy instead of the full-size file:
+        //   Media/KT/KT.webp                        -> Media/KT/KT-mobile.webp
+        //   Media/TUW/TUW.avif                      -> Media/TUW/TUW-mobile.webp
+        //   Media/Depths/DepthsVisuals_Stevo_3.mp4  -> Media/Depths/DepthsVisuals_Stevo_3-mobile.mp4
+        // (Mobile images are always .webp; mobile videos always .mp4.)
+        //
+        // You never type these paths — they're worked out automatically
+        // from `src`. If a -mobile file doesn't exist yet, the page quietly
+        // falls back to the full-size file (see the error handler below),
+        // so nothing breaks while you're still generating them.
+        // Set USE_MOBILE_MEDIA to false to switch the whole thing off.
+        // ---------------------------------------------------------------
+        const USE_MOBILE_MEDIA = true;
+        const IS_MOBILE = window.matchMedia('(max-width: 768px)').matches;
+
+        function mobileSrc(src, type) {
+            if (!USE_MOBILE_MEDIA || !IS_MOBILE) return src;
+            if (!src || /^https?:\/\//.test(src)) return src; // only our own files
+            const dot = src.lastIndexOf('.');
+            if (dot === -1) return src;
+            const base = src.slice(0, dot);
+            if (base.endsWith('-mobile')) return src;
+            return base + (type === 'video' ? '-mobile.mp4' : '-mobile.webp');
+        }
+
+        // If a "-mobile" file is missing, swap in the full-size original.
+        // (Listening in the capture phase catches errors from every
+        // <img>/<video> on the page, including ones added later.)
+        document.addEventListener('error', (e) => {
+            const el = e.target;
+            if (!(el instanceof HTMLImageElement || el instanceof HTMLVideoElement)) return;
+            const full = el.dataset.full;
+            if (!full || el.dataset.fellBack) return;
+            el.dataset.fellBack = '1';
+            el.src = full;
+            // A featured video that's currently on screen should keep playing.
+            if (el instanceof HTMLVideoElement &&
+                (el.closest('.featured-space.is-active') || el.closest('#lightboxMedia'))) {
+                const p = el.play();
+                if (p && typeof p.catch === 'function') p.catch(() => {});
+            }
+        }, true);
+
         function renderMedia(slide, className, opts = {}) {
             if (slide.type === 'video') {
                 const poster = slide.poster ? ` poster="${slide.poster}"` : '';
                 const preload = opts.eager ? 'auto' : 'none';
-                return `<video class="${className}" src="${slide.src}" muted loop playsinline preload="${preload}"${poster}></video>`;
+                const src = mobileSrc(slide.src, 'video');
+                const full = src !== slide.src ? ` data-full="${slide.src}"` : '';
+                return `<video class="${className}" src="${src}"${full} muted loop playsinline preload="${preload}"${poster}></video>`;
             }
             if (slide.type === 'vimeo' || slide.type === 'youtube' || slide.type === 'embed') {
                 return `<iframe class="${className}" src="${slide.src}" loading="lazy" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" allowfullscreen title="${slide.title}"></iframe>`;
             }
             const loading = opts.eager ? 'eager' : 'lazy';
-            return `<img class="${className}" src="${slide.src}" alt="${slide.title}" loading="${loading}" decoding="async">`;
+            const src = mobileSrc(slide.src, 'image');
+            const full = src !== slide.src ? ` data-full="${slide.src}"` : '';
+            return `<img class="${className}" src="${src}"${full} alt="${slide.title}" loading="${loading}" decoding="async">`;
         }
 
         function renderCreditsRows(credits) {

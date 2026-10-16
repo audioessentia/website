@@ -1015,36 +1015,56 @@ footer {
         display: none;
     }
 
-    /* Mobile-only: title + subtitle are centered horizontally instead of
-       right-aligned (they're right-aligned on desktop). */
+    /* Mobile-only: name, subtitle and "click to explore" hint stack in
+       a centered column instead of being pinned at fixed offsets. Long
+       names (e.g. THE UNSPEAKABLE WORLD) and long subtitles wrap onto a
+       second line at the SAME font size instead of being cut off, and
+       everything below moves down to make room. */
+    .featured-caption {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 0 24px;
+        text-align: center;
+    }
+
     .featured-name,
-    .featured-subtitle {
-        left: 0;
-        right: 0;
-        text-align: center;
-    }
-
-    /* Mobile-only: the "click to explore project" hint moves from the
-       bottom-left corner (desktop position) to sit directly beneath the
-       centered title + subtitle instead. */
+    .featured-subtitle,
     .featured-explore-hint {
-        left: 0;
-        right: 0;
-        top: calc(50% + 34px);
+        position: static;
+        transform: none;
+        left: auto;
+        right: auto;
+        top: auto;
         bottom: auto;
+        max-width: 100%;
         text-align: center;
+        white-space: normal;
+        overflow-wrap: break-word;
     }
 
-    /* Mobile-only: photo credit moves to the bottom-left corner of the
-       picture (the title sits over the top on phones), clear of the
-       dots on the right. */
+    .featured-explore-hint {
+        margin-top: 4px;
+    }
+
+    /* Mobile-only: photo credit sits on one line along the very bottom-
+       left edge of the picture — below the "scroll down" arrow and
+       clear of the dots on the right (the title covers the top on
+       phones). */
     .featured-photo-credit {
         top: auto;
-        bottom: 16px;
-        left: 20px;
+        bottom: 6px;
+        left: 16px;
         right: auto;
-        max-width: 60%;
-        font-size: 10px;
+        max-width: 70%;
+        font-size: 9px;
+        letter-spacing: 0.5px;
+        text-align: left;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .more-projects-section {
