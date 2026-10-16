@@ -147,9 +147,9 @@
 
         // ---------------------------------------------------------------
         // FEATURED DATA
-        // Shown in the scroll-driven hero at the top of the page. Only
-        // `title`, `subtitle`, `src`/`type`, `poster` and `link` are used
-        // here. Set `link` to a project page to make the image clickable;
+        // Shown in the carousel at the top of the page. Only `title`,
+        // `subtitle`, `src`/`type`, `poster`, `link`, `photoCredit` and
+        // `photoCreditLink` are used here. Set `link` to a project page to make the image clickable;
         // leave it empty to show the image as non-interactive (e.g.
         // STRAIN, which has no dedicated page).
         //
@@ -158,6 +158,12 @@
         // one with
         //   ffmpeg -ss 1 -i input.mp4 -frames:v 1 -c:v libwebp -quality 80 poster.webp
         // then set e.g. poster: "Media/Depths/DepthsPoster.webp".
+        //
+        // `photoCredit` (optional) — small credit line shown in the top-right
+        // corner of that project's picture (bottom-left on mobile), e.g.
+        // "Photo: Upemba National Park". Leave it out for no credit.
+        // `photoCreditLink` (optional) — a URL; makes the credit clickable
+        // (opens in a new tab).
         //
         // PERFORMANCE: videos are NOT downloaded up front. Only the
         // project currently on screen plays (see goToFeatured); its
@@ -189,12 +195,32 @@
                 link: "shamans.html"
             },
             {
+                title: "THE UNSPEAKABLE WORLD",
+                subtitle: "SHORT DOCUMENTARY FILM AUDIO POST",
+                type: "image",
+                src: "Media/TUW/TUW.avif",
+                poster: "",
+                link: "https://www.youtube.com/watch?v=rUkj6xAmgYQ",
+                photoCredit: "PHOTO: STILL FROM THE UNSPEAKABLE WORLD",
+                photoCreditLink: "",
+            },
+            {
+                title: "UPEMBA",
+                subtitle: "TRAILER AUDIO POST",
+                type: "image",
+                src: "Media/UPEMBA/UPEMBA_5.avif",
+                link: "",
+                photoCredit: "PHOTO: UPEMBA NATIONAL PARK",
+                // Paste the park website's URL here to make the credit a link:
+                photoCreditLink: "https://www.upemba.org/"
+            },
+            /* {
                 title: "STRAIN",
                 subtitle: "SHORT FILM AUDIO POST",
                 type: "image",
                 src: "Media/Strain/Strain.webp",
                 link: ""
-            }
+            } */
         ];
 
         // ---------------------------------------------------------------
@@ -560,7 +586,8 @@
         // section, so plain vertical scrolling just scrolls the page on to
         // "From the Collective" — it's never intercepted.
         //
-        // The carousel moves ONLY on:
+        // The carousel moves on its own every AUTOPLAY_MS (see below), and
+        // by hand ONLY on:
         //   - the prev/next arrows (desktop).
         //   - Shift + scroll wheel over the carousel (desktop). A sideways
         //     trackpad swipe also works, since that's the same intent.
@@ -578,6 +605,23 @@
         // Keep in sync with the .featured-track transition in the CSS.
         const SLIDE_MS = 800;
 
+        // AUTOPLAY — moves to the next project every AUTOPLAY_MS
+        // (8000 = 8 seconds; set 5000 for 5 seconds). After the last
+        // project it fades back to the first instead of sliding back
+        // across all of them. The countdown starts over whenever someone
+        // changes project themselves or scrolls the page, so the carousel
+        // never jumps right after someone interacts. Autoplay pauses while
+        // the carousel is scrolled out of view and while the browser tab
+        // is in the background.
+        const AUTOPLAY_MS = 8000;
+        // Keep in sync with the .featured-viewport transition in the CSS.
+        const WRAP_FADE_MS = 500;
+
+        const featuredViewport = document.querySelector('.featured-viewport');
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let autoplayTimer = null;
+        let wrapping = false;
+
         let featuredIndex = 0;
         let featuredSpaces = [];
         let featuredDotEls = [];
@@ -589,6 +633,53 @@
                 const p = video.play();
                 if (p && typeof p.catch === 'function') p.catch(() => {});
             }
+        }
+
+        function canAutoplay() {
+            return featuredSpaces.length > 1
+                && !reducedMotion
+                && heroInView
+                && !wrapping
+                && !document.hidden
+                && !document.body.classList.contains('lightbox-open');
+        }
+
+        // (Re)starts the countdown to the next automatic change.
+        function scheduleAutoplay() {
+            clearTimeout(autoplayTimer);
+            if (!canAutoplay()) return;
+            autoplayTimer = setTimeout(autoAdvance, AUTOPLAY_MS);
+        }
+
+        function autoAdvance() {
+            if (!canAutoplay()) return;
+            if (featuredIndex < featuredSpaces.length - 1) {
+                goToFeatured(featuredIndex + 1);
+            } else {
+                wrapToStart();
+            }
+        }
+
+        // Last project -> first: fade the picture out, jump back to the
+        // start while it's invisible, then fade it in again.
+        function wrapToStart() {
+            wrapping = true;
+            featuredViewport.classList.add('is-fading');
+            setTimeout(() => {
+                goToFeatured(0, true);
+                featuredViewport.classList.remove('is-fading');
+                wrapping = false;
+                scheduleAutoplay();
+            }, WRAP_FADE_MS);
+        }
+
+        function setupAutoplay() {
+            // Scrolling the page restarts the full countdown, so the
+            // carousel never switches right after someone scrolls.
+            window.addEventListener('scroll', scheduleAutoplay, { passive: true });
+            // Pause while the tab is in the background.
+            document.addEventListener('visibilitychange', scheduleAutoplay);
+            scheduleAutoplay();
         }
 
         function buildFeaturedHero() {
@@ -624,10 +715,20 @@
 
                 const caption = document.createElement('div');
                 caption.className = 'featured-caption';
+                // Optional photo credit — plain text, or a link if
+                // photoCreditLink is set.
+                let photoCredit = '';
+                if (project.photoCredit) {
+                    photoCredit = project.photoCreditLink
+                        ? `<a class="featured-photo-credit" href="${project.photoCreditLink}" target="_blank" rel="noopener">${project.photoCredit}</a>`
+                        : `<span class="featured-photo-credit">${project.photoCredit}</span>`;
+                }
+
                 caption.innerHTML = `
                     <h2 class="featured-name">${project.title}</h2>
                     <p class="featured-subtitle">${project.subtitle}</p>
                     ${exploreHint}
+                    ${photoCredit}
                 `;
                 featuredCaptions.appendChild(caption);
 
@@ -643,6 +744,7 @@
             goToFeatured(0, true);
             setupFeaturedInput();
             setupHeroVisibility();
+            setupAutoplay();
         }
 
         // Moves the carousel to `index` and handles everything tied to the
@@ -697,9 +799,12 @@
                 caption.setAttribute('aria-hidden', isOn ? 'false' : 'true');
             });
 
-            // Dim the arrow that can't go any further.
+            // Hide the arrow that can't go any further.
             if (featuredPrev) featuredPrev.disabled = index === 0;
             if (featuredNext) featuredNext.disabled = index === max;
+
+            // Any change (manual or automatic) restarts the autoplay timer.
+            scheduleAutoplay();
         }
 
         function setupFeaturedInput() {
@@ -787,6 +892,7 @@
             if (!('IntersectionObserver' in window)) return;
             const observer = new IntersectionObserver(([entry]) => {
                 heroInView = entry.isIntersecting;
+                scheduleAutoplay();
                 const video = featuredSpaces[featuredIndex] && featuredSpaces[featuredIndex].querySelector('video');
                 if (!video) return;
                 if (heroInView) playVideo(video);
@@ -892,6 +998,7 @@
             }
 
             projectLightbox.classList.add('active');
+            document.body.classList.add('lightbox-open');
             document.body.style.overflow = 'hidden';
 
             // Push a history entry so the back button closes the lightbox
@@ -902,8 +1009,10 @@
 
         function closeLightbox(fromPopState) {
             projectLightbox.classList.remove('active');
+            document.body.classList.remove('lightbox-open');
             document.body.style.overflow = 'auto';
             lightboxMedia.innerHTML = '';
+            scheduleAutoplay();
 
             if (lightboxHistoryPushed) {
                 lightboxHistoryPushed = false;
