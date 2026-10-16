@@ -6,8 +6,11 @@
     <title>Audio Essentia</title>
     <link rel="icon" type="image/svg+xml" href="Media/Favicon/favicon.svg">
     <link rel="stylesheet" href="indexcss.css">
-    <!-- Start fetching the first hero image immediately, before CSS/JS parse -->
-    <link rel="preload" as="image" href="Media/Depths/Depths_1.webp">
+    <!-- Start fetching the first hero image immediately, before CSS/JS
+         parse — the full-size one on desktop, the smaller -mobile copy
+         on phones (768px wide or less). -->
+    <link rel="preload" as="image" href="Media/Depths/Depths_1.webp" media="(min-width: 769px)">
+    <link rel="preload" as="image" href="Media/Depths/Depths_1-mobile.webp" media="(max-width: 768px)">
 </head>
 <body>
 
@@ -33,15 +36,19 @@
          HERO — DEPTHS takeover. Background photos cross-fade behind a
          dark gradient (see .hero::before in the CSS).
 
-         PERFORMANCE: only the FIRST slide has its image set directly.
-         The rest use data-bg and are loaded one slide ahead by the
-         slideshow script below, so the page only downloads one photo
-         before it's visible instead of all of them at once.
-         To add a slide: copy a line and set data-bg (not style).
+         PERFORMANCE:
+         - Every slide lists its photo in data-bg. The first one loads
+           right away; each of the others loads one slide ahead of when
+           it's shown, so the page only downloads one photo up front.
+         - On phones (768px wide or less) each slide uses the smaller
+           "-mobile" copy instead (Depths_2.webp -> Depths_2-mobile.webp),
+           worked out automatically. If a -mobile file doesn't exist,
+           the full-size photo is used instead, so nothing breaks.
+         To add a slide: copy a line and change data-bg.
     --------------------------------------------------------------- -->
     <section class="hero" id="hero">
         <div class="hero-bg" id="heroBg">
-            <div class="hero-bg-slide active" style="background-image: url('Media/Depths/Depths_1.webp');"></div>
+            <div class="hero-bg-slide active" data-bg="Media/Depths/Depths_1.webp"></div>
             <div class="hero-bg-slide" data-bg="Media/Depths/Depths_2.webp"></div>
             <div class="hero-bg-slide" data-bg="Media/Depths/Depths_3.webp"></div>
             <div class="hero-bg-slide" data-bg="Media/Depths/Depths_4.webp"></div>
@@ -133,22 +140,59 @@
             });
         });
 
+        // ---------------------------------------------------------------
         // Hero background slideshow — cross-fades through the slides
-        // automatically. Change the interval below to change the pace.
-        // Each slide's image is loaded one step ahead of when it's shown
-        // (8 seconds of lead time), so it's ready before it fades in.
+        // automatically. Change SLIDE_INTERVAL_MS to change the pace.
+        // Each slide's photo is loaded one step ahead of when it's shown
+        // (a full interval of lead time), so it's ready before it fades in.
+        //
+        // MOBILE: on screens 768px wide or less, the "-mobile" copy is
+        // tried first (always .webp). If it's missing, the full-size
+        // photo is used. Set USE_MOBILE_MEDIA to false to switch off.
+        // ---------------------------------------------------------------
         (function initHeroSlideshow() {
-            const slides = document.querySelectorAll('.hero-bg-slide');
-            if (slides.length < 2) return;
+            const SLIDE_INTERVAL_MS = 8000;
+            const USE_MOBILE_MEDIA = true;
+            const IS_MOBILE = window.matchMedia('(max-width: 768px)').matches;
 
-            function loadSlide(slide) {
-                if (slide.dataset.bg) {
-                    slide.style.backgroundImage = `url('${slide.dataset.bg}')`;
-                    delete slide.dataset.bg;
-                }
+            const slides = document.querySelectorAll('.hero-bg-slide');
+            if (!slides.length) return;
+
+            function mobileSrc(src) {
+                if (!USE_MOBILE_MEDIA || !IS_MOBILE) return src;
+                const dot = src.lastIndexOf('.');
+                if (dot === -1) return src;
+                const base = src.slice(0, dot);
+                return base.endsWith('-mobile') ? src : base + '-mobile.webp';
             }
 
-            // Queue the second slide once the first screen has fully loaded.
+            function setBg(slide, src) {
+                slide.style.backgroundImage = `url('${src}')`;
+            }
+
+            // Loads a slide's photo (once). The photo is fetched through a
+            // hidden Image first, so a missing -mobile copy can be detected
+            // and the full-size one used instead; the browser then reuses
+            // the downloaded file for the background.
+            function loadSlide(slide) {
+                const full = slide.dataset.bg;
+                if (!full) return;
+                delete slide.dataset.bg;
+
+                const preferred = mobileSrc(full);
+                if (preferred === full) {
+                    setBg(slide, full);
+                    return;
+                }
+                const probe = new Image();
+                probe.onload = () => setBg(slide, preferred);
+                probe.onerror = () => setBg(slide, full);
+                probe.src = preferred;
+            }
+
+            // First photo right away; the second once the page has loaded.
+            loadSlide(slides[0]);
+            if (slides.length < 2) return;
             window.addEventListener('load', () => loadSlide(slides[1]));
 
             let currentSlide = 0;
@@ -158,7 +202,7 @@
                 loadSlide(slides[currentSlide]); // safety net if 'load' hadn't fired yet
                 slides[currentSlide].classList.add('active');
                 loadSlide(slides[(currentSlide + 1) % slides.length]);
-            }, 8000);
+            }, SLIDE_INTERVAL_MS);
         })();
     </script>
 </body>
