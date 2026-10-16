@@ -455,7 +455,10 @@ nav.scrolled {
     letter-spacing: 3px;
     text-transform: uppercase;
     line-height: 1.1;
-    white-space: nowrap;
+    /* Long names wrap onto a second line rather than running off the
+       edge of the screen (on any screen size, not just phones). */
+    white-space: normal;
+    max-width: calc(100% - 200px);
     text-shadow: 0 2px 14px rgba(0, 0, 0, 0.7);
 }
 

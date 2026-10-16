@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Audio Essentia — Projects</title>
     <link rel="icon" type="image/svg+xml" href="Media/Favicon/favicon.svg">
-    <link rel="stylesheet" href="projectscss.css">
+    <!-- ?v=… forces browsers (especially phones) to fetch the new CSS.
+         Bump the number whenever you change projectscss.css. -->
+    <link rel="stylesheet" href="projectscss.css?v=3">
 </head>
 <body>
     <nav id="nav">
@@ -569,9 +571,9 @@
             return base + (type === 'video' ? '-mobile.mp4' : '-mobile.webp');
         }
 
-        // If a "-mobile" file is missing, swap in the full-size original.
-        // (Listening in the capture phase catches errors from every
-        // <img>/<video> on the page, including ones added later.)
+        // IMAGES: if a "-mobile" image is missing, swap in the full-size
+        // original. (Capture phase catches errors from every <img> on the
+        // page, including ones added later.) Also a safety net for videos.
         document.addEventListener('error', (e) => {
             const el = e.target;
             if (!(el instanceof HTMLImageElement || el instanceof HTMLVideoElement)) return;
@@ -591,9 +593,15 @@
             if (slide.type === 'video') {
                 const poster = slide.poster ? ` poster="${slide.poster}"` : '';
                 const preload = opts.eager ? 'auto' : 'none';
-                const src = mobileSrc(slide.src, 'video');
-                const full = src !== slide.src ? ` data-full="${slide.src}"` : '';
-                return `<video class="${className}" src="${src}"${full} muted loop playsinline preload="${preload}"${poster}></video>`;
+                const mobile = mobileSrc(slide.src, 'video');
+                // On phones the video starts WITHOUT a src; resolveVideoSources()
+                // checks whether the -mobile file exists and then sets the
+                // right one. (Relying on a load error to fall back isn't
+                // reliable for video on every phone browser.)
+                if (mobile !== slide.src) {
+                    return `<video class="${className}" data-mobile="${mobile}" data-full="${slide.src}" muted loop playsinline preload="${preload}"${poster}></video>`;
+                }
+                return `<video class="${className}" src="${slide.src}" muted loop playsinline preload="${preload}"${poster}></video>`;
             }
             if (slide.type === 'vimeo' || slide.type === 'youtube' || slide.type === 'embed') {
                 return `<iframe class="${className}" src="${slide.src}" loading="lazy" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" allowfullscreen title="${slide.title}"></iframe>`;
@@ -602,6 +610,30 @@
             const src = mobileSrc(slide.src, 'image');
             const full = src !== slide.src ? ` data-full="${slide.src}"` : '';
             return `<img class="${className}" src="${src}"${full} alt="${slide.title}" loading="${loading}" decoding="async">`;
+        }
+
+        // Phones only: for each video waiting on a source, ask the server
+        // whether its -mobile file exists, then use it — or the full-size
+        // file if not — and start playing if it's the one on screen.
+        function resolveVideoSources(root) {
+            root.querySelectorAll('video[data-mobile]').forEach((video) => {
+                const mobile = video.dataset.mobile;
+                const full = video.dataset.full;
+                video.removeAttribute('data-mobile');
+                fetch(mobile, { method: 'HEAD', cache: 'no-store' })
+                    .then((res) => (res.ok ? mobile : full))
+                    .catch(() => full)
+                    .then((src) => {
+                        video.dataset.fellBack = '1'; // already decided; no more swapping
+                        video.src = src;
+                        const onScreen = (video.closest('.featured-space.is-active') && heroInView)
+                            || video.closest('#lightboxMedia');
+                        if (onScreen) {
+                            const p = video.play();
+                            if (p && typeof p.catch === 'function') p.catch(() => {});
+                        }
+                    });
+            });
         }
 
         function renderCreditsRows(credits) {
@@ -790,6 +822,7 @@
             featuredDotEls = Array.from(featuredDots.children);
             featuredCaptionEls = Array.from(featuredCaptions.children);
 
+            resolveVideoSources(featuredTrack);
             goToFeatured(0, true);
             setupFeaturedInput();
             setupHeroVisibility();
@@ -1037,6 +1070,8 @@
                     ${renderCreditsRows(project.credits)}
                 </div>
             `;
+
+            resolveVideoSources(lightboxMedia);
 
             // A self-hosted video in the lightbox no longer has autoplay,
             // so start it explicitly.
