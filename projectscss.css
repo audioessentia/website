@@ -111,43 +111,57 @@ nav.scrolled {
 }
 
 /* ---------------------------------------------------------------
-   FEATURED HERO — non-cyclic scroll-triggered crossfade.
+   FEATURED HERO — horizontal carousel, one screen tall.
 
-   Name, subtitle, AND image are all position:fixed at the same screen
-   coordinates for every project, and all three fade together, driven by
-   `.is-active` — a JS scrollspy (setupFeaturedActiveTracking) that
-   toggles the class onto whichever .featured-space currently spans the
-   vertical center of the viewport. Only the focused project is
-   opacity:1; everything else is 0. That's what makes the image
-   transition read as a clean fade between pictures instead of a hard
-   cut or a gap — exactly the same mechanism already used for the text.
+   The hero is a normal section in document flow, exactly one viewport
+   tall, so scrolling down moves straight on to "From the Collective"
+   like any other page — nothing is fixed, nothing slides over it.
 
-   Each .featured-space itself has no visible content of its own (all its
-   children are fixed, i.e. pulled out of normal flow) — it's just a
-   scroll-anchor: a fixed-height block that gives the scrollspy something
-   to measure, so each project gets a deliberate, even amount of scroll
-   before handing off to the next. That's also what keeps this
-   non-cyclic: every .featured-space is a plain block in normal
-   document flow, so scrolling past the last one continues straight into
-   #moreProjects below — nothing is wheel-hijacked and nothing loops.
+   Projects sit side by side in .featured-track; the carousel moves
+   sideways ONLY on:
+     - desktop: Shift + scroll wheel (or a horizontal trackpad swipe)
+       while the pointer is over the carousel
+     - touch:   swiping left / right on the carousel
+   Plain vertical scrolling is never intercepted. Movement is handled
+   by goToFeatured() in projects.html, which sets the track's
+   translateX. To change the slide speed, edit the 0.8s below AND
+   SLIDE_MS in projects.html.
 --------------------------------------------------------------- */
 .featured-hero {
-    padding: 140px 0 0;
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
     /* The picture is shorter than the full viewport on purpose — this
        one variable drives both its height and how far the bottom-
-       anchored UI (scroll indicator, dots, "click to explore" hint)
-       sits from the true bottom of the viewport, so they stay landing
-       on the picture itself rather than the plain page background
-       below it, whatever this value is set to. */
+       anchored UI (scroll indicator, dots) sits from the bottom of the
+       hero, so they stay landing on the picture itself. */
     --hero-image-height: 75vh;
+    /* Let the browser handle vertical swipes (page scroll) natively;
+       horizontal swipes are left to the carousel's own touch handling. */
+    touch-action: pan-y;
+}
+
+/* Heading block — "FEATURED PROJECTS" with the browse hint directly
+   below it, vertically centered on the left of the picture. */
+.featured-hero-heading {
+    position: absolute;
+    top: 50%;
+    /* 100px (not 60px) leaves room for the left arrow. */
+    left: 100px;
+    right: auto;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    /* Above the carousel (z-index 2). */
+    z-index: 15;
+    pointer-events: none;
+    opacity: 0;
+    animation: featured-title-fade 1.2s ease forwards;
 }
 
 .featured-hero-title {
-    position: fixed;
-    top: 50%;
-    left: 60px;
-    right: auto;
-    transform: translateY(-50%);
     font-family: "AlteHaasBold";
     font-size: clamp(16px, 1.8vw, 22px);
     font-weight: 700;
@@ -157,19 +171,6 @@ nav.scrolled {
     line-height: 1.3;
     color: rgba(245, 245, 245, 0.85);
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
-    /* Above the image (z-index 2). */
-    z-index: 15;
-    pointer-events: none;
-    /* Plain opacity-only entrance — since the keyframes below don't
-       touch `transform`, the static translateY(-50%) centering above
-       stays in effect the whole time, no conflict. Then a plain opacity
-       transition afterwards — see `.featured-hero-title.is-hidden`
-       below, toggled by JS (setupFeaturedHeroTitleTracking) so the
-       title only shows while #featuredHero itself is actually in view,
-       not once you've scrolled on into #moreProjects. */
-    opacity: 0;
-    animation: featured-title-fade 1.2s ease forwards;
-    transition: opacity 0.4s ease;
 }
 
 @keyframes featured-title-fade {
@@ -181,12 +182,8 @@ nav.scrolled {
     }
 }
 
-.featured-hero-title.is-hidden {
-    opacity: 0 !important;
-}
-
 .scroll-indicator {
-    position: fixed;
+    position: absolute;
     bottom: calc((100vh - var(--hero-image-height)) / 2 + 26px);
     left: 0;
     right: 0;
@@ -196,12 +193,6 @@ nav.scrolled {
     gap: 10px;
     z-index: 15;
     pointer-events: none;
-    opacity: 1;
-    transition: opacity 0.5s ease;
-}
-
-.scroll-indicator.is-hidden {
-    opacity: 0;
 }
 
 .scroll-indicator-label {
@@ -238,26 +229,126 @@ nav.scrolled {
     }
 }
 
-/* Progress dots — one per featured project, lower-right corner. A quiet
-   "how many are left" indicator: the active project's dot is solid and
-   slightly larger, the rest are dim. Same show/hide behavior as the
-   title and scroll indicator (see setupFeaturedHeroTitleTracking). */
-.featured-dots {
-    position: fixed;
-    bottom: calc((100vh - var(--hero-image-height)) / 2 + 30px);
+/* "Shift + scroll / swipe to browse" hint, sits under the title inside
+   .featured-hero-heading. Desktop and touch wording are swapped by the
+   (hover: none) query. */
+.featured-browse-hint {
+    font-family: "AlteHaasRegular";
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(245, 245, 245, 0.85);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+.featured-browse-hint .hint-touch {
+    display: none;
+}
+
+@media (hover: none) {
+    .featured-browse-hint .hint-desktop {
+        display: none;
+    }
+
+    .featured-browse-hint .hint-touch {
+        display: inline;
+    }
+}
+
+/* Progress dots, lower-right corner. The active project's dot is solid
+   and slightly larger, the rest are dim. */
+.featured-controls {
+    position: absolute;
+    bottom: calc((100vh - var(--hero-image-height)) / 2 + 22px);
     right: 60px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    z-index: 15;
+}
+
+.featured-dots {
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 12px;
-    z-index: 15;
     pointer-events: none;
-    opacity: 1;
-    transition: opacity 0.5s ease;
 }
 
-.featured-dots.is-hidden {
+/* Prev / next arrows, vertically centred on the left and right edges
+   of the carousel. Hidden on mobile (swipe instead). */
+.featured-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 15;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    /* Bare chevrons — no circle. The drop shadow keeps them readable
+       over bright pictures. */
+    border: none;
+    background: transparent;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.6));
+    color: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.3s ease, opacity 0.3s ease, visibility 0s linear 0s;
+}
+
+.featured-arrow.prev {
+    left: 30px;
+}
+
+.featured-arrow.next {
+    right: 30px;
+}
+
+.featured-arrow svg {
+    width: 26px;
+    height: 26px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.3s ease;
+}
+
+.featured-arrow:hover {
+    color: #ffffff;
+    opacity: 1;
+}
+
+.featured-arrow.prev:hover svg {
+    transform: translateX(-2px);
+}
+
+.featured-arrow.next:hover svg {
+    transform: translateX(2px);
+}
+
+/* Keyboard focus (Tab key): no ring/circle — the chevron just grows
+   slightly so keyboard users can still see which arrow is selected. */
+.featured-arrow:focus,
+.featured-arrow:focus-visible {
+    outline: none;
+}
+
+.featured-arrow:focus-visible svg {
+    transform: scale(1.2);
+}
+
+/* First/last project: the arrow that can't go any further fades out
+   completely and can't be clicked (the script disables it at the ends). */
+.featured-arrow:disabled {
     opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.3s ease, visibility 0s linear 0.3s;
 }
 
 .featured-dot {
@@ -284,55 +375,67 @@ nav.scrolled {
     }
 }
 
-.featured-track {
-    display: block;
-    /* This used to carry the entire weight of the transition — first
-       55vh (to let the last project's center-crossing window finish),
-       then 8vh (once candidacy widened to "any overlap"). Neither is
-       needed anymore: setupFeaturedActiveTracking now falls back to the
-       last-active project for as long as nothing else overlaps the
-       viewport, and setupFeaturedHeroTitleTracking doesn't cut that off
-       until #moreProjects has scrolled all the way up to fully cover
-       the screen. Together, that means the hero's fixed content simply
-       stays put through the entire handoff — no gap to bridge with
-       padding here at all.
-    */
+/* The picture band — full width, var(--hero-image-height) tall,
+   vertically centered in the hero. Clips the off-screen projects. */
+.featured-viewport {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: var(--hero-image-height);
+    transform: translateY(-50%);
+    overflow: hidden;
+    z-index: 2;
 }
 
-/* Pure scroll-anchor — sets the pace of the crossfade (how long each
-   project stays focused before the next takes over). No visible content
-   of its own; see the block comment above. Kept short and uniform
-   across every project (including the last) so #moreProjects arrives
-   soon after STRAIN instead of a long uneventful scroll. */
+/* All projects side by side; goToFeatured() moves this sideways. */
+.featured-track {
+    display: flex;
+    height: 100%;
+    transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+    will-change: transform;
+}
+
+/* One project = one full-width slide (picture only — the text lives
+   in .featured-captions below so it fades instead of sliding). */
 .featured-space {
     position: relative;
-    height: 55vh;
+    flex: 0 0 100%;
+    height: 100%;
 }
 
-.featured-name,
-.featured-subtitle,
-.featured-media-wrapper {
-    position: fixed;
-    top: 50%;
-    transform: translateY(-50%);
+/* CAPTIONS — each project's name / subtitle / "click to explore" hint.
+   They sit in a layer that does NOT move with the track: the outgoing
+   caption fades out quickly while the picture slides, and the incoming
+   one fades in as its picture lands (the 0.4s delay). */
+.featured-captions {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.featured-caption {
+    position: absolute;
+    inset: 0;
     opacity: 0;
-    transition: opacity 0.6s ease;
+    transition: opacity 0.35s ease;
 }
 
-.featured-space.is-active .featured-name,
-.featured-space.is-active .featured-subtitle,
-.featured-space.is-active .featured-media-wrapper {
+.featured-caption.is-active {
     opacity: 1;
+    transition: opacity 0.6s ease 0.4s;
 }
 
 .featured-name,
 .featured-subtitle {
+    position: absolute;
     pointer-events: none;
-    right: 60px;
+    /* 100px (not 60px) leaves room for the right arrow. */
+    right: 100px;
     left: auto;
     text-align: right;
-    /* Always above the image, which sits directly underneath now that
-       it spans full width. */
+    /* Always above the image. */
     z-index: 10;
 }
 
@@ -351,7 +454,6 @@ nav.scrolled {
 
 .featured-subtitle {
     top: calc(50% + 6px);
-    transform: translateY(0);
     font-family: "AlteHaasRegular";
     font-size: 14px;
     color: #e0e0e0;
@@ -362,23 +464,13 @@ nav.scrolled {
 }
 
 .featured-media-wrapper {
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    position: absolute;
+    inset: 0;
     display: block;
-    width: 100vw;
-    height: var(--hero-image-height);
     border-radius: 0;
     user-select: none;
+    -webkit-user-drag: none;
     z-index: 2;
-    /* Only the focused project's image should be clickable/hoverable —
-       the rest are invisible but would otherwise still sit in the
-       document and intercept the pointer. */
-    pointer-events: none;
-}
-
-.featured-space.is-active .featured-media-wrapper {
-    pointer-events: auto;
 }
 
 .featured-media {
@@ -393,15 +485,15 @@ nav.scrolled {
        flat opacity, which would just look washed out against the dark
        page background. */
     filter: brightness(0.55) saturate(0.85);
+    -webkit-user-drag: none;
 }
 
 /* Only rendered in the DOM for projects with a link (see `exploreHint`
-   in buildFeaturedHero) — so it simply doesn't exist for STRAIN, no
-   extra visibility logic needed. Fades in/out with `.is-active` exactly
-   like the name/subtitle/image above it. */
+   in buildFeaturedHero), so it simply doesn't exist for STRAIN. Moves
+   with its slide. */
 .featured-explore-hint {
-    position: fixed;
-    bottom: calc((100vh - var(--hero-image-height)) / 2 + 30px);
+    position: absolute;
+    bottom: 30px;
     left: 60px;
     font-family: "AlteHaasRegular";
     font-size: 11px;
@@ -409,14 +501,8 @@ nav.scrolled {
     text-transform: uppercase;
     color: rgba(245, 245, 245, 0.65);
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
-    opacity: 0;
-    transition: opacity 0.6s ease;
     pointer-events: none;
     z-index: 10;
-}
-
-.featured-space.is-active .featured-explore-hint {
-    opacity: 1;
 }
 
 /* ---------------------------------------------------------------
@@ -424,29 +510,9 @@ nav.scrolled {
 --------------------------------------------------------------- */
 .more-projects-section {
     position: relative;
-    /* Above the hero's fixed content (image z-index 2, text z-index 10,
-       title/scroll-indicator/dots z-index 15) so as this section scrolls
-       up into place, it visually rises and covers the carousel from the
-       bottom, rather than staying hidden underneath it until it's fully
-       in position. The actual opaque background is a full-viewport-width
-       ::before below (this section itself is a centered 1400px box, too
-       narrow to cover the hero's full-bleed content on wider screens). */
-    z-index: 20;
     max-width: 1400px;
     margin: 0 auto;
     padding: 20px 60px 120px;
-}
-
-.more-projects-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 50%;
-    width: 100vw;
-    transform: translateX(-50%);
-    background: #1a1a1a;
-    z-index: -1;
 }
 
 .more-projects-header {
@@ -884,35 +950,35 @@ footer {
         color: #ffffff;
     }
 
-    /* Same fixed-position crossfade system as desktop — it's simple
-       enough now (no more 3D/perspective) to work fine at any size.
-       Just tighten the insets and shrink the scroll-pace height a bit
-       for smaller screens. */
-    .featured-space {
-        height: 45vh;
-    }
-
     /* Mobile-only: centered horizontally instead of flush left (desktop
        keeps left: 60px / text-align: left from the base rule above). */
-    .featured-hero-title {
+    .featured-hero-heading {
         padding-top: 30px;
         top: 90px;
         left: 0;
         right: 0;
+        transform: none;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .featured-hero-title {
         text-align: center;
     }
 
-    /* Mobile-only: dots stack vertically instead of running horizontally
-       (desktop keeps flex-direction: row from the base rule above). */
-    .featured-dots {
+    /* Mobile-only: no arrows (swipe instead); dots stay horizontal,
+       tucked into the lower-right corner. */
+    .featured-controls {
         right: 20px;
         bottom: calc((100vh - var(--hero-image-height)) / 2 + 20px);
-        flex-direction: column;
+    }
+
+    .featured-arrow {
+        display: none;
     }
 
     /* Mobile-only: title + subtitle are centered horizontally instead of
-       right-aligned (they're right-aligned on desktop, see the base
-       .featured-name/.featured-subtitle rule above). */
+       right-aligned (they're right-aligned on desktop). */
     .featured-name,
     .featured-subtitle {
         left: 0;
@@ -922,19 +988,13 @@ footer {
 
     /* Mobile-only: the "click to explore project" hint moves from the
        bottom-left corner (desktop position) to sit directly beneath the
-       centered title + subtitle instead. 50% + 34px lands just under
-       the subtitle's own box (subtitle starts at 50% + 6px and is ~22px
-       tall at this font-size/line-height), with a small gap above it. */
+       centered title + subtitle instead. */
     .featured-explore-hint {
         left: 0;
         right: 0;
         top: calc(50% + 34px);
         bottom: auto;
         text-align: center;
-    }
-
-    .featured-media-wrapper {
-        width: 100vw;
     }
 
     .more-projects-section {

@@ -28,28 +28,48 @@
 
     <main class="main-content">
         <!-- ---------------------------------------------------------------
-             FEATURED HERO — scroll-driven, non-cyclic. Slides sit in normal
-             document flow (no scroll-jacking, no position:sticky loop), so
-             once the person scrolls past the last featured project the
-             page simply continues into #moreProjects below, exactly like
-             any other section. Project name sits flush left, subtitle
-             flush right, image centered — projects with a dedicated page
-             (`link` set in featuredData) are clickable, no hover effect
-             for now.
+             FEATURED HERO — horizontal carousel, one screen tall. Scrolling
+             down goes straight to "From the Collective" below. The carousel
+             only moves sideways with Shift + scroll or the arrows (desktop,
+             pointer over the carousel) or a left/right swipe (touch). Projects with a
+             dedicated page (`link` set in featuredData) are clickable.
         --------------------------------------------------------------- -->
-        <section class="featured-hero" id="featuredHero">
-            <h1 class="featured-hero-title">FEATURED PROJECTS</h1>
-            <div class="featured-track" id="featuredTrack">
-                <!-- Slides injected by JS from featuredData below -->
+        <section class="featured-hero" id="featuredHero" aria-roledescription="carousel" aria-label="Featured projects">
+            <div class="featured-hero-heading">
+                <h1 class="featured-hero-title">FEATURED PROJECTS</h1>
+                <div class="featured-browse-hint" aria-hidden="true">
+                <!--    <span class="hint-desktop">SHIFT + SCROLL TO BROWSE</span> -->
+                    <span class="hint-touch">SWIPE TO BROWSE</span>
+                </div>
             </div>
+            <div class="featured-viewport">
+                <div class="featured-track" id="featuredTrack">
+                    <!-- Slides (pictures) injected by JS from featuredData below -->
+                </div>
+                <div class="featured-captions" id="featuredCaptions">
+                    <!-- Name/subtitle per project, injected by JS — these fade
+                         in/out instead of sliding with the pictures -->
+                </div>
+            </div>
+            <!-- Prev/next arrows, centred on the left/right edges. Hidden on
+                 mobile (swipe instead) via the CSS. -->
+            <button class="featured-arrow prev" id="featuredPrev" type="button" aria-label="Previous project">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+            </button>
+            <button class="featured-arrow next" id="featuredNext" type="button" aria-label="Next project">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+            </button>
             <div class="scroll-indicator" id="scrollIndicator" aria-hidden="true">
                 <span class="scroll-indicator-label">SCROLL DOWN <br> TO SEE MORE PROJECTS</span>
                 <svg class="scroll-indicator-arrow" viewBox="0 0 24 24" width="18" height="18">
                     <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </div>
-            <div class="featured-dots" id="featuredDots" aria-hidden="true">
-                <!-- One dot per project, injected by JS in buildFeaturedHero -->
+            <!-- Progress dots, lower-right corner -->
+            <div class="featured-controls">
+                <div class="featured-dots" id="featuredDots" aria-hidden="true">
+                    <!-- One dot per project, injected by JS in buildFeaturedHero -->
+                </div>
             </div>
         </section>
 
@@ -139,10 +159,10 @@
         //   ffmpeg -ss 1 -i input.mp4 -frames:v 1 -c:v libwebp -quality 80 poster.webp
         // then set e.g. poster: "Media/Depths/DepthsPoster.webp".
         //
-        // PERFORMANCE: videos are NOT downloaded up front anymore. Only
-        // the project currently on screen plays (see applyActive in
-        // setupFeaturedActiveTracking); the others stay paused with
-        // preload="none" until the person scrolls to them.
+        // PERFORMANCE: videos are NOT downloaded up front. Only the
+        // project currently on screen plays (see goToFeatured); its
+        // neighbours are preloaded so they're ready when you slide to
+        // them, and everything else waits with preload="none".
         // ---------------------------------------------------------------
         const featuredData = [
             {
@@ -493,8 +513,8 @@
         //                       it's actually needed.
         //
         // Videos no longer carry the `autoplay` attribute — playback is
-        // started/stopped explicitly by applyActive() below, so only the
-        // project currently on screen ever plays (and downloads).
+        // started/stopped explicitly by goToFeatured() below, so only the
+        // project currently on screen ever plays.
         // ---------------------------------------------------------------
         function renderMedia(slide, className, opts = {}) {
             if (slide.type === 'video') {
@@ -533,38 +553,62 @@
         }
 
         // ---------------------------------------------------------------
-        // FEATURED HERO BUILD
-        // Pure scroll — no autoplay, no wheel-hijacking, no counter. Each
-        // .featured-space is a plain block in normal document flow, so
-        // scrolling past the last one continues straight into
-        // #moreProjects. Name/subtitle/image are all position:fixed and
-        // crossfade via `.is-active` (see setupFeaturedActiveTracking) —
-        // no gaps, no scroll-driven CSS API, works the same everywhere.
+        // FEATURED HERO — horizontal carousel
         //
-        // Video playback is handled entirely by applyActive() inside
-        // setupFeaturedActiveTracking — the active project's video is
-        // play()'d explicitly (which also fixes the old "first video sits
-        // on a blank frame until you scroll" issue), all others paused.
+        // All projects sit side by side in #featuredTrack; goToFeatured()
+        // slides the track sideways. The hero is a normal one-screen
+        // section, so plain vertical scrolling just scrolls the page on to
+        // "From the Collective" — it's never intercepted.
+        //
+        // The carousel moves ONLY on:
+        //   - the prev/next arrows (desktop).
+        //   - Shift + scroll wheel over the carousel (desktop). A sideways
+        //     trackpad swipe also works, since that's the same intent.
+        //   - a left/right swipe on touch screens.
+        // One gesture = one project, and it stops at the first/last
+        // project (non-cyclic).
         // ---------------------------------------------------------------
+        const featuredHero = document.getElementById('featuredHero');
         const featuredTrack = document.getElementById('featuredTrack');
         const featuredDots = document.getElementById('featuredDots');
+        const featuredCaptions = document.getElementById('featuredCaptions');
+        const featuredPrev = document.getElementById('featuredPrev');
+        const featuredNext = document.getElementById('featuredNext');
+
+        // Keep in sync with the .featured-track transition in the CSS.
+        const SLIDE_MS = 800;
+
+        let featuredIndex = 0;
+        let featuredSpaces = [];
+        let featuredDotEls = [];
+        let featuredCaptionEls = [];
+        let heroInView = true;
+
+        function playVideo(video) {
+            if (video && video.paused) {
+                const p = video.play();
+                if (p && typeof p.catch === 'function') p.catch(() => {});
+            }
+        }
 
         function buildFeaturedHero() {
             featuredTrack.innerHTML = '';
             featuredDots.innerHTML = '';
+            featuredCaptions.innerHTML = '';
 
             featuredData.forEach((project, i) => {
                 const space = document.createElement('div');
                 space.className = 'featured-space';
-                // The first project is visible immediately, with zero
-                // scrolling required.
-                if (i === 0) space.classList.add('is-active');
 
-                const mediaEl = renderMedia(project, 'featured-media', { eager: i === 0 });
+                // Featured still images load up front (they sit off-screen
+                // until slid to, so lazy-loading would leave them blank on
+                // arrival). Videos stay deferred except the first — its
+                // neighbours are preloaded ahead of time by goToFeatured().
+                const mediaEl = renderMedia(project, 'featured-media', { eager: i === 0 || project.type === 'image' });
                 const hasLink = Boolean(project.link);
 
                 const mediaBlock = hasLink
-                    ? `<a class="featured-media-wrapper" href="${project.link}" aria-label="Explore ${project.title}">
+                    ? `<a class="featured-media-wrapper" href="${project.link}" aria-label="Explore ${project.title}" draggable="false">
                            ${mediaEl}
                        </a>`
                     : `<div class="featured-media-wrapper">${mediaEl}</div>`;
@@ -573,188 +617,185 @@
                     ? `<span class="featured-explore-hint">Click to explore project</span>`
                     : '';
 
-                space.innerHTML = `
+                // The slide holds only the picture; its text goes in a
+                // separate caption so it fades rather than slides.
+                space.innerHTML = mediaBlock;
+                featuredTrack.appendChild(space);
+
+                const caption = document.createElement('div');
+                caption.className = 'featured-caption';
+                caption.innerHTML = `
                     <h2 class="featured-name">${project.title}</h2>
-                    ${mediaBlock}
                     <p class="featured-subtitle">${project.subtitle}</p>
                     ${exploreHint}
                 `;
-
-                featuredTrack.appendChild(space);
+                featuredCaptions.appendChild(caption);
 
                 const dot = document.createElement('span');
                 dot.className = 'featured-dot';
-                if (i === 0) dot.classList.add('is-active');
                 featuredDots.appendChild(dot);
             });
 
-            setupFeaturedActiveTracking();
+            featuredSpaces = Array.from(featuredTrack.children);
+            featuredDotEls = Array.from(featuredDots.children);
+            featuredCaptionEls = Array.from(featuredCaptions.children);
+
+            goToFeatured(0, true);
+            setupFeaturedInput();
+            setupHeroVisibility();
         }
 
-        // ---------------------------------------------------------------
-        // FEATURED ACTIVE TRACKING — a scroll-driven "scrollspy". On every
-        // scroll (throttled to one recalculation per animation frame),
-        // this directly measures every .featured-space's current position
-        // via getBoundingClientRect() and picks whichever one is closest
-        // to the vertical center of the viewport.
-        //
-        // (Direct measurement rather than an IntersectionObserver, because
-        // IO can skip short-lived intersection states during fast flicks
-        // and leave a project stuck at opacity:0. Recomputing from real
-        // geometry every frame can't get stuck that way.)
-        // ---------------------------------------------------------------
-        let heroOverlappingNextSection = false;
+        // Moves the carousel to `index` and handles everything tied to the
+        // active project: dots, video playback (only the active project's
+        // video plays) and preloading the neighbouring videos so they're
+        // ready before they slide in.
+        function goToFeatured(index, instant) {
+            const max = featuredSpaces.length - 1;
+            index = Math.max(0, Math.min(max, index));
+            featuredIndex = index;
 
-        function setupFeaturedActiveTracking() {
-            const spaces = Array.from(document.querySelectorAll('.featured-space'));
-            const dots = Array.from(document.querySelectorAll('.featured-dot'));
-            if (!spaces.length) return;
-
-            // Sticky fallback — see the comment on "winner === -1" below
-            // for why this exists.
-            let lastActiveIndex = 0;
-
-            // Marks the active project AND controls video playback: only
-            // the active project's video plays; every other one is paused.
-            // Paused videos with preload="none" don't download at all, so
-            // the A SHAMAN'S TALE video costs nothing until someone
-            // actually scrolls to it. index = -1 pauses everything (used
-            // once #moreProjects covers the screen).
-            function applyActive(index) {
-                if (index !== -1) lastActiveIndex = index;
-                spaces.forEach((space, i) => {
-                    const isOn = i === index;
-                    space.classList.toggle('is-active', isOn);
-                    const video = space.querySelector('video');
-                    if (video) {
-                        if (isOn) {
-                            if (video.paused) {
-                                const p = video.play();
-                                if (p && typeof p.catch === 'function') p.catch(() => {});
-                            }
-                        } else if (!video.paused) {
-                            video.pause();
-                        }
-                    }
-                });
-                dots.forEach((dot, i) => {
-                    dot.classList.toggle('is-active', i === index);
-                });
+            if (instant) featuredTrack.style.transition = 'none';
+            featuredTrack.style.transform = `translateX(-${index * 100}%)`;
+            if (instant) {
+                void featuredTrack.offsetHeight; // apply without animating
+                featuredTrack.style.transition = '';
             }
 
-            let ticking = false;
+            featuredSpaces.forEach((space, i) => {
+                const isOn = i === index;
+                space.classList.toggle('is-active', isOn);
+                space.setAttribute('aria-hidden', isOn ? 'false' : 'true');
+                // Off-screen projects' links shouldn't be reachable by Tab.
+                space.querySelectorAll('a').forEach(a => {
+                    if (isOn) a.removeAttribute('tabindex');
+                    else a.setAttribute('tabindex', '-1');
+                });
 
-            function recalculate() {
-                ticking = false;
+                const video = space.querySelector('video');
+                if (!video) return;
 
-                if (heroOverlappingNextSection) {
-                    applyActive(-1);
-                    return;
+                if (Math.abs(i - index) === 1 && video.preload === 'none') {
+                    video.preload = 'auto';
+                    video.load();
                 }
 
-                const viewportCenter = window.innerHeight / 2;
-                let winner = -1;
-                let winnerDist = Infinity;
-
-                spaces.forEach((space, i) => {
-                    const rect = space.getBoundingClientRect();
-                    // A candidate if ANY part of its box is currently in
-                    // the viewport.
-                    if (rect.bottom > 0 && rect.top < window.innerHeight) {
-                        const rowCenter = rect.top + rect.height / 2;
-                        const dist = Math.abs(rowCenter - viewportCenter);
-                        if (dist < winnerDist) {
-                            winnerDist = dist;
-                            winner = i;
-                        }
-                    }
-                });
-
-                // Once you've scrolled past the last project's own box,
-                // keep whichever project was last active until
-                // #moreProjects fully covers the screen (see
-                // setupFeaturedHeroTitleTracking) — avoids a blank gap.
-                applyActive(winner === -1 ? lastActiveIndex : winner);
-            }
-
-            function requestRecalculate() {
-                if (!ticking) {
-                    ticking = true;
-                    window.requestAnimationFrame(recalculate);
+                if (isOn && heroInView) {
+                    playVideo(video);
+                } else if (!video.paused) {
+                    video.pause();
                 }
-            }
+            });
 
-            recalculate();
+            featuredDotEls.forEach((dot, i) => {
+                dot.classList.toggle('is-active', i === index);
+            });
 
-            window.addEventListener('scroll', requestRecalculate, { passive: true });
-            window.addEventListener('resize', requestRecalculate);
+            // Fade the matching caption in; the others fade out.
+            featuredCaptionEls.forEach((caption, i) => {
+                const isOn = i === index;
+                caption.classList.toggle('is-active', isOn);
+                caption.setAttribute('aria-hidden', isOn ? 'false' : 'true');
+            });
+
+            // Dim the arrow that can't go any further.
+            if (featuredPrev) featuredPrev.disabled = index === 0;
+            if (featuredNext) featuredNext.disabled = index === max;
         }
 
-        // ---------------------------------------------------------------
-        // FEATURED HERO UI TRACKING — the title, "SCROLL DOWN" indicator,
-        // and dots are all position:fixed over the pictures. Checks
-        // #moreProjects's real position on every scroll frame and hides
-        // the hero UI once #moreProjects has scrolled all the way up to
-        // fully cover the viewport (rect.top <= 0), so nothing blank is
-        // ever exposed in between.
-        // ---------------------------------------------------------------
-        function setupFeaturedHeroTitleTracking() {
-            const heroTitle = document.querySelector('.featured-hero-title');
-            const scrollIndicator = document.getElementById('scrollIndicator');
-            const dotsContainer = document.getElementById('featuredDots');
-            const moreProjectsSection = document.getElementById('moreProjects');
-            if (!moreProjectsSection) return;
+        function setupFeaturedInput() {
+            let animating = false;
 
-            let ticking = false;
-
-            function recalculate() {
-                ticking = false;
-
-                const rect = moreProjectsSection.getBoundingClientRect();
-                const overlapping = rect.top <= 0;
-
-                if (overlapping === heroOverlappingNextSection) return;
-                heroOverlappingNextSection = overlapping;
-
-                if (heroTitle) heroTitle.classList.toggle('is-hidden', heroOverlappingNextSection);
-                if (scrollIndicator) scrollIndicator.classList.toggle('is-hidden', heroOverlappingNextSection);
-                if (dotsContainer) dotsContainer.classList.toggle('is-hidden', heroOverlappingNextSection);
-
-                if (heroOverlappingNextSection) {
-                    document.querySelectorAll('.featured-space').forEach((space) => {
-                        space.classList.remove('is-active');
-                        const video = space.querySelector('video');
-                        if (video && !video.paused) video.pause();
-                    });
-                    document.querySelectorAll('.featured-dot').forEach((dot) => {
-                        dot.classList.remove('is-active');
-                    });
-                }
+            function step(direction) {
+                const target = featuredIndex + direction;
+                if (target < 0 || target > featuredSpaces.length - 1) return;
+                goToFeatured(target);
+                animating = true;
+                setTimeout(() => { animating = false; }, SLIDE_MS);
             }
 
-            function requestRecalculate() {
-                if (!ticking) {
-                    ticking = true;
-                    window.requestAnimationFrame(recalculate);
-                }
+            // DESKTOP — arrow buttons (hidden on mobile via the CSS).
+            // After a mouse click, drop focus from the arrow — otherwise the
+            // browser keeps it "selected", and pressing a key later (e.g.
+            // Shift for Shift + scroll) makes it show a focus ring.
+            // (e.detail > 0 means it was a real click, not the keyboard.)
+            function arrowClick(e, direction) {
+                goToFeatured(featuredIndex + direction);
+                if (e.detail > 0) e.currentTarget.blur();
             }
+            if (featuredPrev) featuredPrev.addEventListener('click', (e) => arrowClick(e, -1));
+            if (featuredNext) featuredNext.addEventListener('click', (e) => arrowClick(e, 1));
 
-            recalculate();
+            // DESKTOP — Shift + wheel (or a sideways trackpad swipe).
+            // A plain vertical wheel is ignored here, so the page scrolls
+            // normally. Wheel events arrive in bursts (several per notch,
+            // dozens per trackpad flick), so one continuous burst counts
+            // as one gesture = one project.
+            let lastWheelTime = 0;
+            let gestureUsed = false;
 
-            window.addEventListener('scroll', requestRecalculate, { passive: true });
-            window.addEventListener('resize', requestRecalculate);
+            featuredHero.addEventListener('wheel', (e) => {
+                const sideways = Math.abs(e.deltaX) > Math.abs(e.deltaY);
+                if (!e.shiftKey && !sideways) return; // normal page scroll
+
+                e.preventDefault();
+
+                const now = performance.now();
+                if (now - lastWheelTime > 150) gestureUsed = false;
+                lastWheelTime = now;
+                if (gestureUsed || animating) return;
+
+                // Shift + wheel reports in deltaY on some browsers and
+                // deltaX on others — use whichever carries the movement.
+                const delta = sideways ? e.deltaX : e.deltaY;
+                if (Math.abs(delta) < 4) return;
+
+                gestureUsed = true;
+                step(delta > 0 ? 1 : -1);
+            }, { passive: false });
+
+            // TOUCH — horizontal swipe. Vertical swipes are left alone
+            // (the CSS sets touch-action: pan-y on the hero), so the page
+            // still scrolls normally with a finger.
+            let startX = 0;
+            let startY = 0;
+            let tracking = false;
+
+            featuredHero.addEventListener('touchstart', (e) => {
+                if (e.touches.length !== 1) { tracking = false; return; }
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+                tracking = true;
+            }, { passive: true });
+
+            featuredHero.addEventListener('touchend', (e) => {
+                if (!tracking) return;
+                tracking = false;
+                const touch = e.changedTouches[0];
+                const dx = touch.clientX - startX;
+                const dy = touch.clientY - startY;
+                if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+                    step(dx < 0 ? 1 : -1);
+                }
+            }, { passive: true });
+
+            featuredHero.addEventListener('touchcancel', () => { tracking = false; }, { passive: true });
         }
 
-        // IMPORTANT: buildFeaturedHero() must run before
-        // setupFeaturedHeroTitleTracking(). If the tracking measured
-        // #moreProjects before the featured slides existed, the page would
-        // be artificially short, #moreProjects would wrongly register as
-        // "already covering the screen", and the first project would be
-        // hidden until the person scrolled. Building first means it's only
-        // ever measured against the page's true, final layout.
+        // Pauses the active video while the hero is scrolled out of view
+        // and resumes it when it comes back.
+        function setupHeroVisibility() {
+            if (!('IntersectionObserver' in window)) return;
+            const observer = new IntersectionObserver(([entry]) => {
+                heroInView = entry.isIntersecting;
+                const video = featuredSpaces[featuredIndex] && featuredSpaces[featuredIndex].querySelector('video');
+                if (!video) return;
+                if (heroInView) playVideo(video);
+                else if (!video.paused) video.pause();
+            }, { threshold: 0 });
+            observer.observe(featuredHero);
+        }
+
         buildFeaturedHero();
-
-        setupFeaturedHeroTitleTracking();
 
         // ---------------------------------------------------------------
         // MORE PROJECTS GRID — hover reveals a short description (and a
